@@ -45,4 +45,14 @@ typedef struct
     uint8_t Status;
 }pub_Control_Data;
 
+typedef struct 
+{
+    float data1;
+    float data2;
+    float data3;
+    float data4;
+    float data5;
+    float data6;
+}pub_ros_package;
+
 #pragma pack()

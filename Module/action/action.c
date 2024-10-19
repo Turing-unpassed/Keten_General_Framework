@@ -15,7 +15,6 @@
  */
 #include "action.h"
 #include "bsp_usart.h"
-#include "cmsis_os2.h"
 
 
 extern osThreadId_t ins_SensorTaskHandle;
@@ -25,11 +24,6 @@ union
     uint8_t posture[24];
     float ActVal[6];
 }action_posture;
-
-/* 由于xQueueSendFromISR为宏定义，不能直接挂载函数指针，所以先用函数包装一下 */
-static BaseType_t queue_send_wrapper(QueueHandle_t xQueue, const void *pvItemToQueue, BaseType_t *pxHigherPriorityTaskWoken) {
-    return xQueueSendFromISR(xQueue, pvItemToQueue, pxHigherPriorityTaskWoken);
-}
 
 static uint8_t Action_Rtos_Init(Action_Instance_t* action_instance,uint32_t queue_length);
 
@@ -120,14 +114,14 @@ static uint8_t Action_Rtos_Init(Action_Instance_t* action_instance,uint32_t queu
         LOGERROR("uart_rtos init failed!");
         return 0;
     }
-    rtos_interface_t *rtos_interface = (rtos_interface_t *)pvPortMalloc(sizeof(rtos_interface_t));
+    rtos_for_module_t *rtos_interface = (rtos_for_module_t *)pvPortMalloc(sizeof(rtos_for_module_t));
     assert_param(rtos_interface != NULL);
     if(rtos_interface == NULL)
     {
         LOGERROR("rtos_interface pvPortMalloc failed!");
         return 0;
     }
-    memset(rtos_interface,0,sizeof(rtos_interface_t));
+    memset(rtos_interface,0,sizeof(rtos_for_module_t));
 
     // 注册获取一个Freertos 队列句柄
     QueueHandle_t queue = xQueueCreate(queue_length,sizeof(UART_TxMsg));

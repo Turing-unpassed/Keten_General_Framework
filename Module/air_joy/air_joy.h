@@ -19,8 +19,11 @@ extern "C"{
 #endif
 
 /*----------------------------------include-----------------------------------*/
+/* bsp层接口 */
 #include "bsp_dwt.h"
 #include "bsp_gpio.h"
+
+/* module层接口 */
 #include "topics.h"
 #include "data_type.h"
 #include <math.h>
@@ -84,7 +87,7 @@ uint8_t Air_Joy_Init(GPIO_Instance_t *gpio_instance,Process_method_e method);
  * @param instance 
  * @return uint8_t 
  */
-uint8_t Air_Update(void *instance);
+void Air_Update(void *instance);
 
 
 /**
@@ -92,7 +95,7 @@ uint8_t Air_Update(void *instance);
  * 
  * @return uint8_t 
  */
-uint8_t Air_Joy_Process();
+void Air_Joy_Process();
 
 
 uint8_t Air_Joy_Publish();

@@ -79,14 +79,13 @@ protected:
     } 
     inline virtual void update_speed_aps() override
     {
-        ExponentialFilter<float> aps_filter(0.750f);// 指数平滑系数，填1则无滤波
-        aps_filter.update(RPM_PER_MIN_2_ANGLE_PER_SEC*(float)(this->speed));
-        speed_aps = aps_filter.getFilteredValue();
+        this->speed_aps = this->alpha * this->speed* RPM_PER_MIN_2_ANGLE_PER_SEC + (1 - this->alpha) * this->last_speed_aps;
+        this->last_speed_aps = this->speed_aps;
     }
     /* 更新电机实际电流值 */
     inline void update_current(uint8_t can_rx_data[]) override
     {
-        motor_current = (int16_t)(can_rx_data[4]<<8 | can_rx_data[5]);        
+        this->motor_current = (int16_t)(can_rx_data[4]<<8 | can_rx_data[5]);        
     }
     /* 更新电机温度函数 */
     inline void updata_temperature(uint8_t can_rx_data[]) override

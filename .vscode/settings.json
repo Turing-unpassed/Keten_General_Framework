@@ -36,7 +36,8 @@
         "vofa.h": "c",
         "bsp_gpio.h": "c",
         "gpio.h": "c",
-        "air_joy.h": "c"
+        "air_joy.h": "c",
+        "cmsis_os2.h": "c"
     },
     "C_Cpp.default.compilerPath": "c:/msys64/mingw64/bin/arm-none-eabi-g++.exe",
     "C_Cpp.errorSquiggles": "enabled"

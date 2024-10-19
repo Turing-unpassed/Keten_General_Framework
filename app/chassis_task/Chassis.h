@@ -103,7 +103,7 @@ public:
 protected:
 
     /* 运动学逆解算，由派生类重写 */
-    virtual float Kinematics_Inverse_Resolution(size_t count,Robot_Twist_t ref_twist){}
+    virtual float Kinematics_Inverse_Resolution(size_t count,Robot_Twist_t ref_twist){ return 0; }
     /* 运动学正解算,由派生类重写 */
     virtual void Kinematics_forward_Resolution(){}
     /* 动力学，扭矩分配 */

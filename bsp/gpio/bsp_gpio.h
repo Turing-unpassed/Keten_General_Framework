@@ -39,7 +39,7 @@ typedef enum
     GPIO_EXTI_MODE_NONE,
 }exit_mode_e;
 
-typedef uint8_t (*exit_callback_fun) (void* gpio_instance);
+typedef void (*exit_callback_fun) (void* gpio_instance);
 
 /**
  * @brief gpio结构体，只需要配置GPIOX、GPIO_PIN

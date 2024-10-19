@@ -150,7 +150,12 @@ public:
      float angle = 0;// 电机角度
     /* 速度相关 */
      float speed = 0;// 转子速度
+     float last_speed = 0;// 上一次转子速度
      float speed_aps = 0;// 转子角速度 
+     float last_speed_aps = 0;// 上一次转子角速度
+     float alpha = 0.55f;// 转子速度滤波系数
+     float beta = 0.85f;// 转子角速度滤波系数
+
      inline float get_speed_after_low(){ return this->speed / motor_reduction_ratio; }// 获取减速箱操作之后的速度
      inline float get_speed_aps_after_low(){ return this->speed_aps / motor_reduction_ratio; }// 获取减速箱操作之后的角速度
     /* 电机当前电流值 */

@@ -62,7 +62,7 @@ void RM_Common::enable_the_motor()
     this->ctrl_motor_config.motor_working_status = MOTOR_ENABLED;
 }
 
-
+float ref_in = 0;
 /**
  * @brief 电机内环计算函数，适用于各种大疆电机
  *        目标就是计算Out值，这个值是电流值，单位为mA
@@ -101,8 +101,8 @@ void RM_Common::pid_control_to_motor()
         pid_measure = this->speed_aps;
         pid_ref = PID_Calculate(&temp_pidcontrol_setting.speed_PID,pid_measure,pid_ref);
     }
-
     this->Out = this->aps_to_current(pid_ref);
+    ref_in = this->Out;
 }
 
 

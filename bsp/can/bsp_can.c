@@ -100,48 +100,6 @@ void CAN_Filter_Init(CAN_HandleTypeDef * hcan, uint8_t object_para,uint32_t Id,u
 	}
 
 }
-// uint8_t CAN_Add_Filter(CAN_HandleTypeDef *hcan,CAN_Rx_Instance_t *can_rx_instance)
-// {
-//     CAN_FilterTypeDef CAN_FilterInit_Instance;
-
-//     if(hcan == NULL)
-//     {
-//         LOGERROR("add filter init failed!");
-//         return 0;
-//     }
-
-//     /* 根据用户设置的帧设置不同的过滤方式 */
-//     if((can_rx_instance->object_para & 0x02))
-//     {
-//         /* 对扩展帧进行对应过滤器的设置 */
-//         CAN_FilterInit_Instance.FilterIdHigh = can_rx_instance->rx_id<<3<<16;                                // 用户设置的接收id 高16bit
-//         CAN_FilterInit_Instance.FilterIdLow = (can_rx_instance->rx_id<<3) | ((can_rx_instance->object_para & 0x03)<<1);         // 用户设置的接收id 低16bit
-//         CAN_FilterInit_Instance.FilterMaskIdHigh = can_rx_instance->mask_id<<3<<16;                          // 掩码对高16bit的检查规则
-//         CAN_FilterInit_Instance.FilterMaskIdLow = (can_rx_instance->mask_id<<3) | ((can_rx_instance->object_para & 0x03)<<1);   // 掩码对低16bit的检查规则
-//     }
-//     else
-//     {
-//         /* 对标准帧进行对应过滤器的设置 */
-//         CAN_FilterInit_Instance.FilterIdHigh = can_rx_instance->rx_id<<5;                                    // 用户设置的接收id 高16bit
-//         CAN_FilterInit_Instance.FilterIdLow = 0;                                            // 用户设置的接收id 低16bit
-//         CAN_FilterInit_Instance.FilterMaskIdHigh = can_rx_instance->rx_id<<5;                                // 掩码对高16bit的检查规则
-//         CAN_FilterInit_Instance.FilterMaskIdLow =0;                                         // 掩码对低16bit的检查规则
-//     }
-
-//     CAN_FilterInit_Instance.FilterBank = can_rx_instance->object_para>>3;                                    // 用户设置的Filter 组序号
-//     CAN_FilterInit_Instance.FilterFIFOAssignment = (can_rx_instance->object_para>>2)&0x01;                   // 用户设置的id 所用FIFO (FIFO1和FIFO0可选)
-//     CAN_FilterInit_Instance.FilterActivation = ENABLE;                                      // 使能Filter
-//     CAN_FilterInit_Instance.FilterMode = CAN_FILTERMODE_IDMASK;                             // 设置Filter为掩码模式，通过设置id掩码来进行过滤
-//     CAN_FilterInit_Instance.FilterScale = CAN_FILTERSCALE_32BIT;                            // 设置Filter为32位模式，可兼容扩展帧和标准帧（高16位）
-//     CAN_FilterInit_Instance.SlaveStartFilterBank = 14;                                      // 过滤器开始组别，对于单can控制器无意义，所以默认为14
-
-//     if(HAL_CAN_ConfigFilter(hcan,&CAN_FilterInit_Instance) != HAL_OK)
-//     {
-//         LOGERROR("can filter add failed!");
-//         return 0;
-//     }
-//     return 1;
-// }
 
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)

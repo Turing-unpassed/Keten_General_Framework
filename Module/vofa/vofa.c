@@ -13,12 +13,7 @@
  * @versioninfo :
  */
 #include "vofa.h"
-#include "topics.h"
 
-/* 由于xQueueSendFromISR为宏定义，不能直接挂载函数指针，所以先用函数包装一下 */
-static BaseType_t queue_send_wrapper(QueueHandle_t xQueue, const void *pvItemToQueue, BaseType_t *pxHigherPriorityTaskWoken) {
-    return xQueueSendFromISR(xQueue, pvItemToQueue, pxHigherPriorityTaskWoken);
-}
 
 static uint8_t VOFA_Rtos_Init(VOFA_Instance_t *vofa_instance,uint32_t queue_length);
 
@@ -98,13 +93,13 @@ static uint8_t VOFA_Rtos_Init(VOFA_Instance_t *vofa_instance,uint32_t queue_leng
         LOGERROR("vofa instance is NULL!");
         return 0;
     }
-    rtos_for_vofa_t *rtos_for_vofa = (rtos_for_vofa_t *)pvPortMalloc(sizeof(rtos_for_vofa_t));
+    rtos_for_module_t *rtos_for_vofa = (rtos_for_module_t *)pvPortMalloc(sizeof(rtos_for_module_t));
     if(rtos_for_vofa == NULL)
     {
         LOGERROR("rtos_for_vofa malloc failed!");
         return 0;
     }
-    memset(rtos_for_vofa,0,sizeof(rtos_for_vofa_t));
+    memset(rtos_for_vofa,0,sizeof(rtos_for_module_t));
 
     rtos_for_vofa->queue_send = queue_send_wrapper;
     rtos_for_vofa->queue_receive = xQueueReceive;
@@ -143,7 +138,7 @@ uint8_t VOFA_Task(void* vofa_instance)
             if(VOFA_Get_Data(Msg.data_addr,&temp_vofa_instance->pub_data) == 1)
             {
                 publish_data temp_data;
-                temp_data.data = &temp_vofa_instance->pub_data;
+                temp_data.data = (uint8_t*)&temp_vofa_instance->pub_data;
                 temp_data.len = sizeof(pub_vofa_pid);
                 temp_vofa_instance->vofa_pub->publish(temp_vofa_instance->vofa_pub,temp_data);
                 return 1;

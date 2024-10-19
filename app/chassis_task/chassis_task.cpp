@@ -32,6 +32,52 @@
 /* freertos任务 */
 osThreadId_t Chassis_TaskHandle;
 
+#ifdef TEST_SYSTEM_TURNER
+/* 系统辨识调试使用 */
+CAN_Tx_Instance_t m2006_tx_instance = {
+    .can_handle = &hcan2,
+    .isExTid = 0,
+    .tx_mailbox = 0,
+    .tx_id = 0x200,
+    .tx_len = 8,
+    .can_tx_buff = {0},
+};
+
+CAN_Rx_Instance_t m2006_rx_instance = {
+    .can_handle = &hcan2,
+    .RxHeader = {0},
+    .rx_len = 8,
+    .rx_id = 0x201,
+    .can_rx_buff = {0},
+};
+
+
+Motor_Control_Setting_t m2006_control_instance = {
+    .motor_controller_setting = {
+        .speed_PID = {
+            .Kp = 0.4327,
+            .Ki = 2.7885,
+            .Kd = 0,           
+            .MaxOut = 10000,
+            .IntegralLimit = 1000,
+            .DeadBand = 100,
+            .Output_LPF_RC = 0.5,
+            .Derivative_LPF_RC = 0.5,
+            .OLS_Order = 1,
+            .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
+        },
+        .pid_ref = 0,
+    },
+    .outer_loop_type = SPEED_LOOP,
+    .inner_loop_type = SPEED_LOOP,
+    .motor_is_reverse_flag = MOTOR_DIRECTION_NORMAL,
+    .motor_working_status = MOTOR_ENABLED,
+};
+
+
+Motor_C610 m2006[1] = {Motor_C610(1,m2006_rx_instance,m2006_tx_instance,m2006_control_instance)};
+
+#endif 
 
 /* 即使是大疆电机，也最好做好定义,统一can设备使用方式 */
 
@@ -50,8 +96,6 @@ CAN_Rx_Instance_t m3508_lf_rx_instance = {
         .RxHeader = {0},
         .rx_len = 8,
         .rx_id = 0x201,
-        .object_para = CanFilter_0|CanFifo_0|Can_STDID|Can_DataType,
-        .mask_id = 0,
         .can_rx_buff = {0},
 };
 
@@ -90,8 +134,6 @@ CAN_Rx_Instance_t m3508_rf_rx_instance = {
         .RxHeader = {0},
         .rx_len = 8,
         .rx_id = 0x202,
-        .object_para = CanFilter_0|CanFifo_0|Can_STDID|Can_DataType,
-        .mask_id = 0,
         .can_rx_buff = {0},
 };
 
@@ -131,8 +173,6 @@ CAN_Rx_Instance_t m3508_rb_rx_instance = {
         .RxHeader = {0},
         .rx_len = 8,
         .rx_id = 0x203,
-        .object_para = CanFilter_1|CanFifo_1|Can_STDID|Can_DataType,
-        .mask_id = 0,
         .can_rx_buff = {0},
 };
 
@@ -171,8 +211,6 @@ CAN_Rx_Instance_t m3508_lb_rx_instance = {
         .RxHeader = {0},
         .rx_len = 8,
         .rx_id = 0x204,
-        .object_para = CanFilter_1|CanFifo_1|Can_STDID|Can_DataType,
-        .mask_id = 0,
         .can_rx_buff = {0},
 };
 
@@ -276,7 +314,6 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
 #endif
 #ifdef CHASSIS_TO_DEBUG
     publish_data temp_data;
-    float temp = 0;
 #endif
     for(;;)
     {
@@ -330,7 +367,6 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
 
 uint8_t Chassis(Omni_Chassis &user_chassis)
 {
-   float temp = 0;
    switch(user_chassis.Chassis_Status)
    {
       case CHASSIS_STOP:
@@ -349,8 +385,8 @@ uint8_t Chassis(Omni_Chassis &user_chassis)
          user_chassis.Dynamics_Inverse_Resolution();
          for(size_t i = 0;i < user_chassis.Wheel_Num; i++)
          {
-            temp = user_chassis.Kinematics_Inverse_Resolution(i,user_chassis.ref_twist);
-            chassis_motor[i].Out = chassis_motor[i].aps_to_current(temp);
+            chassis_motor[i].ctrl_motor_config.motor_controller_setting.pid_ref = user_chassis.Kinematics_Inverse_Resolution(i,user_chassis.ref_twist);
+            chassis_motor[i].pid_control_to_motor();
          }
          break;
       case WORLD_CHASSIS:
@@ -366,8 +402,8 @@ uint8_t Chassis(Omni_Chassis &user_chassis)
          /* 电机输出赋值 */
          for(size_t i = 0;i < user_chassis.Wheel_Num; i++)
          {
-            temp = user_chassis.Kinematics_Inverse_Resolution(i,user_chassis.ref_twist);
-            chassis_motor[i].Out = chassis_motor[i].aps_to_current(temp);
+            chassis_motor[i].ctrl_motor_config.motor_controller_setting.pid_ref = user_chassis.Kinematics_Inverse_Resolution(i,user_chassis.ref_twist);
+            chassis_motor[i].pid_control_to_motor();
          }
          break;
     }

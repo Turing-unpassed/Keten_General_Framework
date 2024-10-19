@@ -116,8 +116,6 @@ typedef struct
     CAN_RxHeaderTypeDef RxHeader;
     uint8_t rx_len;                 // 接收数据帧长度，长度范围为0~8
     uint32_t rx_id;                 // 接收id   
-    uint8_t object_para;            // 过滤器配置id 按CanFilter_N | CanFifo_N | Can_XXXID | Can_XXXXType 格式设置
-    uint32_t mask_id;               // 过滤器掩码id,设置为0则表示不过滤
     uint8_t can_rx_buff[8];         // can接收buffer
 }CAN_Rx_Instance_t;
 

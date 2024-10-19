@@ -96,6 +96,8 @@ C_SOURCES =  \
 ../Module/controller/pid_controller.c \
 ../Module/vofa/vofa.c \
 ../Module/air_joy/air_joy.c \
+../Module/rtos_interface.c \
+../Module/ros_com/ros_com.c \
 ../Core/Src/sysmem.c \
 ../Core/Src/syscalls.c  \
 
@@ -171,6 +173,7 @@ C_DEFS =  \
 -DDISABLE_LOG_SYSTEM \
 -DDEBUG_FOR_ACTION \
 -DCHASSIS_TO_DEBUG \
+# -DTEST_SYSTEM_TURNER \
 # -DDISABLE_SYSVIEW_SYSTEM \
 
 
@@ -211,6 +214,7 @@ C_CPP_INCLUDES =  \
 -I../Module/algorithm \
 -I../Module/vofa \
 -I../Module/air_joy \
+-I../Module/ros_com \
 -I../Module \
 -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include \
 -I../Drivers/CMSIS/Include \

@@ -58,6 +58,7 @@ add_definitions(
     -DDEBUG_FOR_ACTION 
     -DUSE_ACTION_FOR_IMU
     -DCHASSIS_TO_DEBUG
+    # -DTEST_SYSTEM_TURNER
     # -DDISABLE_LOG_SYSTEM
     # -DDISABLE_SYSVIEW_SYSTEM
     ) # need -D<macro> to define macro

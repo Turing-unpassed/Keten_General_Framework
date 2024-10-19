@@ -14,9 +14,10 @@
 #include "com_config.h"
 #include "topics.h"
 
-extern Motor_C610 m2006;
+extern Motor_C610 m2006[1];
 
 osThreadId_t CAN1_Send_TaskHandle;
+osThreadId_t CAN2_Send_TaskHandle;
 
 QueueHandle_t CAN1_TxPort;
 QueueHandle_t CAN2_TxPort;
@@ -31,10 +32,7 @@ uint8_t Common_Service_Init()
     return 1;
 }
 
-uint32_t aa = 0;
-uint32_t b = 0;
-uint32_t c = 0;
-uint32_t d = 0;
+
 void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
     if(can_instance->RxHeader.IDE == CAN_ID_STD)
@@ -44,25 +42,21 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
             case 0x201:
             {
                 chassis_motor[0].update(can_instance->can_rx_buff);
-                aa++;
                 break;
             }
             case 0x202:
             {
                 chassis_motor[1].update(can_instance->can_rx_buff);
-                b++;
                 break;
             }
             case 0x203:
             {
                 chassis_motor[2].update(can_instance->can_rx_buff);
-                c++;
                 break;
             }
             case 0x204:
             {
                 chassis_motor[3].update(can_instance->can_rx_buff);
-                d++;
                 break;
             }
         }
@@ -79,7 +73,8 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
     }
 }
 
-
+float speed_aps = 0;
+float motor_current = 0;
 void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
     if(can_instance->RxHeader.IDE == CAN_ID_STD)
@@ -88,6 +83,11 @@ void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
         {
             case 0x201:
             {
+#ifdef TEST_SYSTEM_TURNER
+                m2006[0].update(can_instance->can_rx_buff);
+                speed_aps = m2006[0].speed_aps;
+                motor_current = m2006[0].motor_current;
+#endif
                 break;
             }
         }
@@ -114,5 +114,27 @@ __attribute((noreturn)) void CAN1_Send_Task(void *argument)
         osDelay(1);
     }
 }
+
+
+__attribute((noreturn)) void CAN2_Send_Task(void *argument)
+{
+    CAN_Tx_Instance_t temp_can_txmsg;
+    uint8_t free_can_mailbox;
+    for(;;)
+    {
+        if(xQueueReceive(CAN2_TxPort,&temp_can_txmsg,0) == pdTRUE)
+        {
+            do{
+                free_can_mailbox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan2);
+            }while(free_can_mailbox == 0);
+            if(temp_can_txmsg.isExTid == 1)// 发送扩展帧
+                CAN_Transmit_ExtId(&temp_can_txmsg);
+            else    // 发送标准帧
+                CAN_Transmit_StdID(&temp_can_txmsg);
+        }
+        osDelay(1);
+    }
+}
+
 
 

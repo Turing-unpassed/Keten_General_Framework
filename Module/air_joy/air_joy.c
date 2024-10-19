@@ -12,7 +12,6 @@
  * @versioninfo :
  */
 #include "air_joy.h"
-#include "bsp_gpio.h"
 
 
 static void update_trapezoidal_state(TrapezoidalState *state, float target_velocity);
@@ -27,13 +26,13 @@ uint8_t Air_Joy_Init(GPIO_Instance_t *gpio_instance,Process_method_e method)
     if(gpio_instance == NULL)
     {
         LOGERROR("gpio_instance is not prepared!");
-        return NULL;
+        return 0;
     }
     air_instance = (Air_Joy_Instance_t*)pvPortMalloc(sizeof(Air_Joy_Instance_t));
     if(air_instance == NULL)
     {
         LOGERROR("create air_joy instance failed!");
-        return NULL;
+        return 0;
     }
     memset(air_instance,0,sizeof(Air_Joy_Instance_t));
     /* 设置控制模式 */
@@ -62,10 +61,11 @@ uint8_t Air_Joy_Init(GPIO_Instance_t *gpio_instance,Process_method_e method)
 
     /* 注册发布者 */
     air_instance->air_joy_pub = register_pub("air_joy_pub");
+    return 1;
 }
 
 
-uint8_t Air_Update(void *instance)
+void Air_Update(void *instance)
 {
     /* 获取当前时间 */
     air_instance->last_ppm_time = air_instance->now_ppm_time;
@@ -121,7 +121,7 @@ static void update_trapezoidal_state(TrapezoidalState *state, float target_veloc
     }
 }
 
-uint8_t Air_Joy_Process()
+void Air_Joy_Process()
 {
     /* 在最前面提供拨杆处理，优先处理拨杆再处理摇杆 */
     if(air_instance->LEFT_X!=0||air_instance->LEFT_Y!=0||air_instance->RIGHT_X!=0||air_instance->RIGHT_Y!=0)            

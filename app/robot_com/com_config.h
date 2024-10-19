@@ -66,6 +66,7 @@ void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance);
  * @param argument 
  */
 void CAN1_Send_Task(void *argument);
+void CAN2_Send_Task(void *argument);
 
 
 #ifdef __cplusplus

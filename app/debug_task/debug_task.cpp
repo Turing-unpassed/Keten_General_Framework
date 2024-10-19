@@ -30,9 +30,13 @@ VOFA_Instance_t *vofa_instance = NULL;
 Uart_Instance_t *vofa_uart_instance = NULL;
 extern uart_package_t VOFA_uart_package;
 
+extern Motor_C610 m2006[1];
+extern float ref_in;
+
 __attribute((noreturn)) void Debug_Task(void *argument)
 {
-
+    // int count = 0;
+#ifdef VOFA_TO_DEBUG
     /* vofa设备创建 */
     vofa_uart_instance = Uart_Register(&VOFA_uart_package);
     if(vofa_uart_instance == NULL)
@@ -46,11 +50,39 @@ __attribute((noreturn)) void Debug_Task(void *argument)
         LOGERROR("vofa init failed!");
         vTaskDelete(NULL);
     }
-
+#endif
     for(;;)
     {
+#ifdef VOFA_TO_DEBUG
         vofa_instance->vofa_task(vofa_instance);
         LOGINFO("debug task is running!");
-        osDelay(100);
+#endif
+
+#ifdef TEST_SYSTEM_TURNER
+        // count++;
+        // if(count <= 3000)
+        // {
+        //     ref_in = 0;
+        //     m2006[0].Out = 0;
+        //     Motor_SendMsgs(m2006);            
+        // }
+        // else if(count>3000 && count<=6000)
+        // {
+        //     m2006[0].Motor_Ctrl(10000);
+        //     Motor_SendMsgs(m2006);
+        // }
+        // else if(count >6000 && count <= 9000){
+        //     ref_in = 0;
+        //     m2006[0].Out = 0;
+        //     Motor_SendMsgs(m2006);
+        // }
+        // else
+        // {
+        //     count = 0;
+        // }
+#endif
+        osDelay(1);
+
+
     }
 }

@@ -19,12 +19,14 @@ extern "C"{
 #endif
 
 /*----------------------------------include-----------------------------------*/
-/* freertos接口，提供堆管理 */
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
+/* freertos接口，提供堆管理以及队列处理 */
+#include "rtos_interface.h"
+
+/* bsp层接口 */
 #include "bsp_usart.h"
 #include "bsp_log.h"
+
+/* module层接口 */
 #include "topics.h"
 #include "data_type.h"
 /*-----------------------------------macro------------------------------------*/
@@ -32,16 +34,8 @@ extern "C"{
 /*----------------------------------typedef-----------------------------------*/
 typedef struct
 {
-    uint32_t queue_length;// 通过调整队列长度，可以调节队列缓冲
-    QueueHandle_t xQueue;// 队列句柄
-    BaseType_t (*queue_send)(QueueHandle_t xQueue, const void *pvItemToQueue,BaseType_t *pxHigherPriorityTaskWoken);
-    BaseType_t (*queue_receive)(QueueHandle_t xQueue,void *pvBuffer,TickType_t xTicksToWait);// 从队列读数据
-}rtos_for_vofa_t;
-
-typedef struct
-{
     Uart_Instance_t *vofa_uart_instance;
-    rtos_for_vofa_t *rtos_for_vofa;
+    rtos_for_module_t *rtos_for_vofa;
     Publisher *vofa_pub;
     pub_vofa_pid pub_data;
     uint8_t (*vofa_task)(void* vofa_instance);
