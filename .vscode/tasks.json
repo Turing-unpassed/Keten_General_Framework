@@ -9,7 +9,7 @@
             "problemMatcher": [],        
             "group": {
                 "kind": "build",
-                "isDefault": true
+                "isDefault": false
             },
             "dependsOn": ["clean"] // 添加依赖项，每次构建都必须删除原build目录下的东西 
         },
@@ -28,7 +28,7 @@
              */
             "group": {
                 "kind": "build",
-                "isDefault": true
+                "isDefault": false
             },
             "problemMatcher": []
         },
@@ -39,7 +39,7 @@
             "command":"mingw32-make -C ToolChain -j16 ; mingw32-make -C ToolChain download_jlink", // "mingw32-make -j24 ; mingw32-make download_jlink"
             "group": {
                 "kind": "build",
-                "isDefault": true,
+                "isDefault": false,
             }
         },
         {
@@ -66,13 +66,21 @@
                     /* 传递给Bash的参数 -l：使 Bash 作为登录 shell 启动 -c:传递命令字符串给 Bash 执行 */
                     "args": ["-l", "-c"]
                 }
-            }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
         },
         {
             /* 使用cmake构建项目，编译生成可执行文件 */
             "label": "build_by_cmake",
             "type": "shell",
             "command": "cd build ; cmake -G \"Ninja\" .. ; ninja",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
             "dependsOn": ["clean"] // 添加依赖项，每次构建都必须删除原build目录下的东西 
         },
         {
@@ -81,7 +89,10 @@
             "type": "shell",
             /* 暂时没有找到为什么不能通过ninja下载的原因 */
             "command": "mingw32-make -C ToolChain download_jlink",
-            "dependsOn": ["build_by_cmake"]
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
         },
     ]
 

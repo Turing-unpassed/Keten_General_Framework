@@ -23,6 +23,8 @@ QueueHandle_t CAN1_TxPort;
 QueueHandle_t CAN2_TxPort;
 
 
+extern Motor_GM6020 gm6020[1];
+
 uint8_t Common_Service_Init()
 {
     CAN1_TxPort = xQueueCreate(16,sizeof(CAN_Tx_Instance_t));
@@ -32,7 +34,10 @@ uint8_t Common_Service_Init()
     return 1;
 }
 
-
+float speed_aps = 0;
+float motor_acceleration = 0;
+float angle = 0;
+float motor_current = 0;
 void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
     if(can_instance->RxHeader.IDE == CAN_ID_STD)
@@ -52,6 +57,7 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
             case 0x203:
             {
                 chassis_motor[2].update(can_instance->can_rx_buff);
+                speed_aps = chassis_motor[2].speed_aps;
                 break;
             }
             case 0x204:
@@ -59,6 +65,14 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
                 chassis_motor[3].update(can_instance->can_rx_buff);
                 break;
             }
+#ifdef TEST_SYSTEM_GM6020
+            case 0x205:
+            {
+                gm6020[0].update(can_instance->can_rx_buff);
+                angle = gm6020[0].angle;
+                break;
+            }
+#endif
         }
     }
     if(can_instance->RxHeader.IDE == CAN_ID_EXT)
@@ -73,8 +87,7 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
     }
 }
 
-float speed_aps = 0;
-float motor_current = 0;
+
 void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
     if(can_instance->RxHeader.IDE == CAN_ID_STD)
@@ -83,11 +96,15 @@ void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
         {
             case 0x201:
             {
-#ifdef TEST_SYSTEM_TURNER
+#ifdef TEST_SYSTEM_M2006
                 m2006[0].update(can_instance->can_rx_buff);
                 speed_aps = m2006[0].speed_aps;
-                motor_current = m2006[0].motor_current;
+                motor_acceleration = m2006[0].motor_acceleration;
 #endif
+                break;
+            }
+            case 0x205:
+            {
                 break;
             }
         }

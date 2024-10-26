@@ -28,7 +28,7 @@ __attribute((noreturn)) void Control_Task(void *argument)
         LOGERROR("gpio instance create failed!");
         vTaskDelete(NULL);
     }
-    Air_Joy_Init(gpio_instance,TRAPEZOIDAL);
+    Air_Joy_Init(gpio_instance,NORMAL);
     for(;;)
     {
         Air_Joy_Process();

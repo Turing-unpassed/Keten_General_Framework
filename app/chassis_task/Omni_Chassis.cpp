@@ -14,6 +14,15 @@
  */
 #include "Omni_Chassis.h"
 
+void Omni_Chassis::Chassis_TrackingController_Init()
+{
+   // todo:对底盘加入前馈控制器
+
+   PID_Init(&this->Chassis_PID_X);
+   PID_Init(&this->Chassis_PID_Y);
+   PID_Init(&this->Chassis_PID_Omega);
+}
+
 
 /**
  * @brief 运动学逆解算

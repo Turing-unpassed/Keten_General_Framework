@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 # 指定编译平台/架构与语言标准, 推荐指定Ninja为构建工具,可以加快编译速度(相比make)
+set(CMAKE_GENERATOR "Ninja")
 set(CMAKE_SYSTEM_NAME Generic) # 表示正在为一个通用的系统编译，而非指定的操作系统
 set(CMAKE_SYSTEM_PROCESSOR arm) # 指定目标处理器架构为 arm
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY) # 指示cmake在尝试编译时生成静态库
@@ -27,8 +28,6 @@ set(CMAKE_BUILD_TYPE Debug) # Debug Release RelWithDebInfo MinSizeRel
 set(MCU_FLAGS -mcpu=cortex-m4 -mthumb -mthumb-interwork -mfloat-abi=hard -mfpu=fpv4-sp-d16)
 set(LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/ToolChain/STM32F407ZGTx_FLASH.ld") # 指定链接脚本
 
-# option(BUILD_DSP ON) # 是否编译DSP库,若要定制须修改DSP/Source/CMakeLists.txt
-# 定义选项
 
 # Generic compiler settings for optimization and basic link lib
 # add_compile_options(-pipe ${MCU_FLAGS} -Wall -Werror -fmessage-length=0 # basic options
@@ -40,6 +39,11 @@ add_link_options(-pipe ${MCU_FLAGS} -T${LINKER_SCRIPT} -Wl,--no-warn-rwx-segment
 -Wl,--gc-sections -flto -specs=nano.specs -specs=nosys.specs # optimize options
 -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map -Wl,--cref -Wl,--print-memory-usage # map options
 ) # if your executable is too large , try option '-s' to strip symbols
+
+# 开启f4系列芯片的FPU单精度浮点运算
+add_compile_definitions(ARM_MATH_CM4;ARM_MATH_MATRIX_CHECK;ARM_MATH_ROUNDING)
+add_compile_options(-mfloat-abi=hard -mfpu=fpv4-sp-d16)
+add_link_options(-mfloat-abi=hard -mfpu=fpv4-sp-d16)
 
 # add_compile_definitions() works for compile stage
 # while add_definitions() works for both compile and link stage
@@ -58,11 +62,16 @@ add_definitions(
     -DDEBUG_FOR_ACTION 
     -DUSE_ACTION_FOR_IMU
     -DCHASSIS_TO_DEBUG
-    # -DTEST_SYSTEM_TURNER
-    # -DDISABLE_LOG_SYSTEM
+    -DTEST_SYSTEM_TURNER
+    -DTEST_SYSTEM_M3508 
+    # -DTEST_SYSTEM_M2006
+    # -DTEST_SYSTEM_GM6020 
+    -DDISABLE_LOG_SYSTEM
     # -DDISABLE_SYSVIEW_SYSTEM
+    # -DDEBUG_TASK_RUN 
     ) # need -D<macro> to define macro
     
+
 # add inc 添加头文件路径
 # .cmake是cmake的脚本文件，用于定义构建系统的配置和行为
 include(${CMAKE_SOURCE_DIR}/ToolChain/find_header.cmake) # 递归包含头文件的函数，添加该文件的位置
@@ -114,7 +123,11 @@ add_definitions(-DESC_DEBUG) # ESC Debug
 endif ()
 
 # build binary and hex file 生成目标.elf 可执行文件
+link_directories(${CMAKE_SOURCE_DIR}/Middlewares/ST/ARM/DSP/Lib)
+
 add_executable(${PROJECT_NAME}.elf  ${SOURCES} ${ASM_SOURCES} ${LINKER_SCRIPT})
+
+target_link_libraries(${PROJECT_NAME}.elf libarm_cortexM4lf_math.a) # 链接数学库
 
 # add_custom_command 添加自定义构建步骤
 add_custom_command(
@@ -125,6 +138,11 @@ add_custom_command(
     COMMENT "EXCUTABLE SIZE:"
     COMMAND ${SIZE} ${PROJECT_NAME}.elf # 使用size工具显示elf文件的大小信息
 )
+
+# 输出编译器信息
+message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
+message(STATUS "C++ compiler: ${CMAKE_CXX_COMPILER}")
+message(STATUS "ASM compiler: ${CMAKE_ASM_COMPILER}")
 
 # 定义下载目标
 add_custom_target(download_jlink

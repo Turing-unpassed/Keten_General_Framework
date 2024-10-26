@@ -62,28 +62,30 @@ void osTaskInit(void)
     .stack_size = 128*4 ,
     .priority = (osPriority_t) osPriorityNormal,
     };
-    // IWDGTaskHandle = osThreadNew(IWDGTask, NULL, &IWDGTaskHandle_attributes);
+    IWDGTaskHandle = osThreadNew(IWDGTask, NULL, &IWDGTaskHandle_attributes);
 
     const osThreadAttr_t CAN1_SendTaskHandle_attributes = {
     .name = "CAN1_Send_TaskHandle",
     .stack_size = 128*4 ,
     .priority = (osPriority_t) osPriorityNormal,
     };
-    // CAN1_Send_TaskHandle = osThreadNew(CAN1_Send_Task, NULL, &CAN1_SendTaskHandle_attributes);
+    CAN1_Send_TaskHandle = osThreadNew(CAN1_Send_Task, NULL, &CAN1_SendTaskHandle_attributes);
 
     const osThreadAttr_t CAN2_SendTaskHandle_attributes = {
     .name = "CAN2_Send_TaskHandle",
     .stack_size = 128*4 ,
     .priority = (osPriority_t) osPriorityNormal,
     };
-    // CAN2_Send_TaskHandle = osThreadNew(CAN2_Send_Task, NULL, &CAN2_SendTaskHandle_attributes);
+    CAN2_Send_TaskHandle = osThreadNew(CAN2_Send_Task, NULL, &CAN2_SendTaskHandle_attributes);
 
     const osThreadAttr_t DebugTaskHandle_attributes = {
     .name = "Debug_TaskHandle",
     .stack_size = 128*4 ,
     .priority = (osPriority_t) osPriorityNormal,
     };
-    // Debug_TaskHandle = osThreadNew(Debug_Task, NULL, &DebugTaskHandle_attributes);
+#ifdef DEBUG_TASK_RUN 
+    Debug_TaskHandle = osThreadNew(Debug_Task, NULL, &DebugTaskHandle_attributes);
+#endif 
 
     const osThreadAttr_t ChassisTaskHandle_attributes = {
     .name = "Chassis_TaskHandle",

@@ -12,6 +12,8 @@
  ******************************************************************************
  */
 #include "pid_controller.h"
+#include "bsp_dwt.h"
+#include "bsp_log.h"
 
 /******************************** FUZZY PID **********************************/
 static float FuzzyRuleKpRAW[7][7] = {
@@ -122,69 +124,38 @@ static void f_Output_Limit(PID_t *pid);                 // 输出限幅
 static void f_Proportion_Limit(PID_t *pid);             // 限制比例控制器输出
 static void f_PID_ErrorHandle(PID_t *pid);              // 误差计算
 
+
+
 /**
  * @brief          PID初始化   PID initialize
  * @param[in]      PID结构体   PID structure
  * @param[in]      略
  * @retval         返回空      null
  */
-void PID_Init(
-    PID_t *pid,
-    float max_out,
-    float intergral_limit,
-    float deadband,
-
-    float kp,
-    float Ki,
-    float Kd,
-
-    float A,
-    float B,
-
-    float output_lpf_rc,
-    float derivative_lpf_rc,
-
-    uint16_t ols_order,
-
-    uint8_t improve)
+void PID_Init(PID_t *pid)
 {
-    pid->DeadBand = deadband;
-    pid->IntegralLimit = intergral_limit;
-    pid->MaxOut = max_out;
     pid->Ref = 0;
-
-    pid->Kp = kp;
-    pid->Ki = Ki;
-    pid->Kd = Kd;
     pid->ITerm = 0;
-
-    // 变速积分参数
-    // coefficient of changing integration rate
-    pid->CoefA = A;
-    pid->CoefB = B;
-
-    pid->Output_LPF_RC = output_lpf_rc;
-
-    pid->Derivative_LPF_RC = derivative_lpf_rc;
+    pid->Err = 0;
 
     // 最小二乘提取信号微分初始化
-    // differential signal is distilled by OLS
-    pid->OLS_Order = ols_order;
-    OLS_Init(&pid->OLS, ols_order);
+    OLS_Init(&pid->OLS, pid->OLS_Order);
 
     // DWT定时器计数变量清零
     // reset DWT Timer count counter
     pid->DWT_CNT = 0;
-
-    // 设置PID优化环节
-    pid->Improve = improve;
+    pid->dt = 0;
 
     // 设置PID异常处理 目前仅包含电机堵转保护
     pid->ERRORHandler.ERRORCount = 0;
     pid->ERRORHandler.ERRORType = PID_ERROR_NONE;
 
+    pid->Pout = 0;
+    pid->Iout = 0;
+    pid->Dout = 0;
     pid->Output = 0;
 }
+
 
 /**
  * @brief          PID计算
@@ -197,8 +168,7 @@ float PID_Calculate(PID_t *pid, float measure, float ref)
 {
     if (pid->Improve & ErrorHandle)
         f_PID_ErrorHandle(pid);
-
-    pid->dt = DWT_GetDeltaT((void *)&pid->DWT_CNT);
+    pid->dt = DWT_GetDeltaT(&pid->DWT_CNT);
 
     pid->Measure = measure;
     pid->Ref = ref;
@@ -247,9 +217,9 @@ float PID_Calculate(PID_t *pid, float measure, float ref)
         if (pid->Improve & Integral_Limit)
             f_Integral_Limit(pid);
 
-        pid->Iout += pid->ITerm;
+        pid->Iout += pid->ITerm;// 计算积分项
 
-        pid->Output = pid->Pout + pid->Iout + pid->Dout;
+        pid->Output = pid->Pout + pid->Iout + pid->Dout;// 计算输出项
 
         // 输出滤波
         if (pid->Improve & OutputFilter)
@@ -300,19 +270,20 @@ static void f_Changing_Integration_Rate(PID_t *pid)
 
 static void f_Integral_Limit(PID_t *pid)
 {
-    static float temp_Output, temp_Iout;
+    static float temp_Output, temp_Iout;// 存储临时输出和积分项
     temp_Iout = pid->Iout + pid->ITerm;
     temp_Output = pid->Pout + pid->Iout + pid->Dout;
+    // 抗积分饱和
     if (abs(temp_Output) > pid->MaxOut)
     {
         if (pid->Err * pid->Iout > 0)
         {
             // 积分呈累积趋势
-            // Integral still increasing
             pid->ITerm = 0;
         }
     }
 
+    // 积分限幅
     if (temp_Iout > pid->IntegralLimit)
     {
         pid->ITerm = 0;
@@ -334,7 +305,7 @@ static void f_Derivative_On_Measurement(PID_t *pid)
         if (pid->OLS_Order > 2)
             pid->Dout = pid->Kd * OLS_Derivative(&pid->OLS, pid->dt, -pid->Measure);
         else
-            pid->Dout = pid->Kd * (pid->Last_Measure - pid->Measure) / pid->dt;
+            pid->Dout = pid->Kd * (pid->Last_Measure - pid->Measure) / pid->dt;// 微分先行是计算测量值的变化率
     }
     else
     {
@@ -349,7 +320,6 @@ static void f_Derivative_On_Measurement(PID_t *pid)
 // 对微分输出部分进行低通滤波
 static void f_Derivative_Filter(PID_t *pid)
 {
-    // 指数平均滤波实现
     pid->Dout = pid->Dout * pid->dt / (pid->Derivative_LPF_RC + pid->dt) +
                 pid->Last_Dout * pid->Derivative_LPF_RC / (pid->Derivative_LPF_RC + pid->dt);
 }

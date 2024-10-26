@@ -59,7 +59,7 @@ public:
     PID_t Chassis_PID_Y;
     PID_t Chassis_PID_Omega;
 
-    Chassis_Status_e Chassis_Status = ROBOT_CHASSIS;// 初始化为机器人坐标系下控制
+    Chassis_Status_e Chassis_Status = CHASSIS_STOP;// 初始化为机器人坐标系下控制
 
     /* 底盘所需pub-sub操作的初始化，必须调用 */
     uint8_t Chassis_Subscribe_Init()
@@ -101,21 +101,22 @@ public:
         this->WorldSpeed.omega = this->RoboSpeed.omega;  
     }
 protected:
-
+    /* 底盘速度pid跟踪器初始化,必须由派生类重写 */
+    virtual void Chassis_TrackingController_Init(){};
     /* 运动学逆解算，由派生类重写 */
     virtual float Kinematics_Inverse_Resolution(size_t count,Robot_Twist_t ref_twist){ return 0; }
     /* 运动学正解算,由派生类重写 */
     virtual void Kinematics_forward_Resolution(){}
-    /* 动力学，扭矩分配 */
+    /* 动力学，扭矩分配,由派生类重写 */
     virtual void Dynamics_Inverse_Resolution(){}
     /* 动力学输出 */
 
 public:
-    Robot_Twist_t RoboSpeed = {0};// 机器人坐标系下速度
-    Robot_Twist_t WorldSpeed = {0};// 世界坐标系下速度
+    Robot_Twist_t RoboSpeed = {0,0,0};// 机器人坐标系下速度
+    Robot_Twist_t WorldSpeed = {0,0,0};// 世界坐标系下速度
 
-    Robot_Twist_t Ref_RoboSpeed = {0};// 期望机器人坐标系下速度
-    Robot_Twist_t Ref_WorldSpeed = {0};// 期望世界坐标系下速度
+    Robot_Twist_t Ref_RoboSpeed = {0,0,0};// 期望机器人坐标系下速度
+    Robot_Twist_t Ref_WorldSpeed = {0,0,0};// 期望世界坐标系下速度
 
     float ref[4];// 期望值，用于各环pid输出到输入
     Robot_Twist_t ref_twist;// 期望速度
@@ -138,8 +139,8 @@ extern "C"{
 #define PI                          3.1415926535f         // 圆周率
 #endif
 
-#define WHEEL_TO_MOTOR              RAD_2_DEGREE/(WHEEL_R*MOTOR_REDUCTION_RATIO)     // 将车身速度逆解算得到的驱动轮速度m/s向（经过减速箱之后的）电机的转子的角速度，单位为 度/s
-#define MOTOR_TO_WHEEL              (PI * WHEEL_R / (180.0 * MOTOR_REDUCTION_RATIO))       // 将转子角速度换算到轮子实际线速度
+#define WHEEL_TO_MOTOR              RAD_2_DEGREE/(WHEEL_R)     // 将车身速度逆解算得到的驱动轮速度m/s向（经过减速箱之后的）电机的转子的角速度，单位为 度/s
+#define MOTOR_TO_WHEEL              (PI * WHEEL_R / (180.0))       // 将转子角速度换算到轮子实际线速度
 #define SPEED_TO_RPM                60/(2*PI*WHEEL_R) // 将m/s转换为rpm/s
 #define RPM_TO_SPEED                2*PI*WHEEL_R/60   // 将rpm/s转换为m/s
 

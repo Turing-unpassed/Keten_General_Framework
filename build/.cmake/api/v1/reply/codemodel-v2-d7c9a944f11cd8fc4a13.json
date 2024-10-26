@@ -41,14 +41,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "download_jlink::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-download_jlink-Debug-aa45ae386f382bdf48be.json",
+					"jsonFile" : "target-download_jlink-Debug-503bf5038b9298bfbede.json",
 					"name" : "download_jlink",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "new_build.elf::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-new_build.elf-Debug-fe101f77b55a92f71008.json",
+					"jsonFile" : "target-new_build.elf-Debug-59d096b7797171f670ad.json",
 					"name" : "new_build.elf",
 					"projectIndex" : 0
 				}

@@ -43,14 +43,14 @@ uint8_t Air_Joy_Init(GPIO_Instance_t *gpio_instance,Process_method_e method)
     gpio_instance->mode = GPIO_EXTI_MODE_RISING_FALLING;
 
     /* 用于更新的数据进行清零 */
-    air_instance->SWA = 0;
-    air_instance->SWB = 0;
-    air_instance->SWC = 0;
-    air_instance->SWD = 0;
-    air_instance->LEFT_X = 0;
-    air_instance->LEFT_Y = 0;
-    air_instance->RIGHT_X = 0;
-    air_instance->RIGHT_Y = 0;
+    air_instance->SWA = 1000;
+    air_instance->SWB = 1000;
+    air_instance->SWC = 1000;
+    air_instance->SWD = 1000;
+    air_instance->LEFT_X = 1500;
+    air_instance->LEFT_Y = 1500;
+    air_instance->RIGHT_X = 1500;
+    air_instance->RIGHT_Y = 1500;
     air_instance->last_ppm_time = 0;
     air_instance->now_ppm_time = 0;
     air_instance->ppm_ready = 0;
@@ -61,6 +61,11 @@ uint8_t Air_Joy_Init(GPIO_Instance_t *gpio_instance,Process_method_e method)
 
     /* 注册发布者 */
     air_instance->air_joy_pub = register_pub("air_joy_pub");
+
+    air_instance->control_data.linear_x = 0;
+    air_instance->control_data.linear_y = 0;
+    air_instance->control_data.Omega = 0;
+    air_instance->control_data.Status = 0;
     return 1;
 }
 
@@ -121,6 +126,7 @@ static void update_trapezoidal_state(TrapezoidalState *state, float target_veloc
     }
 }
 
+
 void Air_Joy_Process()
 {
     /* 在最前面提供拨杆处理，优先处理拨杆再处理摇杆 */
@@ -153,9 +159,9 @@ void Air_Joy_Process()
     switch(air_instance->process_method)
     {
         case NORMAL:
-            air_instance->control_data.linear_x = (air_instance->LEFT_Y - 1500) / 500.0f * 3.0f;
-            air_instance->control_data.linear_y = (air_instance->LEFT_X - 1500) / 500.0f * 3.0f;
-            air_instance->control_data.Omega = (air_instance->RIGHT_X - 1500) / 500.0f * 4.0f;
+            air_instance->control_data.linear_x = (air_instance->LEFT_Y - 1500) / 500.0f * MAX_VELOCITY;
+            air_instance->control_data.linear_y = -(air_instance->LEFT_X - 1500) / 500.0f * MAX_VELOCITY;
+            air_instance->control_data.Omega = (air_instance->RIGHT_X - 1500) / 500.0f * MAX_VELOCITY;
             Air_Joy_Publish();
             break;
         case TRAPEZOIDAL:

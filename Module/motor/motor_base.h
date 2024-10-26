@@ -14,6 +14,9 @@
  *              !!!存进CCMRAM的操作，直接对整个类的实例进行操作即可，经过试验不可以在类内进行数据存进CCMRAM的操作
  *              对于派生类中重载基类的函数，请务必加上 override 声明，以便于阅读
  *              对于不会修改的变量，请加上 const 声明，以便于阅读，这是一种声明，也是一种约定
+ *              注意motor只是一个模块设备，需要包含motor的app主动去调用motor的一系列初始化函数
+ * 
+ *              c++小知识：类的初始化列表比构造函数更先执行，所以构造函数写的内容会将初始化列表中的东西覆盖
  * 
  * @note :      
  * @versioninfo :
@@ -22,6 +25,8 @@
  *         更新机制放在update方法中
  *         2.明确各模块职责，这里只是电机封装，但是电机并非只是用来充当底盘的动力系统
  *          电机可以是其他的机构，所以这里不做对什么轮子做处理,一切均为以转子刻画的速度以及减速箱减速下的速度
+ * 
+ *         3.将减速箱配置加入到类的创建中
  */
 #pragma once
 
@@ -37,8 +42,8 @@
 extern "C"{
 #endif
 
-#define RAD_2_DEGREE                        57.2957795f    // 180/pi  角度转换成弧度
-#define DEGREE_2_RAD                        0.01745329252f // pi/180  弧度转化位角度
+#define RAD_2_DEGREE                        57.2957795f    // 180/pi  弧度转换成角度
+#define DEGREE_2_RAD                        0.01745329252f // pi/180  角度转化成弧度
 #define RPM_PER_MIN_2_ANGLE_PER_SEC         6.0f        // 360/60,转每分钟 转化 度每秒    
 #define RPM_PER_MIN_2_RAD_PER_SEC           0.104719755f // ×2pi/60sec,转每分钟 转化 弧度每秒
 
@@ -117,9 +122,38 @@ public:
         : ID(id), 
           can_tx_for_motor{can_tx_instance},can_rx_for_motor{can_rx_instance},
           ctrl_motor_config(ctrl_config),
-          max_current(max_current), motor_reduction_ratio(reduction_ratio){}
+          max_current(max_current), if_reduction(reduction_ratio)
+          {
+            if(reduction_ratio == 1)
+            {
+                this->if_reduction = 1;
+            }
+            else if(reduction_ratio == -1)
+            {
+                this->if_reduction = -1;
+            }
+            else
+            {
+                this->if_reduction = reduction_ratio;
+            } 
+          }
     virtual ~Motor(){}
     const uint8_t ID = 0;
+
+    /* 电机控制器初始化 */
+    uint8_t MotorController_Init()
+    {
+        /* 目前对于电机内环通常使用pid控制器 */
+        if(this->ctrl_motor_config.inner_loop_type == SPEED_LOOP)
+        {
+            PID_Init(&this->ctrl_motor_config.motor_controller_setting.speed_PID);
+        }
+        else if(this->ctrl_motor_config.inner_loop_type == ANGLE_LOOP)
+        {
+            PID_Init(&this->ctrl_motor_config.motor_controller_setting.angle_PID);
+        }
+        return 1;
+    }
 
     /* 电机数值更新 */
     virtual void update(uint8_t can_rx_data[]) = 0;
@@ -134,8 +168,9 @@ public:
     /* 声明can句柄，表明这里是一个can设备 */
      CAN_Tx_Instance_t can_tx_for_motor = {0};
      CAN_Rx_Instance_t can_rx_for_motor = {0};
-
+     /* 声明控制器句柄 */
      Motor_Control_Setting_t ctrl_motor_config = {0};
+
      virtual void set_motor_ref(float ref)= 0;// 设置电机参考值
      virtual void stop_the_motor() = 0;// 急停电机
      virtual void enable_the_motor() = 0;// 使能电机
@@ -155,6 +190,8 @@ public:
      float last_speed_aps = 0;// 上一次转子角速度
      float alpha = 0.55f;// 转子速度滤波系数
      float beta = 0.85f;// 转子角速度滤波系数
+    
+     float motor_acceleration = 0;// 电机加速度
 
      inline float get_speed_after_low(){ return this->speed / motor_reduction_ratio; }// 获取减速箱操作之后的速度
      inline float get_speed_aps_after_low(){ return this->speed_aps / motor_reduction_ratio; }// 获取减速箱操作之后的角速度
@@ -163,7 +200,9 @@ public:
      /* 电机当前温度 */
      int16_t motor_temperature = 0;
 
-
+    /* 硬件强实时 */
+     uint32_t DWT_CNT = 0;
+     float dt = 0;
 public:
 
     /* 核心待重载函数---须经具体电机种类型号进行重载 */
@@ -172,16 +211,22 @@ public:
     inline virtual void update_speed(uint8_t can_rx_data[]){}// 更新电机速度
     inline virtual void update_speed_aps(){}// 更新电机角速度,依赖更新电机速度，要在更新电机速度后才能调用
     inline virtual void update_current(uint8_t can_rx_data[]){}// 更新电机电流值
-    inline virtual void updata_temperature(uint8_t can_rx_data[]){}// 更新电机温度
-protected:
-    /* 基类的保护变量，初始化按的大疆电机初始化来的 */
+    inline virtual void update_temperature(uint8_t can_rx_data[]){}// 更新电机温度
+    inline virtual void update_motor_acceleration(){}// 更新电机角加速度,依赖更新电机角速度,需在更新电机角速度后才能调用
+protected:    
      float total_angle = 0;// 总角度，注意方向
-     uint32_t round_cnt = 0;// 编码器圈数
-     int16_t encoder_max = 8192;//  
+     int32_t round_cnt = 0;// 编码器圈数
+     int16_t encoder_max = 8192;//  一圈360度分为8192编码
      float encoder_angle_ratio = 8192.0f / 360.0f;// 编码器角度比
-     int16_t max_current = 0;// 最大电流
-     uint8_t motor_reduction_ratio = 0;// 电机减速比
 
+
+     int16_t max_current = 0;// 最大电流
+
+     int8_t if_reduction = 0;// 用于配置减速比输出
+     int8_t motor_reduction_ratio = 0;// 电机减速比
+     
+     float temp_last_speed_aps = 0;
+     float temp_last_motor_acceleration = 0;
 };
 
 /*----------------------------------Template-----------------------------------*/

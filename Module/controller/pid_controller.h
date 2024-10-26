@@ -170,25 +170,9 @@ typedef struct PACKED pid_t
     void (*User_Func2_f)(struct pid_t *pid);
 } PID_t;
 
-void PID_Init(
-    PID_t *pid,
-    float max_out,
-    float intergral_limit,
-    float deadband,
+void PID_Init(PID_t *pid);
 
-    float kp,
-    float ki,
-    float kd,
 
-    float A,
-    float B,
-
-    float output_lpf_rc,
-    float derivative_lpf_rc,
-
-    uint16_t ols_order,
-
-    uint8_t improve);
 float PID_Calculate(PID_t *pid, float measure, float ref);
 
 /*************************** FEEDFORWARD CONTROL *****************************/

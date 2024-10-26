@@ -27,6 +27,7 @@ public:
     Omni_Chassis(size_t wheel_num,float wheel_radius,float wheel_to_center) :Chassis(wheel_num,wheel_radius),Wheel_To_Center(wheel_to_center){}
     virtual ~Omni_Chassis() = default;
 
+    virtual void Chassis_TrackingController_Init() override;
     virtual float Kinematics_Inverse_Resolution(size_t count,Robot_Twist_t ref_twist) override;
     virtual void Kinematics_forward_Resolution(float wheel_1,float wheel_2,float wheel_3,float wheel_4);
     virtual void Dynamics_Inverse_Resolution() override;

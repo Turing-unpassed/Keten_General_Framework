@@ -68,12 +68,8 @@ float ref_in = 0;
  *        目标就是计算Out值，这个值是电流值，单位为mA
  * 
  */
-Motor_PIDController_Setting_t temp_pidcontrol_setting;
 void RM_Common::pid_control_to_motor() 
 {
-
-    temp_pidcontrol_setting = this->ctrl_motor_config.motor_controller_setting;
-
     if(this->ctrl_motor_config.motor_working_status == MOTOR_STOP)
     {
         /* 电机失能，直接让输出电流为0 */
@@ -81,8 +77,8 @@ void RM_Common::pid_control_to_motor()
         return;
     }
     float pid_ref,pid_measure;
-    
     pid_ref = this->ctrl_motor_config.motor_controller_setting.pid_ref;
+
     if(this->ctrl_motor_config.motor_is_reverse_flag == MOTOR_DIRECTION_REVERSE)
     {
        pid_ref *=-1;
@@ -91,15 +87,15 @@ void RM_Common::pid_control_to_motor()
     /* 位置环计算，只有外部闭环为位置环且内部启用位置环，才会进行位置环计算输出 */
     if((this->ctrl_motor_config.outer_loop_type & ANGLE_LOOP) && (this->ctrl_motor_config.inner_loop_type & ANGLE_LOOP))
     {
-        pid_measure = this->total_angle;
-        pid_ref = PID_Calculate(&temp_pidcontrol_setting.angle_PID,pid_measure,pid_ref);
+        pid_measure = this->angle;
+        pid_ref = PID_Calculate(&this->ctrl_motor_config.motor_controller_setting.angle_PID,pid_measure,pid_ref);
     }
 
     /* 速度环计算，只有外部闭环为速度环且内部启用位置环或速度环才会进行速度环计算输出 */
     if((this->ctrl_motor_config.outer_loop_type & SPEED_LOOP) && (this->ctrl_motor_config.inner_loop_type & (SPEED_LOOP|ANGLE_LOOP)))
     {
         pid_measure = this->speed_aps;
-        pid_ref = PID_Calculate(&temp_pidcontrol_setting.speed_PID,pid_measure,pid_ref);
+        pid_ref = PID_Calculate(&this->ctrl_motor_config.motor_controller_setting.speed_PID,pid_measure,pid_ref);
     }
     this->Out = this->aps_to_current(pid_ref);
     ref_in = this->Out;

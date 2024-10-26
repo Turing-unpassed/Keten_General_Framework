@@ -37,8 +37,10 @@
         "bsp_gpio.h": "c",
         "gpio.h": "c",
         "air_joy.h": "c",
-        "cmsis_os2.h": "c"
+        "cmsis_os2.h": "c",
+        "pid_controller.h": "c"
     },
     "C_Cpp.default.compilerPath": "c:/msys64/mingw64/bin/arm-none-eabi-g++.exe",
-    "C_Cpp.errorSquiggles": "enabled"
+    "C_Cpp.errorSquiggles": "enabled",
+    "makefile.makefilePath": "ToolChain/Makefile"
 }

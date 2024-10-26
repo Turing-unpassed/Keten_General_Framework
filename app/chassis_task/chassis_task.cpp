@@ -32,7 +32,8 @@
 /* freertos任务 */
 osThreadId_t Chassis_TaskHandle;
 
-#ifdef TEST_SYSTEM_TURNER
+#ifdef TEST_SYSTEM_M2006
+
 /* 系统辨识调试使用 */
 CAN_Tx_Instance_t m2006_tx_instance = {
     .can_handle = &hcan2,
@@ -51,22 +52,20 @@ CAN_Rx_Instance_t m2006_rx_instance = {
     .can_rx_buff = {0},
 };
 
-
 Motor_Control_Setting_t m2006_control_instance = {
-    .motor_controller_setting = {
-        .speed_PID = {
-            .Kp = 0.4327,
-            .Ki = 2.7885,
-            .Kd = 0,           
-            .MaxOut = 10000,
-            .IntegralLimit = 1000,
-            .DeadBand = 100,
-            .Output_LPF_RC = 0.5,
-            .Derivative_LPF_RC = 0.5,
-            .OLS_Order = 1,
-            .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
-        },
-        .pid_ref = 0,
+    .motor_controller_setting.speed_PID = {
+        .Kp = 20,
+        .Ki = 18.6129837,
+        .Kd = 0.0911037326,
+        .MaxOut = 10000,
+        .IntegralLimit = 3000,
+        .DeadBand = 10,
+        .CoefA = 0,
+        .CoefB = 0,
+        .Output_LPF_RC = 0,
+        .Derivative_LPF_RC = 0,
+        .OLS_Order = 0,
+        .Improve = OutputFilter | Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement, 
     },
     .outer_loop_type = SPEED_LOOP,
     .inner_loop_type = SPEED_LOOP,
@@ -74,10 +73,57 @@ Motor_Control_Setting_t m2006_control_instance = {
     .motor_working_status = MOTOR_ENABLED,
 };
 
-
-Motor_C610 m2006[1] = {Motor_C610(1,m2006_rx_instance,m2006_tx_instance,m2006_control_instance)};
+Motor_C610 m2006[1] = {Motor_C610(1,m2006_rx_instance,m2006_tx_instance,m2006_control_instance,-1)};
 
 #endif 
+
+#ifdef TEST_SYSTEM_GM6020
+// 测试GM6020电机
+CAN_Tx_Instance_t gm6020_tx_instance = {
+    .can_handle = &hcan1,
+    .isExTid = 0,
+    .tx_mailbox = 0,
+    .tx_id = 0x1FF,
+    .tx_len = 8,
+    .can_tx_buff = {0},
+};
+
+CAN_Rx_Instance_t gm6020_rx_instance = {
+    .can_handle = &hcan1,
+    .RxHeader = {0},
+    .rx_len = 8,
+    .rx_id = 0x205,// gm6020电机 接收id 0x204+ID
+    .can_rx_buff = {0},
+};
+
+
+Motor_Control_Setting_t gm6020_control_instance = {
+    .motor_controller_setting = {
+        .angle_PID = {
+            .Kp = 1500,
+            .Ki = 100,
+            .Kd = 190,           
+            .MaxOut = 50000,
+            .IntegralLimit = 20000,
+            .DeadBand = 0.05,
+            .Output_LPF_RC = 0.5,
+            .Derivative_LPF_RC = 0.5,
+            .OLS_Order = 1,
+            .DWT_CNT = 0,
+            .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
+        },
+        .pid_ref = 0,
+    },
+    .outer_loop_type = ANGLE_LOOP,
+    .inner_loop_type = ANGLE_LOOP,
+    .motor_is_reverse_flag = MOTOR_DIRECTION_NORMAL,
+    .motor_working_status = MOTOR_ENABLED,
+};
+
+Motor_GM6020 gm6020[1] = {Motor_GM6020(1,gm6020_rx_instance,gm6020_tx_instance,gm6020_control_instance,-1)};
+
+#endif 
+
 
 /* 即使是大疆电机，也最好做好定义,统一can设备使用方式 */
 
@@ -102,22 +148,23 @@ CAN_Rx_Instance_t m3508_lf_rx_instance = {
 Motor_Control_Setting_t m3508_lf_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 8.0,
-            .Ki = 0.0,
-            .Kd = 0.0,
+            .Kp = 100,
+            .Ki = 39.9388206132998,
+            .Kd = 5,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .Output_LPF_RC = 0.2,
-            .Derivative_LPF_RC = 0.5,
+            .DeadBand = 8,
+            .Output_LPF_RC = 0.5,
+            .Derivative_LPF_RC = 0,
             .OLS_Order = 1,
-            .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
+            .Improve = OutputFilter | Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
         },
         .pid_ref = 0,
     },
-    .outer_loop_type = SPEED_LOOP,
-    .inner_loop_type = SPEED_LOOP,
-    .motor_is_reverse_flag = MOTOR_DIRECTION_NORMAL,
-    .motor_working_status = MOTOR_ENABLED,
+    .outer_loop_type = SPEED_LOOP,// 外环控制为速度环
+    .inner_loop_type = SPEED_LOOP,// 内环控制为速度环
+    .motor_is_reverse_flag = MOTOR_DIRECTION_NORMAL,// 正转
+    .motor_working_status = MOTOR_ENABLED,// 使能电机
 };
 
 /* m3508电机作rf电机 */
@@ -140,12 +187,13 @@ CAN_Rx_Instance_t m3508_rf_rx_instance = {
 Motor_Control_Setting_t m3508_rf_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 8.0,
-            .Ki = 0.0,
-            .Kd = 0.0,
+            .Kp = 100,
+            .Ki = 39.9388206132998,
+            .Kd = 5,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .Output_LPF_RC = 0.2,
+            .DeadBand = 8,
+            .Output_LPF_RC = 0.5,
             .Derivative_LPF_RC = 0.5,
             .OLS_Order = 1,
             .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
@@ -179,12 +227,13 @@ CAN_Rx_Instance_t m3508_rb_rx_instance = {
 Motor_Control_Setting_t m3508_rb_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 8.0,
-            .Ki = 0.0,
-            .Kd = 0.0,
+            .Kp = 100,
+            .Ki = 39.9388206132998,
+            .Kd = 5,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .Output_LPF_RC = 0.2,
+            .DeadBand = 8,
+            .Output_LPF_RC = 0.5,
             .Derivative_LPF_RC = 0.5,
             .OLS_Order = 1,
             .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
@@ -217,12 +266,13 @@ CAN_Rx_Instance_t m3508_lb_rx_instance = {
 Motor_Control_Setting_t m3508_lb_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 8.5,
-            .Ki = 0.0,
-            .Kd = 0.0,
+            .Kp = 100,
+            .Ki = 39.9388206132998,
+            .Kd = 5,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .Output_LPF_RC = 0.2,
+            .DeadBand = 8,
+            .Output_LPF_RC = 0.5,
             .Derivative_LPF_RC = 0.5,
             .OLS_Order = 1,
             .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
@@ -238,10 +288,10 @@ Motor_Control_Setting_t m3508_lb_control_instance = {
 
 /* 实例化电机，存进读取速度更快的CCMRAM */
 
-CCMRAM Motor_C620 chassis_motor[4] = {Motor_C620(1,m3508_lf_rx_instance,m3508_lf_tx_instance,m3508_lf_control_instance), 
-                                      Motor_C620(2,m3508_rf_rx_instance,m3508_rf_tx_instance,m3508_rf_control_instance),
-                                      Motor_C620(3,m3508_rb_rx_instance,m3508_rb_tx_instance,m3508_rb_control_instance), 
-                                      Motor_C620(4,m3508_lb_rx_instance,m3508_lb_tx_instance,m3508_lb_control_instance)};
+CCMRAM Motor_C620 chassis_motor[4] = {Motor_C620(1,m3508_lf_rx_instance,m3508_lf_tx_instance,m3508_lf_control_instance,-1), 
+                                      Motor_C620(2,m3508_rf_rx_instance,m3508_rf_tx_instance,m3508_rf_control_instance,-1),
+                                      Motor_C620(3,m3508_rb_rx_instance,m3508_rb_tx_instance,m3508_rb_control_instance,-1), 
+                                      Motor_C620(4,m3508_lb_rx_instance,m3508_lb_tx_instance,m3508_lb_control_instance,-1)};
 
  /* 创建底盘实例 */
 Omni_Chassis User_Chassis(4,WHEEL_R,CHASSIS_R);
@@ -258,35 +308,49 @@ Subscriber *air_data_sub;
 pub_Control_Data twist;  
 #endif
 
+
 uint8_t Chassis_Init()
 {
-    /* 底盘扭矩控制pid */
+    /* 电机pid控制器初始化 */
+    for(size_t i = 0;i < 4;i++)
+    {
+        chassis_motor[i].MotorController_Init();
+    }
+
+    /* 底盘控制器pid */
+    User_Chassis.Chassis_TrackingController_Init();
     User_Chassis.Chassis_PID_X = {
-        .Kp = 30.0,
-        .Ki = 0.5,
-        .Kd = 0.0,
-        .MaxOut = 70.0,
+        .Kp = 8,
+        .Ki = 25,
+        .Kd = 0.7,
+        .MaxOut = 1.3,
         .IntegralLimit = 70.0,
-        .Output_LPF_RC = 0.2,
-        .Improve = Integral_Limit|OutputFilter,
+        .DeadBand = 0.1,
+        .Output_LPF_RC = 0.85,
+        // .Derivative_LPF_RC = 0.2,
+        .Improve = Integral_Limit|OutputFilter|DerivativeFilter,
     };
     User_Chassis.Chassis_PID_Y = {
-        .Kp = 30.0,
-        .Ki = 0.5,
-        .Kd = 0.0,
-        .MaxOut = 70.0,
+        .Kp = 8,
+        .Ki = 25,
+        .Kd = 0.7,
+        .MaxOut = 1000,
         .IntegralLimit = 70.0,
-        .Output_LPF_RC = 0.2,
-        .Improve = Integral_Limit|OutputFilter,
+        .DeadBand = 0.1,
+        .Output_LPF_RC = 0.85,
+        // .Derivative_LPF_RC = 0.2,
+        .Improve = Integral_Limit|OutputFilter|DerivativeFilter,
     };
     User_Chassis.Chassis_PID_Omega = {
-        .Kp = 30.0,
-        .Ki = 0.5,
-        .Kd = 0.0,
-        .MaxOut = 70.0,
+        .Kp = 8,
+        .Ki = 25,
+        .Kd = 0.7,
+        .MaxOut = 1000,
         .IntegralLimit = 70.0,
-        .Output_LPF_RC = 0.2,
-        .Improve = Integral_Limit|OutputFilter,
+        .DeadBand = 0.1,
+        .Output_LPF_RC = 0.85,
+        // .Derivative_LPF_RC = 0.2,
+        .Improve = Integral_Limit|OutputFilter|DerivativeFilter,
     };
 
     User_Chassis.Chassis_Subscribe_Init();
@@ -300,10 +364,10 @@ uint8_t Chassis_Init()
     /* vofa订阅者准备 */
     motor_pid_sub = register_sub("vofa_pub",1);
 #endif
+
+
     return 1;
 }
-
-
 
 
 __attribute((noreturn)) void Chassis_Task(void *argument)
