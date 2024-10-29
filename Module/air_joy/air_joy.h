@@ -45,6 +45,15 @@ typedef struct
     float target_velocity;
 }TrapezoidalState;
 
+typedef enum
+{
+    NONE_EVENT = 0x00,
+    SWA_EVENT = 0x01,// swa 被置位
+    SWB_EVENT = 0x02,// swb 被置位
+    SWC_EVENT = 0x04,// swc 被置位
+    SWD_EVENT = 0x08,// swd 被置位
+}SWO_EVENT_e;
+
 typedef struct
 {
     GPIO_Instance_t *air_joy_gpio;
@@ -57,6 +66,9 @@ typedef struct
     uint8_t ppm_sample_cnt;
     uint8_t ppm_update_flag;
     uint16_t ppm_time_delta;
+
+    uint16_t last_swo_buf[4];
+    uint8_t swo_event;
     /* 控制模式 */
     Process_method_e process_method;
 

@@ -21,6 +21,7 @@ void Omni_Chassis::Chassis_TrackingController_Init()
    PID_Init(&this->Chassis_PID_X);
    PID_Init(&this->Chassis_PID_Y);
    PID_Init(&this->Chassis_PID_Omega);
+   PID_Init(&this->Chassis_Yaw_Adjust);
 }
 
 
@@ -101,6 +102,7 @@ void Omni_Chassis::Kinematics_forward_Resolution(float wheel_1,float wheel_2,flo
 
 /**
  * @brief 动力学逆解算
+ * @update 2024-10-29 添加了在机器人坐标系下或世界坐标系下保持X轴或Y轴方向移动的功能，待测试
  * 
  */
 void Omni_Chassis::Dynamics_Inverse_Resolution()
@@ -117,19 +119,50 @@ void Omni_Chassis::Dynamics_Inverse_Resolution()
       }
       case ROBOT_CHASSIS:
       {
-         force_x = PID_Calculate(&this->Chassis_PID_X,this->RoboSpeed.linear_x,this->Ref_RoboSpeed.linear_x);
-         force_y = PID_Calculate(&this->Chassis_PID_Y,this->RoboSpeed.linear_y,this->Ref_RoboSpeed.linear_y);
-         torque_omega = PID_Calculate(&this->Chassis_PID_Omega,this->RoboSpeed.omega,this->Ref_RoboSpeed.omega);
+         switch(this->Moving_Status)
+         {
+            case FREE:
+               force_x = PID_Calculate(&this->Chassis_PID_X,this->RoboSpeed.linear_x,this->Ref_RoboSpeed.linear_x);
+               force_y = PID_Calculate(&this->Chassis_PID_Y,this->RoboSpeed.linear_y,this->Ref_RoboSpeed.linear_y);
+               torque_omega = PID_Calculate(&this->Chassis_PID_Omega,this->RoboSpeed.omega,this->Ref_RoboSpeed.omega);
+               break;
+            case KEEP_X_MOVING:
+               force_x = PID_Calculate(&this->Chassis_PID_X,this->RoboSpeed.linear_x,this->Ref_RoboSpeed.linear_x);
+               force_y = 0;
+               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
+               break;
+            case KEEP_Y_MOVING:
+               force_x = 0;
+               force_y = PID_Calculate(&this->Chassis_PID_Y,this->RoboSpeed.linear_y,this->Ref_RoboSpeed.linear_y);
+               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
+               break;
+         }
          break;
       }
       case WORLD_CHASSIS:
       {
-         force_x = PID_Calculate(&this->Chassis_PID_X,this->RoboSpeed.linear_x,this->Ref_WorldSpeed.linear_x);
-         force_y = PID_Calculate(&this->Chassis_PID_Y,this->RoboSpeed.linear_y,this->Ref_WorldSpeed.linear_y);
-         torque_omega = PID_Calculate(&this->Chassis_PID_Omega,this->RoboSpeed.omega,this->Ref_WorldSpeed.omega);
+         switch(this->Moving_Status)
+         {
+            case FREE:
+               force_x = PID_Calculate(&this->Chassis_PID_X,this->WorldSpeed.linear_x,this->Ref_WorldSpeed.linear_x);
+               force_y = PID_Calculate(&this->Chassis_PID_Y,this->WorldSpeed.linear_y,this->Ref_WorldSpeed.linear_y);
+               torque_omega = PID_Calculate(&this->Chassis_PID_Omega,this->WorldSpeed.omega,this->WorldSpeed.omega);
+               break;
+            case KEEP_X_MOVING:
+               force_x = PID_Calculate(&this->Chassis_PID_X,this->WorldSpeed.linear_x,this->Ref_WorldSpeed.linear_x);
+               force_y = 0;
+               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
+               break;
+            case KEEP_Y_MOVING:
+               force_x = 0;
+               force_y = PID_Calculate(&this->Chassis_PID_Y,this->WorldSpeed.linear_y,this->Ref_WorldSpeed.linear_y);
+               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
+               break;
+         }
          break;
       }
    }
+
    this->ref_twist.linear_x = force_x;
    this->ref_twist.linear_y = force_y;
    this->ref_twist.omega = torque_omega;

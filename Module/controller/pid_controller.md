@@ -2,6 +2,8 @@
 https://zhuanlan.zhihu.com/p/468741326
 根据文章所述，pid控制算法可以分为两类：专家pid 和 模糊pid
 专家pid 就是下面所要说的pid控制器优化选项
+
+2024年10月29日写：一则调参经验，速度环不建议加死区，会导致output = 0 造成电机转动卡顿，位置环需加死区，加快收敛
 # pid控制器优化选项
 - 何为“专家”，因为这些优化选项本质上是使用传统pid时所会遇到的问题，而“专家”则代表着“经验”
 - 下面是pid_controller中所提供的一些优化选项
@@ -33,23 +35,24 @@ typedef enum pid_Improvement_e
 pid->CoefA = A;
 pid->CoefB = B;
 ```
-设置CoefA 和 CoefB 就是设置两个阈值，注意设置大小的顺序
+设置CoefA 和 CoefB 就是设置两个阈值，注意设置大小的顺序：
+代码中是这样写的：
 ```c
 static void f_Changing_Integration_Rate(PID_t *pid)
 {
     if (pid->Err * pid->Iout > 0)
     {
-        // 积分呈累积趋势
+        // still integral
         if (abs(pid->Err) <= pid->CoefB)
-            return; // Full integral
+            return; // when err <= CoefB , Full integral 
         if (abs(pid->Err) <= (pid->CoefA + pid->CoefB))
-            pid->ITerm *= (pid->CoefA - abs(pid->Err) + pid->CoefB) / pid->CoefA;// 变速积分 CoefA <
+            pid->ITerm *= (pid->CoefA - abs(pid->Err) + pid->CoefB) / pid->CoefA;// when CoefB < err <= CoefA + CoefB , change the speed of integral
         else
-            // 误差较大，停止积分，避免积分饱和过冲
-            pid->ITerm = 0;
+            pid->ITerm = 0;// when err ? CoefA + CoefB , stop integral 
     }
 }
 ```
+
 
 
 ## 梯形积分

@@ -15,6 +15,7 @@
 
 
 static void update_trapezoidal_state(TrapezoidalState *state, float target_velocity);
+static void Air_SWO_Event_Process();
 
 
 // 留一个指针值，不管最终有无创建，也只占4字节的指针内存
@@ -111,7 +112,28 @@ void Air_Update(void *instance)
         air_instance->ppm_sample_cnt = 0;
         air_instance->ppm_update_flag = 0;
     }
-}
+
+    if(air_instance->SWA - air_instance->last_swo_buf[0] >= 500 || air_instance->SWA - air_instance->last_swo_buf[0] <= -500)
+    {
+        air_instance->swo_event |= SWA_EVENT;
+    }
+    else if(air_instance->SWB - air_instance->last_swo_buf[1] >= 500 || air_instance->SWB - air_instance->last_swo_buf[1] <= -500)
+    {
+        air_instance->swo_event |= SWB_EVENT;
+    }
+    else if(air_instance->SWC - air_instance->last_swo_buf[2] >= 500 || air_instance->SWC - air_instance->last_swo_buf[2] <= -500)
+    {
+        air_instance->swo_event |= SWC_EVENT;
+    }
+    else if(air_instance->SWD - air_instance->last_swo_buf[3] >= 500 || air_instance->SWD - air_instance->last_swo_buf[3] <= -500)
+    {
+        air_instance->swo_event |= SWD_EVENT; 
+    }
+    air_instance->last_swo_buf[0] = air_instance->SWA;
+    air_instance->last_swo_buf[1] = air_instance->SWB;
+    air_instance->last_swo_buf[2] = air_instance->SWC;
+    air_instance->last_swo_buf[3] = air_instance->SWD;
+}   
 
 
 static void update_trapezoidal_state(TrapezoidalState *state, float target_velocity) 
@@ -126,28 +148,66 @@ static void update_trapezoidal_state(TrapezoidalState *state, float target_veloc
     }
 }
 
-
-void Air_Joy_Process()
+static void Air_SWO_Event_Process()
 {
-    /* 在最前面提供拨杆处理，优先处理拨杆再处理摇杆 */
-    if(air_instance->LEFT_X!=0||air_instance->LEFT_Y!=0||air_instance->RIGHT_X!=0||air_instance->RIGHT_Y!=0)            
+    if(air_instance->swo_event == 0) 
+    {
+        return;
+    }
+    if(air_instance->swo_event & SWB_EVENT)
     {
         if(air_instance->SWB > 950 && air_instance->SWB < 1050)
         {
             // 三档拨杆，最上状态
             air_instance->control_data.Status = 0;
+            air_instance->swo_event &= ~SWB_EVENT;
+            return;
         }
         if(air_instance->SWB > 1450 && air_instance->SWB < 1550)
         {
             // 三档拨杆，中间状态
             air_instance->control_data.Status = 1;
+            air_instance->swo_event &= ~SWB_EVENT;
+            return;
         }
         if(air_instance->SWB > 1950 && air_instance->SWB < 2050)
         {
             // 三档拨杆，最下状态
             air_instance->control_data.Status = 2;
+            air_instance->swo_event &= ~SWB_EVENT;
+            return;
         }
     }
+    if(air_instance->swo_event & SWC_EVENT)
+    {
+        if(air_instance->SWC > 950 && air_instance->SWC < 1050)
+        {
+            // 三档拨杆，最上状态
+            air_instance->control_data.Move = 0;
+            air_instance->swo_event &= ~SWC_EVENT;
+            return;
+        }
+        if(air_instance->SWC > 1450 && air_instance->SWC < 1550)
+        {
+            // 三档拨杆，中间状态
+            air_instance->control_data.Move = 1;
+            air_instance->swo_event &= ~SWC_EVENT;
+            return;
+        }
+        if(air_instance->SWC > 1950 && air_instance->SWC < 2050)
+        {
+            // 三档拨杆，最下状态
+            air_instance->control_data.Move = 2;
+            air_instance->swo_event &= ~SWC_EVENT;
+            return;
+        }
+    }
+}
+
+void Air_Joy_Process()
+{
+    /* 在最前面提供拨杆处理，优先处理拨杆再处理摇杆 */
+    Air_SWO_Event_Process();
     if(air_instance->LEFT_X > 1400 && air_instance->LEFT_X < 1600)
         air_instance->LEFT_X = 1500;
     if(air_instance->LEFT_Y > 1400 && air_instance->LEFT_Y < 1600)  
@@ -156,6 +216,7 @@ void Air_Joy_Process()
         air_instance->RIGHT_X = 1500;
     if(air_instance->RIGHT_Y > 1400 && air_instance->RIGHT_Y < 1600)
         air_instance->RIGHT_Y = 1500;
+
     switch(air_instance->process_method)
     {
         case NORMAL:

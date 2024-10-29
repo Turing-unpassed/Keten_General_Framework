@@ -62,13 +62,14 @@ add_definitions(
     -DDEBUG_FOR_ACTION 
     -DUSE_ACTION_FOR_IMU
     -DCHASSIS_TO_DEBUG
-    -DTEST_SYSTEM_TURNER
-    -DTEST_SYSTEM_M3508 
+    # -DTEST_SYSTEM_TURNER
+    # -DTEST_SYSTEM_M3508 
     # -DTEST_SYSTEM_M2006
     # -DTEST_SYSTEM_GM6020 
     -DDISABLE_LOG_SYSTEM
     # -DDISABLE_SYSVIEW_SYSTEM
-    # -DDEBUG_TASK_RUN 
+    -DDEBUG_TASK_RUN 
+    # -DDEBUG_NO_TRACKING
     ) # need -D<macro> to define macro
     
 
@@ -119,7 +120,7 @@ elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
 else ()
     message(STATUS "Minimal optimization, debug info included")
     add_compile_options(-Og -g -gdwarf-2)
-add_definitions(-DESC_DEBUG) # ESC Debug
+    add_definitions(-DESC_DEBUG) # ESC Debug
 endif ()
 
 # build binary and hex file 生成目标.elf 可执行文件

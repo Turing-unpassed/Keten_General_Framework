@@ -94,6 +94,7 @@ typedef enum pid_Improvement_e
     ChangingIntegrationRate = 0x20,     //0010 0000 变速积分
     DerivativeFilter = 0x40,            //0100 0000 微分滤波（LR）
     ErrorHandle = 0x80,                 //1000 0000 错误处理（电机堵转）
+    IMCREATEMENT_OF_OUT = 0x100,        //0001 0000 0000 启用增量式输出
 } PID_Improvement_e;
 
 
@@ -131,9 +132,11 @@ typedef struct PACKED pid_t
     float Kd;
 
     float Measure;
-    float Last_Measure;
+    float Last_Measure;// 上次的测量值
+    float Eriler_Measure;// 上上次的测量值
     float Err;
-    float Last_Err;
+    float Last_Err;// 上一次的error
+    float Eriler_Err;// 上上次的error
     float Last_ITerm;
 
     float Pout;
@@ -143,7 +146,7 @@ typedef struct PACKED pid_t
 
     float Output;
     float Last_Output;
-    float Last_Dout;
+    float Last_Dout;// 上一次的输出
 
     float MaxOut;
     float IntegralLimit;
@@ -162,7 +165,7 @@ typedef struct PACKED pid_t
 
     FuzzyRule_t *FuzzyRule;
 
-    uint8_t Improve;// 配置pid优化环节，使用 | 运算符连接，详细见枚举 PID_Improvement_e
+    uint16_t Improve;// 配置pid优化环节，使用 | 运算符连接，详细见枚举 PID_Improvement_e
 
     PID_ErrorHandler_t ERRORHandler;
 

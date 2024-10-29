@@ -45,6 +45,14 @@ typedef enum
     WORLD_CHASSIS,
 }Chassis_Status_e;
 
+typedef enum
+{
+    FREE = 0,// 全向模式
+    KEEP_X_MOVING,// 锁x轴方向移动
+    KEEP_Y_MOVING,// 锁y轴方向移动
+    AUTO_MOVING,// 自由移动
+}Moving_Status_e;
+
 /* 底盘基类 */
 class Chassis 
 {
@@ -58,9 +66,10 @@ public:
     PID_t Chassis_PID_X;
     PID_t Chassis_PID_Y;
     PID_t Chassis_PID_Omega;
+    PID_t Chassis_Yaw_Adjust;
 
-    Chassis_Status_e Chassis_Status = CHASSIS_STOP;// 初始化为机器人坐标系下控制
-
+    Chassis_Status_e Chassis_Status = CHASSIS_STOP;// 初始化为底盘失能状态
+    Moving_Status_e Moving_Status = FREE;// 初始化为全向移动状态
     /* 底盘所需pub-sub操作的初始化，必须调用 */
     uint8_t Chassis_Subscribe_Init()
     {
@@ -80,7 +89,7 @@ public:
         chassis_imu_data = this->chassis_imu_sub->getdata(this->chassis_imu_sub);
         if(chassis_imu_data.len != -1)
         {
-            imu_data = (pub_imu_yaw*)(chassis_imu_data.data);
+            this->imu_data = (pub_imu_yaw*)(chassis_imu_data.data);
         }
     }
     void Get_Current_Position()
@@ -100,6 +109,15 @@ public:
         this->WorldSpeed.linear_y = this->RoboSpeed.linear_x * SINANGLE + this->RoboSpeed.linear_y * COSANGLE;
         this->WorldSpeed.omega = this->RoboSpeed.omega;  
     }
+
+    void RefWorldSpeed_To_RefRoboSpeed()
+    {
+        float COSANGLE = arm_cos_f32(this->imu_data->yaw * DEGREE_2_RAD);// cos90 = 0
+        float SINANGLE = arm_sin_f32(this->imu_data->yaw * DEGREE_2_RAD);// sin90 = 1
+        this->Ref_RoboSpeed.linear_x = this->Ref_WorldSpeed.linear_x * COSANGLE - this->Ref_WorldSpeed.linear_y * SINANGLE;
+        this->Ref_RoboSpeed.linear_y = this->Ref_WorldSpeed.linear_x * SINANGLE + this->Ref_WorldSpeed.linear_y * COSANGLE;
+        this->Ref_RoboSpeed.omega = this->Ref_WorldSpeed.omega; 
+    }
 protected:
     /* 底盘速度pid跟踪器初始化,必须由派生类重写 */
     virtual void Chassis_TrackingController_Init(){};
@@ -109,8 +127,10 @@ protected:
     virtual void Kinematics_forward_Resolution(){}
     /* 动力学，扭矩分配,由派生类重写 */
     virtual void Dynamics_Inverse_Resolution(){}
-    /* 动力学输出 */
-
+    /* 保持X轴方向移动 */
+    virtual void Keep_X_Moving_Control(){}
+    /* 保持Y轴方向移动 */
+    virtual void Keep_Y_Moving_Control(){}
 public:
     Robot_Twist_t RoboSpeed = {0,0,0};// 机器人坐标系下速度
     Robot_Twist_t WorldSpeed = {0,0,0};// 世界坐标系下速度
@@ -140,7 +160,7 @@ extern "C"{
 #endif
 
 #define WHEEL_TO_MOTOR              RAD_2_DEGREE/(WHEEL_R)     // 将车身速度逆解算得到的驱动轮速度m/s向（经过减速箱之后的）电机的转子的角速度，单位为 度/s
-#define MOTOR_TO_WHEEL              (PI * WHEEL_R / (180.0))       // 将转子角速度换算到轮子实际线速度
+#define MOTOR_TO_WHEEL              (PI * WHEEL_R / (180.0))       // 将电机轴（即转子经过减速箱之后）角速度换算到轮子实际线速度
 #define SPEED_TO_RPM                60/(2*PI*WHEEL_R) // 将m/s转换为rpm/s
 #define RPM_TO_SPEED                2*PI*WHEEL_R/60   // 将rpm/s转换为m/s
 

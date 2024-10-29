@@ -88,6 +88,9 @@ extern uint8_t GlobalDebugMode;
 #define VAL_MIN(a, b) ((a) < (b) ? (a) : (b))
 #define VAL_MAX(a, b) ((a) > (b) ? (a) : (b))
 
+// 绝对值计算
+#define ABS(x)      ((x)>0? (x):(-(x)))
+
 typedef struct
 {
     float input;        // 输入数据

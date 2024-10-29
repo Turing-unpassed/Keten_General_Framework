@@ -34,7 +34,6 @@ uint8_t Common_Service_Init()
     return 1;
 }
 
-float speed_aps = 0;
 float motor_acceleration = 0;
 float angle = 0;
 float motor_current = 0;
@@ -57,7 +56,6 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
             case 0x203:
             {
                 chassis_motor[2].update(can_instance->can_rx_buff);
-                speed_aps = chassis_motor[2].speed_aps;
                 break;
             }
             case 0x204:

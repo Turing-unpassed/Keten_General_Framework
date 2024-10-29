@@ -10,17 +10,17 @@
  *        也就是说app层操作的是电机的外环
  *        电机内部电流环、速度环or位置环 封装在电机内部
  *        底盘调外环速度环，比较量是机器人实际速度和期望速度，然后将输出量作为电机的输入量
- * 
+ *        
  * 
  * @version 0.1
  * @date 2024-10-04
  * 
  * @copyright Copyright (c) 2024
  * 
- * @attention :
+ * @attention :底盘是一个由多个模块组成的机构，所以它的init会是多个模块的初始化耦合在一块
  * @note :
  * @versioninfo :
- * @todo :使用扭矩进行底盘控制（并且加入扭矩前馈），将坐标系换成更加通用的 上z前x左y
+ * @todo :使用扭矩进行底盘控制（并且加入扭矩前馈），将坐标系换成更加通用的 上z前x左y  -- done
  *        丰富底盘种类，目前打算加入：三全向轮、四全向轮、四舵轮、三舵轮  ---同时包括运动学正解算以及逆解算
  */
 #include "chassis_task.h"
@@ -124,9 +124,6 @@ Motor_GM6020 gm6020[1] = {Motor_GM6020(1,gm6020_rx_instance,gm6020_tx_instance,g
 
 #endif 
 
-
-/* 即使是大疆电机，也最好做好定义,统一can设备使用方式 */
-
 /* m3508电机作lf电机 */
 CAN_Tx_Instance_t m3508_lf_tx_instance = {
         .can_handle = &hcan1,
@@ -148,16 +145,16 @@ CAN_Rx_Instance_t m3508_lf_rx_instance = {
 Motor_Control_Setting_t m3508_lf_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 100,
-            .Ki = 39.9388206132998,
-            .Kd = 5,
+            .Kp = 80,
+            .Ki = 10,
+            .Kd = 8.5,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .DeadBand = 8,
-            .Output_LPF_RC = 0.5,
-            .Derivative_LPF_RC = 0,
+            .DeadBand = 5,
+            .Output_LPF_RC = 0.9,
+            .Derivative_LPF_RC = 0.85,
             .OLS_Order = 1,
-            .Improve = OutputFilter | Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
+            .Improve = OutputFilter | Trapezoid_Intergral | Derivative_On_Measurement | Integral_Limit
         },
         .pid_ref = 0,
     },
@@ -187,16 +184,16 @@ CAN_Rx_Instance_t m3508_rf_rx_instance = {
 Motor_Control_Setting_t m3508_rf_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 100,
-            .Ki = 39.9388206132998,
-            .Kd = 5,
+            .Kp = 80,
+            .Ki = 10,
+            .Kd = 8.5,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .DeadBand = 8,
-            .Output_LPF_RC = 0.5,
-            .Derivative_LPF_RC = 0.5,
+            .DeadBand = 5,
+            .Output_LPF_RC = 0.9,
+            .Derivative_LPF_RC = 0.85,
             .OLS_Order = 1,
-            .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
+            .Improve = OutputFilter|Trapezoid_Intergral | Derivative_On_Measurement | Integral_Limit
         },
         .pid_ref = 0,
     },
@@ -227,16 +224,16 @@ CAN_Rx_Instance_t m3508_rb_rx_instance = {
 Motor_Control_Setting_t m3508_rb_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 100,
-            .Ki = 39.9388206132998,
-            .Kd = 5,
+            .Kp = 80,
+            .Ki = 10,
+            .Kd = 8.8,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .DeadBand = 8,
-            .Output_LPF_RC = 0.5,
-            .Derivative_LPF_RC = 0.5,
+            .DeadBand = 5,
+            .Output_LPF_RC = 0.9,
+            .Derivative_LPF_RC = 0.85,
             .OLS_Order = 1,
-            .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
+            .Improve = OutputFilter|Trapezoid_Intergral | Derivative_On_Measurement |Integral_Limit
         },
         .pid_ref = 0,
     },
@@ -266,16 +263,16 @@ CAN_Rx_Instance_t m3508_lb_rx_instance = {
 Motor_Control_Setting_t m3508_lb_control_instance = {
     .motor_controller_setting = {
         .speed_PID = {
-            .Kp = 100,
-            .Ki = 39.9388206132998,
-            .Kd = 5,
+            .Kp = 80,
+            .Ki = 10,
+            .Kd = 8,
             .MaxOut = 10000,
             .IntegralLimit = 1000,
-            .DeadBand = 8,
-            .Output_LPF_RC = 0.5,
-            .Derivative_LPF_RC = 0.5,
+            .DeadBand = 5,
+            .Output_LPF_RC = 0.9,
+            .Derivative_LPF_RC = 0.85,
             .OLS_Order = 1,
-            .Improve = OutputFilter|Trapezoid_Intergral | Integral_Limit | Derivative_On_Measurement
+            .Improve = OutputFilter|Trapezoid_Intergral | Derivative_On_Measurement |Integral_Limit
         },
         .pid_ref = 0,
     },
@@ -320,41 +317,62 @@ uint8_t Chassis_Init()
     /* 底盘控制器pid */
     User_Chassis.Chassis_TrackingController_Init();
     User_Chassis.Chassis_PID_X = {
-        .Kp = 8,
+        .Kp = 15,
         .Ki = 25,
-        .Kd = 0.7,
-        .MaxOut = 1.3,
+        .Kd = 1.5,
+        .MaxOut = 2,
         .IntegralLimit = 70.0,
-        .DeadBand = 0.1,
+        .DeadBand = 0,
+        .CoefA = 0,
+        .CoefB = 1.0,
         .Output_LPF_RC = 0.85,
-        // .Derivative_LPF_RC = 0.2,
-        .Improve = Integral_Limit|OutputFilter|DerivativeFilter,
+        .Derivative_LPF_RC = 0,
+        .Improve = Integral_Limit|OutputFilter|DerivativeFilter|ChangingIntegrationRate|Derivative_On_Measurement,
     };
     User_Chassis.Chassis_PID_Y = {
-        .Kp = 8,
+        .Kp = 15,
         .Ki = 25,
-        .Kd = 0.7,
-        .MaxOut = 1000,
+        .Kd = 1.5,
+        .MaxOut = 2,
         .IntegralLimit = 70.0,
-        .DeadBand = 0.1,
+        .DeadBand = 0,
+        .CoefA = 1.2,
+        .CoefB = 0,
         .Output_LPF_RC = 0.85,
-        // .Derivative_LPF_RC = 0.2,
-        .Improve = Integral_Limit|OutputFilter|DerivativeFilter,
+        .Derivative_LPF_RC = 0,
+        .Improve = Integral_Limit|OutputFilter|DerivativeFilter|ChangingIntegrationRate|Derivative_On_Measurement,
     };
     User_Chassis.Chassis_PID_Omega = {
-        .Kp = 8,
+        .Kp = 15,
         .Ki = 25,
-        .Kd = 0.7,
-        .MaxOut = 1000,
+        .Kd = 1.5,
+        .MaxOut = 2,
         .IntegralLimit = 70.0,
-        .DeadBand = 0.1,
+        .DeadBand = 0,
+        .CoefA = 1.2,
+        .CoefB = 0,
         .Output_LPF_RC = 0.85,
-        // .Derivative_LPF_RC = 0.2,
-        .Improve = Integral_Limit|OutputFilter|DerivativeFilter,
+        .Derivative_LPF_RC = 0,
+        .Improve = Integral_Limit|OutputFilter|DerivativeFilter|ChangingIntegrationRate|Derivative_On_Measurement,
+    };
+    User_Chassis.Chassis_Yaw_Adjust = {
+        .Kp = 1,
+        .Ki = 0,
+        .Kd = 0,
+        .MaxOut = 2,
+        .IntegralLimit = 10.0,
+        .DeadBand = 0.5,
+        .CoefA = 1.2,
+        .CoefB = 0,
+        .Output_LPF_RC = 0.85,
+        .Derivative_LPF_RC = 0,
+        .Improve = OutputFilter|DerivativeFilter|ChangingIntegrationRate|Derivative_On_Measurement,
     };
 
+    /* 底盘订阅机制初始化 */
     User_Chassis.Chassis_Subscribe_Init();
 
+    /* 底盘控制器初始化 */
 #ifdef CHASSIS_TO_DEBUG
     /* air_joy 订阅者准备 */
     air_data_sub = register_sub("air_joy_pub",1);
@@ -364,7 +382,6 @@ uint8_t Chassis_Init()
     /* vofa订阅者准备 */
     motor_pid_sub = register_sub("vofa_pub",1);
 #endif
-
 
     return 1;
 }
@@ -421,10 +438,11 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
                     break;
             }
             User_Chassis.Chassis_Status = (Chassis_Status_e)twist.Status;
+            User_Chassis.Moving_Status = (Moving_Status_e)twist.Move;
             Chassis(User_Chassis);       
         }
 #endif
-        osDelay(2);
+        osDelay(1);
     }
 }
 
@@ -446,7 +464,13 @@ uint8_t Chassis(Omni_Chassis &user_chassis)
          // 正解算得到底盘速度
          user_chassis.Kinematics_forward_Resolution(chassis_motor[0].speed_aps,chassis_motor[1].speed_aps,chassis_motor[2].speed_aps,chassis_motor[3].speed_aps);      
          /* 外环速度环 */
+#ifndef DEBUG_NO_TRACKING
          user_chassis.Dynamics_Inverse_Resolution();
+#else
+         user_chassis.ref_twist.linear_x = user_chassis.Ref_RoboSpeed.linear_x;
+         user_chassis.ref_twist.linear_y = user_chassis.Ref_RoboSpeed.linear_y;
+         user_chassis.ref_twist.omega = user_chassis.Ref_RoboSpeed.omega;
+#endif
          for(size_t i = 0;i < user_chassis.Wheel_Num; i++)
          {
             chassis_motor[i].ctrl_motor_config.motor_controller_setting.pid_ref = user_chassis.Kinematics_Inverse_Resolution(i,user_chassis.ref_twist);
@@ -459,16 +483,25 @@ uint8_t Chassis(Omni_Chassis &user_chassis)
          user_chassis.Get_Current_Posture();
          // 正解算得到底盘速度
          user_chassis.Kinematics_forward_Resolution(chassis_motor[0].speed_aps,chassis_motor[1].speed_aps,chassis_motor[2].speed_aps,chassis_motor[3].speed_aps);      
+        
+#ifndef DEBUG_NO_TRACKING
          /* 获得当前世界坐标系下速度 */
-         user_chassis.RoboSpeed_To_WorldSpeed();
-         /* 外环速度环 */
+          user_chassis.RoboSpeed_To_WorldSpeed();
+         // 外环速度环
          user_chassis.Dynamics_Inverse_Resolution();
+         user_chassis.RefWorldSpeed_To_RefRoboSpeed();
+
+#else
+         user_chassis.ref_twist.linear_x = user_chassis.Ref_RoboSpeed.linear_x;
+         user_chassis.ref_twist.linear_y = user_chassis.Ref_RoboSpeed.linear_y;
+         user_chassis.ref_twist.omega = user_chassis.Ref_RoboSpeed.omega;
+#endif
          /* 电机输出赋值 */
          for(size_t i = 0;i < user_chassis.Wheel_Num; i++)
          {
             chassis_motor[i].ctrl_motor_config.motor_controller_setting.pid_ref = user_chassis.Kinematics_Inverse_Resolution(i,user_chassis.ref_twist);
             chassis_motor[i].pid_control_to_motor();
-         }
+         }          
          break;
     }
     Motor_SendMsgs(chassis_motor); // 发送电机can帧

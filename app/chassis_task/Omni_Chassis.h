@@ -19,7 +19,7 @@
 #ifdef __cplusplus
 #include "rm_motor.h"
 #include "Chassis.h"
-
+#include "user_tool.h"
 
 class Omni_Chassis :public Chassis
 {

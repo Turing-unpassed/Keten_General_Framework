@@ -18,6 +18,10 @@
 #include "vofa.h"
 #include "air_joy.h"
 #include "arm_math.h"
+
+#ifdef CHASSIS_TO_DEBUG
+#include "pid_controller.h"
+#endif 
 // extern Motor_C610 m2006;
 
 osThreadId_t Debug_TaskHandle;
@@ -31,10 +35,15 @@ VOFA_Instance_t *vofa_instance = NULL;
 Uart_Instance_t *vofa_uart_instance = NULL;
 extern uart_package_t VOFA_uart_package;
 
+#ifdef TEST_SYSTEM_TURNER
 extern Motor_C610 m2006[1];
 extern Motor_C620 chassis_motor[4];
 extern Motor_GM6020 gm6020[1];
 
+#endif
+
+
+extern Omni_Chassis User_Chassis;
 
 
 float wheel_v = 0;
@@ -47,6 +56,10 @@ float32_t sine = 0;
 float32_t phase_increment = 2 * PI * frequency / sample_rate;
 float32_t phase = 0.0f;
 float ref_temp = 0;
+float speed_aps = 0;
+float Dout = 0;
+float Iout = 0;
+float Pout = 0;
 #endif
 
 __attribute((noreturn)) void Debug_Task(void *argument)
@@ -90,34 +103,34 @@ __attribute((noreturn)) void Debug_Task(void *argument)
             phase -= 2 * PI;
         }
 #ifdef TEST_SYSTEM_M3508
-        // count++;
-        // if(count <= 3000)
-        // {
-        //     ref_in = 0;
-        //     chassis_motor[0].Motor_Ctrl(0);
-        //     Motor_SendMsgs(chassis_motor);           
-        // }
-        // else if(count>3000 && count<=6000)
-        // {
-        //     chassis_motor[0].Motor_Ctrl(1000);
-        //     Motor_SendMsgs(chassis_motor);
-        // }
-        // else if(count >6000 && count <= 9000){
-        //     ref_in = 0;
-        //     chassis_motor[0].Motor_Ctrl(0);
-        //     Motor_SendMsgs(chassis_motor);
-        // }
-        // else
-        // {
-        //     count = 0;
-        // }
+        count++;
+        if(count <= 3000)
+        {
+            chassis_motor[3].Motor_Ctrl(0);
+            Motor_SendMsgs(chassis_motor);           
+        }
+        else if(count>3000 && count<=6000)
+        {
+            chassis_motor[3].Motor_Ctrl(2000);
+            Motor_SendMsgs(chassis_motor);
+        }
+        else if(count >6000 && count <= 9000){
+            chassis_motor[3].Motor_Ctrl(0);
+            Motor_SendMsgs(chassis_motor);
+        }
+        else
+        {
+            count = 0;
+        }
         // chassis_motor[0].Motor_Ctrl(ref_temp);
         // Motor_SendMsgs(chassis_motor);
         // chassis_motor[0].Motor_Ctrl(sine);
         // Motor_SendMsgs(chassis_motor);
         // chassis_motor[1].Motor_Ctrl(sine);
-        chassis_motor[2].Motor_Ctrl(ref_temp);
-        Motor_SendMsgs(chassis_motor);
+        speed_aps = chassis_motor[3].speed_aps;
+        Dout = chassis_motor[3].ctrl_motor_config.motor_controller_setting.speed_PID.Dout;
+        Iout = chassis_motor[3].ctrl_motor_config.motor_controller_setting.speed_PID.Iout;
+        Pout = chassis_motor[3].ctrl_motor_config.motor_controller_setting.speed_PID.Pout;
 #endif
 
 #ifdef TEST_SYSTEM_M2006
@@ -177,6 +190,9 @@ __attribute((noreturn)) void Debug_Task(void *argument)
         // chassis_motor[0].Motor_Ctrl(0);
         // Motor_SendMsgs(chassis_motor);    
 #endif
+        // User_Chassis.Ref_RoboSpeed.linear_x = 2.5;
+        // User_Chassis.Ref_RoboSpeed.linear_y = 0;
+        // User_Chassis.Ref_RoboSpeed.omega = 0;
         osDelay(1);
     }
 }

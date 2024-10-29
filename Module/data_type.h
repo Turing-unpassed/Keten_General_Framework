@@ -42,7 +42,8 @@ typedef struct
     float linear_x;// x方向速度 m/s
     float linear_y;// y方向速度 m/s
     float Omega;   // 转动速度 rad/s
-    uint8_t Status;
+    uint8_t Status;// 底盘状态
+    uint8_t Move;// 底盘运动方式
 }pub_Control_Data;
 
 typedef struct 

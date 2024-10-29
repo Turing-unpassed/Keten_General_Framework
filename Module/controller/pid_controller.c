@@ -181,12 +181,34 @@ float PID_Calculate(PID_t *pid, float measure, float ref)
     {
         if (pid->FuzzyRule == NULL)
         {
-            pid->Pout = pid->Kp * pid->Err;
-            pid->ITerm = pid->Ki * pid->Err * pid->dt;
-            if (pid->OLS_Order > 2)
-                pid->Dout = pid->Kd * OLS_Derivative(&pid->OLS, pid->dt, pid->Err);
+            if(pid->Improve & IMCREATEMENT_OF_OUT)
+            {
+                pid->Pout = pid->Kp * pid->Err - pid->Kp * pid->Last_Err;
+                pid->ITerm += pid->Ki * pid->Err * pid->dt;
+            }
             else
-                pid->Dout = pid->Kd * (pid->Err - pid->Last_Err) / pid->dt;
+            {
+                pid->Pout = pid->Kp * pid->Err;
+                pid->ITerm = pid->Ki * pid->Err * pid->dt;
+            }
+
+            // @todo:使用OLS提取信号微分时,是否需要区分增量式pid和位置式pid？
+            if (pid->OLS_Order > 2)
+            {
+                pid->Dout = pid->Kd * OLS_Derivative(&pid->OLS, pid->dt, pid->Err);
+            }
+            else
+            {
+                // 是否使用增量式pid
+                if(pid->Improve & IMCREATEMENT_OF_OUT)
+                {
+                    pid->Dout = pid->Kd * (pid->Err + pid->Eriler_Err - 2 * pid->Last_Err) / pid->dt;// 微分先行是计算测量值的变化率
+                }
+                else
+                {
+                    pid->Dout = pid->Kd * (pid->Err - pid->Last_Err) / pid->dt;
+                }
+            }
         }
         else
         {
@@ -210,7 +232,7 @@ float PID_Calculate(PID_t *pid, float measure, float ref)
         // 微分先行
         if (pid->Improve & Derivative_On_Measurement)
             f_Derivative_On_Measurement(pid);
-        // 微分滤波器
+        // 微分滤波器(不完全微分)
         if (pid->Improve & DerivativeFilter)
             f_Derivative_Filter(pid);
         // 积分限幅
@@ -219,7 +241,10 @@ float PID_Calculate(PID_t *pid, float measure, float ref)
 
         pid->Iout += pid->ITerm;// 计算积分项
 
-        pid->Output = pid->Pout + pid->Iout + pid->Dout;// 计算输出项
+        if(pid->Improve & IMCREATEMENT_OF_OUT)
+            pid->Output = pid->Pout + pid->Iout + pid->Dout + pid->Last_Output;// 计算输出项
+        else
+            pid->Output = pid->Pout + pid->Iout + pid->Dout;// 计算输出项
 
         // 输出滤波
         if (pid->Improve & OutputFilter)
@@ -231,12 +256,17 @@ float PID_Calculate(PID_t *pid, float measure, float ref)
         // 无关紧要
         f_Proportion_Limit(pid);
     }
-
+    else
+    {
+        pid->Output = 0;
+    }
+    pid->Eriler_Measure = pid->Last_Measure;
     pid->Last_Measure = pid->Measure;
-    pid->Last_Output = pid->Output;
     pid->Last_Dout = pid->Dout;
+    pid->Eriler_Err = pid->Last_Err;
     pid->Last_Err = pid->Err;
     pid->Last_ITerm = pid->ITerm;
+    pid->Last_Output = pid->Output;
 
     return pid->Output;
 }
@@ -259,9 +289,9 @@ static void f_Changing_Integration_Rate(PID_t *pid)
         // 积分呈累积趋势
         // Integral still increasing
         if (abs(pid->Err) <= pid->CoefB)
-            return; // Full integral
+            return; // Full integral 全速积分
         if (abs(pid->Err) <= (pid->CoefA + pid->CoefB))
-            pid->ITerm *= (pid->CoefA - abs(pid->Err) + pid->CoefB) / pid->CoefA;// 变速积分 CoefA <
+            pid->ITerm *= (pid->CoefA - abs(pid->Err) + pid->CoefB) / pid->CoefA;// 变速积分 CoefB < err <= CoefA + CoefB
         else
             // 误差较大，停止积分，避免积分饱和过冲
             pid->ITerm = 0;
@@ -305,7 +335,15 @@ static void f_Derivative_On_Measurement(PID_t *pid)
         if (pid->OLS_Order > 2)
             pid->Dout = pid->Kd * OLS_Derivative(&pid->OLS, pid->dt, -pid->Measure);
         else
-            pid->Dout = pid->Kd * (pid->Last_Measure - pid->Measure) / pid->dt;// 微分先行是计算测量值的变化率
+        {
+            // 是否使用增量式pid
+            if(pid->Improve & IMCREATEMENT_OF_OUT)
+            {
+                pid->Dout = pid->Kd * (pid->Measure + pid->Eriler_Measure - 2 * pid->Last_Measure) / pid->dt;// 微分先行是计算测量值的变化率
+            }
+            else
+                pid->Dout = pid->Kd * (pid->Last_Measure - pid->Measure) / pid->dt;// 微分先行是计算测量值的变化率
+        }
     }
     else
     {
