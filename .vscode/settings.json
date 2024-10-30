@@ -1,4 +1,5 @@
 {
+    // 用于配置文件关联的设置，允许用户指定文件关联的语言模式
     "files.associations": {
         "freertos.h": "c",
         "compare": "c",
@@ -40,7 +41,8 @@
         "cmsis_os2.h": "c",
         "pid_controller.h": "c"
     },
-    "C_Cpp.default.compilerPath": "c:/msys64/mingw64/bin/arm-none-eabi-g++.exe",
+    // 这里要改成你自己的编译器的路径
+    "C_Cpp.default.compilerPath": "arm-none-eabi-g++",
     "C_Cpp.errorSquiggles": "enabled",
     "makefile.makefilePath": "ToolChain/Makefile"
 }

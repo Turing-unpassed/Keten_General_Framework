@@ -21,18 +21,40 @@
 
 # vscode配置文件设置
 - 可以直接抄.vscode 目录下的东西，也是看着修改，没啥好说的
+- 首先明确：vscode的.json 文件分 工作空间下 和 全局空间 下（这就很符合程序员思维嘛）
+一般来说，全局空间下的配置文件是不会随着工作空间的切换而改变的，而工作空间下的配置文件是会随着工作空间的切换而改变的；就跟你定义变量一样（
+建议一些编译器路径相关的，根据你自己的电脑进行配置全局空间下的.json，不要和你的工程强绑定，否则别人会莫名其妙地报一堆错（
+真正关于本工程的配置需要在工作空间下配置，如：头文件路径目录、Makefile文件路径、CMakeLists.txt文件路径、全局宏定义等等
+
+- 先来看看 全局下的 setting.json
+其实你仔细看一下，也可以发现这些其实就是你的vscode中的（扩展）插件配置，只不过是以.json文件的格式写出来了，当然你也可以直接`ctrl + ,` 打开你想要配置的扩展设置，然后用图形化界面进行修改
+分点：
+1. 插件 cortex-debug 的配置,这个插件是用来调试的，但是我不推荐使用vscode调试，因为ozone更加强大
+![alt text](<2024-10-30 13-41-02 的屏幕截图.png>)
+注意具体的工具链和调试器的配置路径换成你的电脑中的路径（在这之前一定要先将这些路径添加环境变量，然后在终端中输入xxx --version 看看会不会返回版本号来验证（小坑：有时候要退掉所有vscode再重开这些环境变量才会真正被添加（注意是所有，不能只关一个当前的），然后再输入--version验证，有版本号返回就是成功））
+
+
 - 使用CMake tools 时，默认的构建方式是MinGW Makefiles，而我的工程使用的是cmake + ninja 构建，所以在使用过ninja构建过后，使用CMake tools 配置时，会报错：
 这只需要在这里修改一下就可以
 ![alt text](image-1.png)
 - c_cpp_properties.json
 （笔者在好长一段时间内使用vscode开发没有任何代码提示、错误提醒时居然没有一点怀疑）
 只需要看着抄就可以了（可视化包括代码提示、错误提醒、代码补全等等）
+**注意注意**：c_cpp_properties.json是c/c++插件为你的工作空间生成的配置文件，它能提供你在当前工作空间下的所有代码提示工作，但是这个文件是不会随着工作空间的切换而改变的，所以你需要在每个工作空间下都配置一遍，不然你会发现你的代码提示突然消失了，==即无全局配置==
+这里提供了相对通用的stm32f407的配置，你可以根据自己的工程修改
+
+看下面提供的两个配置项：cmake和c_cpp可以联动，自动识别你的CMakeLists.txt中的自定义宏，然后为你提供未定义宏区域的暗化
+但是makefile不能，所以如果你想要实现这个效果，需要在下面的makefile配置中添加你的自定义宏定义
+
+*2024年10月30日更新：添加了Linux下的开发环境配置*
+
 ```json
         {
             "name": "arm-cmsis-c/cpp_use_cmake",// c_cpp插件会结合CMakeLists.txt的内容来给你提供可视化和代码提醒
             "includePath": [
                 "${workspaceFolder}/**"
             ],
+            // 保留核心宏定义
             "defines": [
                 "_DEBUG",
                 "UNICODE",
@@ -52,6 +74,61 @@
         },
         {
             "name": "arm-cmsis-c/cpp_use_makefile",// c_cpp插件会结合Makefile的内容来给你提供可视化和代码提醒
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            // 核心宏定义+自定义宏定义
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "USE_HAL_DRIVER",
+                "STM32F407xx",
+                "ARM_MATH_CM4",
+                "ARM_MATH_MATRIX_CHECK",
+                "ARM_MATH_ROUNDING",
+                "ARM_MATH_LOOPUNROLL",
+                "DISABLEFLOAT16",
+                "USE_RTOS_FOR_UART",
+                "TOPICS_DEBUG",
+                "DEBUG_FOR_ACTION",
+                "CHASSIS_TO_DEBUG",
+                "TEST_SYSTEM_TURNER",
+                "TEST_SYSTEM_M2006",
+                "TEST_SYSTEM_GM6020",
+                "DISABLE_LOG_SYSTEM",
+                "TEST_SYSTEM_M3508",
+                "DISABLE_SYSVIEW_SYSTEM"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-arm",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }，
+        {
+            "name": "arm-cmsis-c/cpp_use_cmake_linux",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "USE_HAL_DRIVER",
+                "STM32F407xx",
+                "ARM_MATH_CM4",
+                "ARM_MATH_MATRIX_CHECK",
+                "ARM_MATH_ROUNDING",
+                "ARM_MATH_LOOPUNROLL",
+                "DISABLEFLOAT16"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-arm",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        },
+        {
+            "name": "arm-cmsis-c/cpp_use_makefile_linux",
             "includePath": [
                 "${workspaceFolder}/**"
             ],
@@ -79,9 +156,10 @@
             ],
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "windows-gcc-arm",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "intelliSenseMode": "linux-gcc-arm",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
+
 ```
 - launch.json 
 直接抄，配置完就可以实现vscode直接烧录、调试（不推荐使用vscode调试，还是使用ozone
@@ -263,3 +341,5 @@
 }
 
 ```
+
+

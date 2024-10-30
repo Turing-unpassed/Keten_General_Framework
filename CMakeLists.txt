@@ -1,7 +1,16 @@
-cmake_minimum_required(VERSION 3.16)
+# 指定cmake最低版本，只有使用3.30及以上的版本才能使用C17标准，具体CMake版本支持的C标准版本可以查看官方网站
+cmake_minimum_required(VERSION 3.30)
 # 指定编译平台/架构与语言标准, 推荐指定Ninja为构建工具,可以加快编译速度(相比make)
 set(CMAKE_GENERATOR "Ninja")
+
 set(CMAKE_SYSTEM_NAME Generic) # 表示正在为一个通用的系统编译，而非指定的操作系统
+if (WIN32)
+    message(STATUS "Configuring for Windows")
+elseif (UNIX)
+    message(STATUS "Configuring for Unix")
+endif()
+
+# 指定交叉编译工具链，不论是在Linux还是Windows下，都使用arm-none-eabi
 set(CMAKE_SYSTEM_PROCESSOR arm) # 指定目标处理器架构为 arm
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY) # 指示cmake在尝试编译时生成静态库
 # 指定工具链
@@ -15,6 +24,7 @@ set(CMAKE_OBJCOPY arm-none-eabi-objcopy)
 set(CMAKE_OBJDUMP arm-none-eabi-objdump)
 set(SIZE arm-none-eabi-size) 
 set(CMAKE_AR arm-none-eabi-ar)
+
 set(CMAKE_CXX_STANDARD 17) # 指定c++标准
 set(CMAKE_C_STANDARD 17) # 指定c标准
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # 生成编译命令的JSON文件
@@ -93,14 +103,13 @@ file(GLOB_RECURSE SOURCES
     "App/*.c"
     "Bsp/*.c"
     "Module/*.c"
-    "test/*.c"
     "Module/*.cpp"
     "App/*.cpp"
 )
 
 # 汇编文件路径
 set(ASM_SOURCES
-Toolchain/startup_stm32f407xx.s
+ToolChain/startup_stm32f407xx.s
 Middlewares/Third_Party/SystemView/SEGGER/SEGGER_RTT_ASM_ARMv7M.s
 )
 # "-x assembler-with-cpp" 标志告诉编译器，这些汇编文件在编译之前需要经过c的预处理
