@@ -1,4 +1,0 @@
-/media/keten/OS/c_plusplus_try/new_build/build/CMakeFiles/new_build.elf.dir
-/media/keten/OS/c_plusplus_try/new_build/build/CMakeFiles/download_jlink.dir
-/media/keten/OS/c_plusplus_try/new_build/build/CMakeFiles/edit_cache.dir
-/media/keten/OS/c_plusplus_try/new_build/build/CMakeFiles/rebuild_cache.dir

@@ -966,251 +966,251 @@
 			[
 				{
 					"backtrace" : 11,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App"
+					"path" : "C:/c_plusplus_try/new_build/App"
 				},
 				{
 					"backtrace" : 13,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/chassis_task"
+					"path" : "C:/c_plusplus_try/new_build/App/chassis_task"
 				},
 				{
 					"backtrace" : 15,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/control_task"
+					"path" : "C:/c_plusplus_try/new_build/App/control_task"
 				},
 				{
 					"backtrace" : 17,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/debug_task"
+					"path" : "C:/c_plusplus_try/new_build/App/debug_task"
 				},
 				{
 					"backtrace" : 19,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/robot_com"
+					"path" : "C:/c_plusplus_try/new_build/App/robot_com"
 				},
 				{
 					"backtrace" : 21,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/robot_ins"
+					"path" : "C:/c_plusplus_try/new_build/App/robot_ins"
 				},
 				{
 					"backtrace" : 23,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp"
+					"path" : "C:/c_plusplus_try/new_build/Bsp"
 				},
 				{
 					"backtrace" : 25,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/can"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/can"
 				},
 				{
 					"backtrace" : 27,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/dwt"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/dwt"
 				},
 				{
 					"backtrace" : 29,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/gpio"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/gpio"
 				},
 				{
 					"backtrace" : 31,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/log"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/log"
 				},
 				{
 					"backtrace" : 33,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/soft_reset"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/soft_reset"
 				},
 				{
 					"backtrace" : 35,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/usart"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/usart"
 				},
 				{
 					"backtrace" : 37,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core"
+					"path" : "C:/c_plusplus_try/new_build/Core"
 				},
 				{
 					"backtrace" : 39,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Core/Inc"
 				},
 				{
 					"backtrace" : 41,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core/Src"
+					"path" : "C:/c_plusplus_try/new_build/Core/Src"
 				},
 				{
 					"backtrace" : 43,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers"
+					"path" : "C:/c_plusplus_try/new_build/Drivers"
 				},
 				{
 					"backtrace" : 45,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS"
 				},
 				{
 					"backtrace" : 47,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device"
 				},
 				{
 					"backtrace" : 49,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST"
 				},
 				{
 					"backtrace" : 51,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx"
 				},
 				{
 					"backtrace" : 53,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Include"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Include"
 				},
 				{
 					"backtrace" : 55,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source"
 				},
 				{
 					"backtrace" : 57,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates"
 				},
 				{
 					"backtrace" : 59,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Include"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Include"
 				},
 				{
 					"backtrace" : 61,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver"
 				},
 				{
 					"backtrace" : 63,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc"
 				},
 				{
 					"backtrace" : 65,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
 				},
 				{
 					"backtrace" : 67,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Src"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Src"
 				},
 				{
 					"backtrace" : 69,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares"
 				},
 				{
 					"backtrace" : 71,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST"
 				},
 				{
 					"backtrace" : 73,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM"
 				},
 				{
 					"backtrace" : 75,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP"
 				},
 				{
 					"backtrace" : 77,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Inc"
 				},
 				{
 					"backtrace" : 79,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Lib"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Lib"
 				},
 				{
 					"backtrace" : 81,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party"
 				},
 				{
 					"backtrace" : 83,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS"
 				},
 				{
 					"backtrace" : 85,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source"
 				},
 				{
 					"backtrace" : 87,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"
 				},
 				{
 					"backtrace" : 89,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/include"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/include"
 				},
 				{
 					"backtrace" : 91,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable"
 				},
 				{
 					"backtrace" : 93,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC"
 				},
 				{
 					"backtrace" : 95,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
 				},
 				{
 					"backtrace" : 97,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang"
 				},
 				{
 					"backtrace" : 99,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView"
 				},
 				{
 					"backtrace" : 101,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/Config"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/Config"
 				},
 				{
 					"backtrace" : 103,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER"
 				},
 				{
 					"backtrace" : 105,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER/Syscalls"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER/Syscalls"
 				},
 				{
 					"backtrace" : 107,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module"
+					"path" : "C:/c_plusplus_try/new_build/Module"
 				},
 				{
 					"backtrace" : 109,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/action"
+					"path" : "C:/c_plusplus_try/new_build/Module/action"
 				},
 				{
 					"backtrace" : 111,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/air_joy"
+					"path" : "C:/c_plusplus_try/new_build/Module/air_joy"
 				},
 				{
 					"backtrace" : 113,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/alarm"
+					"path" : "C:/c_plusplus_try/new_build/Module/alarm"
 				},
 				{
 					"backtrace" : 115,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/algorithm"
+					"path" : "C:/c_plusplus_try/new_build/Module/algorithm"
 				},
 				{
 					"backtrace" : 117,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/bmi088"
+					"path" : "C:/c_plusplus_try/new_build/Module/bmi088"
 				},
 				{
 					"backtrace" : 119,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/controller"
+					"path" : "C:/c_plusplus_try/new_build/Module/controller"
 				},
 				{
 					"backtrace" : 121,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/motor"
+					"path" : "C:/c_plusplus_try/new_build/Module/motor"
 				},
 				{
 					"backtrace" : 123,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/movebase"
+					"path" : "C:/c_plusplus_try/new_build/Module/movebase"
 				},
 				{
 					"backtrace" : 125,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/ros_com"
+					"path" : "C:/c_plusplus_try/new_build/Module/ros_com"
 				},
 				{
 					"backtrace" : 127,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/soft_iwdg"
+					"path" : "C:/c_plusplus_try/new_build/Module/soft_iwdg"
 				},
 				{
 					"backtrace" : 129,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/tool"
+					"path" : "C:/c_plusplus_try/new_build/Module/tool"
 				},
 				{
 					"backtrace" : 131,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/topics"
+					"path" : "C:/c_plusplus_try/new_build/Module/topics"
 				},
 				{
 					"backtrace" : 133,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/vofa"
+					"path" : "C:/c_plusplus_try/new_build/Module/vofa"
 				}
 			],
 			"language" : "CXX",
@@ -1368,251 +1368,251 @@
 			[
 				{
 					"backtrace" : 11,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App"
+					"path" : "C:/c_plusplus_try/new_build/App"
 				},
 				{
 					"backtrace" : 13,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/chassis_task"
+					"path" : "C:/c_plusplus_try/new_build/App/chassis_task"
 				},
 				{
 					"backtrace" : 15,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/control_task"
+					"path" : "C:/c_plusplus_try/new_build/App/control_task"
 				},
 				{
 					"backtrace" : 17,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/debug_task"
+					"path" : "C:/c_plusplus_try/new_build/App/debug_task"
 				},
 				{
 					"backtrace" : 19,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/robot_com"
+					"path" : "C:/c_plusplus_try/new_build/App/robot_com"
 				},
 				{
 					"backtrace" : 21,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/robot_ins"
+					"path" : "C:/c_plusplus_try/new_build/App/robot_ins"
 				},
 				{
 					"backtrace" : 23,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp"
+					"path" : "C:/c_plusplus_try/new_build/Bsp"
 				},
 				{
 					"backtrace" : 25,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/can"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/can"
 				},
 				{
 					"backtrace" : 27,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/dwt"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/dwt"
 				},
 				{
 					"backtrace" : 29,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/gpio"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/gpio"
 				},
 				{
 					"backtrace" : 31,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/log"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/log"
 				},
 				{
 					"backtrace" : 33,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/soft_reset"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/soft_reset"
 				},
 				{
 					"backtrace" : 35,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/usart"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/usart"
 				},
 				{
 					"backtrace" : 37,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core"
+					"path" : "C:/c_plusplus_try/new_build/Core"
 				},
 				{
 					"backtrace" : 39,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Core/Inc"
 				},
 				{
 					"backtrace" : 41,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core/Src"
+					"path" : "C:/c_plusplus_try/new_build/Core/Src"
 				},
 				{
 					"backtrace" : 43,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers"
+					"path" : "C:/c_plusplus_try/new_build/Drivers"
 				},
 				{
 					"backtrace" : 45,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS"
 				},
 				{
 					"backtrace" : 47,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device"
 				},
 				{
 					"backtrace" : 49,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST"
 				},
 				{
 					"backtrace" : 51,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx"
 				},
 				{
 					"backtrace" : 53,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Include"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Include"
 				},
 				{
 					"backtrace" : 55,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source"
 				},
 				{
 					"backtrace" : 57,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates"
 				},
 				{
 					"backtrace" : 59,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Include"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Include"
 				},
 				{
 					"backtrace" : 61,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver"
 				},
 				{
 					"backtrace" : 63,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc"
 				},
 				{
 					"backtrace" : 65,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
 				},
 				{
 					"backtrace" : 67,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Src"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Src"
 				},
 				{
 					"backtrace" : 69,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares"
 				},
 				{
 					"backtrace" : 71,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST"
 				},
 				{
 					"backtrace" : 73,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM"
 				},
 				{
 					"backtrace" : 75,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP"
 				},
 				{
 					"backtrace" : 77,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Inc"
 				},
 				{
 					"backtrace" : 79,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Lib"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Lib"
 				},
 				{
 					"backtrace" : 81,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party"
 				},
 				{
 					"backtrace" : 83,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS"
 				},
 				{
 					"backtrace" : 85,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source"
 				},
 				{
 					"backtrace" : 87,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"
 				},
 				{
 					"backtrace" : 89,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/include"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/include"
 				},
 				{
 					"backtrace" : 91,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable"
 				},
 				{
 					"backtrace" : 93,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC"
 				},
 				{
 					"backtrace" : 95,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
 				},
 				{
 					"backtrace" : 97,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang"
 				},
 				{
 					"backtrace" : 99,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView"
 				},
 				{
 					"backtrace" : 101,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/Config"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/Config"
 				},
 				{
 					"backtrace" : 103,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER"
 				},
 				{
 					"backtrace" : 105,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER/Syscalls"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER/Syscalls"
 				},
 				{
 					"backtrace" : 107,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module"
+					"path" : "C:/c_plusplus_try/new_build/Module"
 				},
 				{
 					"backtrace" : 109,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/action"
+					"path" : "C:/c_plusplus_try/new_build/Module/action"
 				},
 				{
 					"backtrace" : 111,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/air_joy"
+					"path" : "C:/c_plusplus_try/new_build/Module/air_joy"
 				},
 				{
 					"backtrace" : 113,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/alarm"
+					"path" : "C:/c_plusplus_try/new_build/Module/alarm"
 				},
 				{
 					"backtrace" : 115,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/algorithm"
+					"path" : "C:/c_plusplus_try/new_build/Module/algorithm"
 				},
 				{
 					"backtrace" : 117,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/bmi088"
+					"path" : "C:/c_plusplus_try/new_build/Module/bmi088"
 				},
 				{
 					"backtrace" : 119,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/controller"
+					"path" : "C:/c_plusplus_try/new_build/Module/controller"
 				},
 				{
 					"backtrace" : 121,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/motor"
+					"path" : "C:/c_plusplus_try/new_build/Module/motor"
 				},
 				{
 					"backtrace" : 123,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/movebase"
+					"path" : "C:/c_plusplus_try/new_build/Module/movebase"
 				},
 				{
 					"backtrace" : 125,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/ros_com"
+					"path" : "C:/c_plusplus_try/new_build/Module/ros_com"
 				},
 				{
 					"backtrace" : 127,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/soft_iwdg"
+					"path" : "C:/c_plusplus_try/new_build/Module/soft_iwdg"
 				},
 				{
 					"backtrace" : 129,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/tool"
+					"path" : "C:/c_plusplus_try/new_build/Module/tool"
 				},
 				{
 					"backtrace" : 131,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/topics"
+					"path" : "C:/c_plusplus_try/new_build/Module/topics"
 				},
 				{
 					"backtrace" : 133,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/vofa"
+					"path" : "C:/c_plusplus_try/new_build/Module/vofa"
 				}
 			],
 			"language" : "C",
@@ -1830,251 +1830,251 @@
 			[
 				{
 					"backtrace" : 11,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App"
+					"path" : "C:/c_plusplus_try/new_build/App"
 				},
 				{
 					"backtrace" : 13,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/chassis_task"
+					"path" : "C:/c_plusplus_try/new_build/App/chassis_task"
 				},
 				{
 					"backtrace" : 15,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/control_task"
+					"path" : "C:/c_plusplus_try/new_build/App/control_task"
 				},
 				{
 					"backtrace" : 17,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/debug_task"
+					"path" : "C:/c_plusplus_try/new_build/App/debug_task"
 				},
 				{
 					"backtrace" : 19,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/robot_com"
+					"path" : "C:/c_plusplus_try/new_build/App/robot_com"
 				},
 				{
 					"backtrace" : 21,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/App/robot_ins"
+					"path" : "C:/c_plusplus_try/new_build/App/robot_ins"
 				},
 				{
 					"backtrace" : 23,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp"
+					"path" : "C:/c_plusplus_try/new_build/Bsp"
 				},
 				{
 					"backtrace" : 25,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/can"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/can"
 				},
 				{
 					"backtrace" : 27,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/dwt"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/dwt"
 				},
 				{
 					"backtrace" : 29,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/gpio"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/gpio"
 				},
 				{
 					"backtrace" : 31,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/log"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/log"
 				},
 				{
 					"backtrace" : 33,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/soft_reset"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/soft_reset"
 				},
 				{
 					"backtrace" : 35,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Bsp/usart"
+					"path" : "C:/c_plusplus_try/new_build/Bsp/usart"
 				},
 				{
 					"backtrace" : 37,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core"
+					"path" : "C:/c_plusplus_try/new_build/Core"
 				},
 				{
 					"backtrace" : 39,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Core/Inc"
 				},
 				{
 					"backtrace" : 41,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Core/Src"
+					"path" : "C:/c_plusplus_try/new_build/Core/Src"
 				},
 				{
 					"backtrace" : 43,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers"
+					"path" : "C:/c_plusplus_try/new_build/Drivers"
 				},
 				{
 					"backtrace" : 45,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS"
 				},
 				{
 					"backtrace" : 47,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device"
 				},
 				{
 					"backtrace" : 49,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST"
 				},
 				{
 					"backtrace" : 51,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx"
 				},
 				{
 					"backtrace" : 53,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Include"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Include"
 				},
 				{
 					"backtrace" : 55,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source"
 				},
 				{
 					"backtrace" : 57,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates"
 				},
 				{
 					"backtrace" : 59,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/CMSIS/Include"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/CMSIS/Include"
 				},
 				{
 					"backtrace" : 61,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver"
 				},
 				{
 					"backtrace" : 63,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc"
 				},
 				{
 					"backtrace" : 65,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
 				},
 				{
 					"backtrace" : 67,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Src"
+					"path" : "C:/c_plusplus_try/new_build/Drivers/STM32F4xx_HAL_Driver/Src"
 				},
 				{
 					"backtrace" : 69,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares"
 				},
 				{
 					"backtrace" : 71,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST"
 				},
 				{
 					"backtrace" : 73,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM"
 				},
 				{
 					"backtrace" : 75,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP"
 				},
 				{
 					"backtrace" : 77,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Inc"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Inc"
 				},
 				{
 					"backtrace" : 79,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Lib"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Lib"
 				},
 				{
 					"backtrace" : 81,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party"
 				},
 				{
 					"backtrace" : 83,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS"
 				},
 				{
 					"backtrace" : 85,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source"
 				},
 				{
 					"backtrace" : 87,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"
 				},
 				{
 					"backtrace" : 89,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/include"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/include"
 				},
 				{
 					"backtrace" : 91,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable"
 				},
 				{
 					"backtrace" : 93,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC"
 				},
 				{
 					"backtrace" : 95,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"
 				},
 				{
 					"backtrace" : 97,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang"
 				},
 				{
 					"backtrace" : 99,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView"
 				},
 				{
 					"backtrace" : 101,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/Config"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/Config"
 				},
 				{
 					"backtrace" : 103,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER"
 				},
 				{
 					"backtrace" : 105,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER/Syscalls"
+					"path" : "C:/c_plusplus_try/new_build/Middlewares/Third_Party/SystemView/SEGGER/Syscalls"
 				},
 				{
 					"backtrace" : 107,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module"
+					"path" : "C:/c_plusplus_try/new_build/Module"
 				},
 				{
 					"backtrace" : 109,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/action"
+					"path" : "C:/c_plusplus_try/new_build/Module/action"
 				},
 				{
 					"backtrace" : 111,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/air_joy"
+					"path" : "C:/c_plusplus_try/new_build/Module/air_joy"
 				},
 				{
 					"backtrace" : 113,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/alarm"
+					"path" : "C:/c_plusplus_try/new_build/Module/alarm"
 				},
 				{
 					"backtrace" : 115,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/algorithm"
+					"path" : "C:/c_plusplus_try/new_build/Module/algorithm"
 				},
 				{
 					"backtrace" : 117,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/bmi088"
+					"path" : "C:/c_plusplus_try/new_build/Module/bmi088"
 				},
 				{
 					"backtrace" : 119,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/controller"
+					"path" : "C:/c_plusplus_try/new_build/Module/controller"
 				},
 				{
 					"backtrace" : 121,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/motor"
+					"path" : "C:/c_plusplus_try/new_build/Module/motor"
 				},
 				{
 					"backtrace" : 123,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/movebase"
+					"path" : "C:/c_plusplus_try/new_build/Module/movebase"
 				},
 				{
 					"backtrace" : 125,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/ros_com"
+					"path" : "C:/c_plusplus_try/new_build/Module/ros_com"
 				},
 				{
 					"backtrace" : 127,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/soft_iwdg"
+					"path" : "C:/c_plusplus_try/new_build/Module/soft_iwdg"
 				},
 				{
 					"backtrace" : 129,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/tool"
+					"path" : "C:/c_plusplus_try/new_build/Module/tool"
 				},
 				{
 					"backtrace" : 131,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/topics"
+					"path" : "C:/c_plusplus_try/new_build/Module/topics"
 				},
 				{
 					"backtrace" : 133,
-					"path" : "/media/keten/OS/c_plusplus_try/new_build/Module/vofa"
+					"path" : "C:/c_plusplus_try/new_build/Module/vofa"
 				}
 			],
 			"language" : "ASM",
@@ -2130,7 +2130,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-T/media/keten/OS/c_plusplus_try/new_build/ToolChain/STM32F407ZGTx_FLASH.ld",
+				"fragment" : "-TC:/c_plusplus_try/new_build/ToolChain/STM32F407ZGTx_FLASH.ld",
 				"role" : "flags"
 			},
 			{
@@ -2175,7 +2175,7 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-Wl,-Map=/media/keten/OS/c_plusplus_try/new_build/build/new_build.map",
+				"fragment" : "-Wl,-Map=C:/c_plusplus_try/new_build/build/new_build.map",
 				"role" : "flags"
 			},
 			{
@@ -2190,7 +2190,7 @@
 			},
 			{
 				"backtrace" : 3,
-				"fragment" : "-L/media/keten/OS/c_plusplus_try/new_build/Middlewares/ST/ARM/DSP/Lib",
+				"fragment" : "-LC:\\c_plusplus_try\\new_build\\Middlewares\\ST\\ARM\\DSP\\Lib",
 				"role" : "libraryPath"
 			},
 			{
