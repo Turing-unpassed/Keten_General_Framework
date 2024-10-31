@@ -29,6 +29,11 @@
 #include "Omni_Chassis.h"
 #include "motor_interface.h"
 
+#ifdef TEST_YAW_ADJUST
+#include "tracking.h"
+#endif
+
+
 /* freertos任务 */
 osThreadId_t Chassis_TaskHandle;
 
@@ -343,9 +348,9 @@ uint8_t Chassis_Init()
         .Improve = Integral_Limit|OutputFilter|DerivativeFilter|ChangingIntegrationRate|Derivative_On_Measurement,
     };
     User_Chassis.Chassis_PID_Omega = {
-        .Kp = 15,
-        .Ki = 25,
-        .Kd = 1.5,
+        .Kp = 9.24445,
+        .Ki = 23.131,
+        .Kd = 0.45841,
         .MaxOut = 2,
         .IntegralLimit = 70.0,
         .DeadBand = 0,
@@ -356,17 +361,17 @@ uint8_t Chassis_Init()
         .Improve = Integral_Limit|OutputFilter|DerivativeFilter|ChangingIntegrationRate|Derivative_On_Measurement,
     };
     User_Chassis.Chassis_Yaw_Adjust = {
-        .Kp = 1,
+        .Kp = 0.05,
         .Ki = 0,
-        .Kd = 0,
-        .MaxOut = 2,
+        .Kd = 0.0188,
+        .MaxOut = 1.8,
         .IntegralLimit = 10.0,
-        .DeadBand = 0.5,
-        .CoefA = 1.2,
+        .DeadBand = 2,
+        .CoefA = 0,
         .CoefB = 0,
         .Output_LPF_RC = 0.85,
         .Derivative_LPF_RC = 0,
-        .Improve = OutputFilter|DerivativeFilter|ChangingIntegrationRate|Derivative_On_Measurement,
+        .Improve = OutputFilter|DerivativeFilter|Derivative_On_Measurement,
     };
 
     /* 底盘订阅机制初始化 */
@@ -383,10 +388,11 @@ uint8_t Chassis_Init()
     motor_pid_sub = register_sub("vofa_pub",1);
 #endif
 
+
     return 1;
 }
 
-
+float ref_angle = 0;
 __attribute((noreturn)) void Chassis_Task(void *argument)
 {
     Chassis_Init();
@@ -418,6 +424,8 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
         if(temp_data.len != -1)
         {
             twist = *(pub_Control_Data*)temp_data.data;
+            User_Chassis.Chassis_Status = (Chassis_Status_e)twist.Status;
+            User_Chassis.Moving_Status = (Moving_Status_e)twist.Move;
             switch (User_Chassis.Chassis_Status)
             {
                 case ROBOT_CHASSIS:
@@ -437,11 +445,35 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
                 default:
                     break;
             }
-            User_Chassis.Chassis_Status = (Chassis_Status_e)twist.Status;
-            User_Chassis.Moving_Status = (Moving_Status_e)twist.Move;
-            Chassis(User_Chassis);       
+            switch(User_Chassis.Moving_Status)
+            {
+                case FREE:
+                {
+                    break;
+                }
+                case KEEP_X_MOVING:
+                {
+                    User_Chassis.Ref_RoboSpeed.linear_y = 0;
+                    User_Chassis.Ref_WorldSpeed.linear_y = 0;
+                    break;
+                }
+                case KEEP_Y_MOVING:
+                {
+                    User_Chassis.Ref_RoboSpeed.linear_x = 0;
+                    User_Chassis.Ref_WorldSpeed.linear_x = 0;
+                    break;
+                }
+            }
         }
 #endif
+
+#ifdef TEST_YAW_ADJUST
+        Yaw_Adjust(&User_Chassis.Chassis_Yaw_Adjust,ref_angle,User_Chassis.imu_data->yaw,-180,180);
+        User_Chassis.Chassis_Status = ROBOT_CHASSIS;
+        User_Chassis.Ref_RoboSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
+#endif 
+        User_Chassis.Chassis_Parking_Control();// 长时间未控制时自动进入驻车模式
+        Chassis(User_Chassis);       
         osDelay(1);
     }
 }
@@ -449,6 +481,8 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
 
 uint8_t Chassis(Omni_Chassis &user_chassis)
 {
+    /* 获取ins系统的机器人姿态数据 */
+    user_chassis.Get_Current_Posture();
    switch(user_chassis.Chassis_Status)
    {
       case CHASSIS_STOP:
@@ -458,9 +492,7 @@ uint8_t Chassis(Omni_Chassis &user_chassis)
              chassis_motor[i].Out = 0;
          }
          break;
-      case ROBOT_CHASSIS:
-         /* 机器人坐标系下控制底盘 */
-
+      case ROBOT_CHASSIS:/* 机器人坐标系下控制底盘 */
          // 正解算得到底盘速度
          user_chassis.Kinematics_forward_Resolution(chassis_motor[0].speed_aps,chassis_motor[1].speed_aps,chassis_motor[2].speed_aps,chassis_motor[3].speed_aps);      
          /* 外环速度环 */
@@ -477,21 +509,17 @@ uint8_t Chassis(Omni_Chassis &user_chassis)
             chassis_motor[i].pid_control_to_motor();
          }
          break;
-      case WORLD_CHASSIS:
-         /* 世界坐标系下控制底盘 */
-         /* 获取ins系统的机器人姿态数据 */
-         user_chassis.Get_Current_Posture();
+      case WORLD_CHASSIS:/* 世界坐标系下控制底盘 */
          // 正解算得到底盘速度
          user_chassis.Kinematics_forward_Resolution(chassis_motor[0].speed_aps,chassis_motor[1].speed_aps,chassis_motor[2].speed_aps,chassis_motor[3].speed_aps);      
-        
-#ifndef DEBUG_NO_TRACKING
          /* 获得当前世界坐标系下速度 */
-          user_chassis.RoboSpeed_To_WorldSpeed();
+         user_chassis.RoboSpeed_To_WorldSpeed();
+        
+#ifndef DEBUG_NO_TRACKING// 调试底盘速度外环跟踪
          // 外环速度环
          user_chassis.Dynamics_Inverse_Resolution();
-         user_chassis.RefWorldSpeed_To_RefRoboSpeed();
 
-#else
+#else // 使用电机内环直驱
          user_chassis.ref_twist.linear_x = user_chassis.Ref_RoboSpeed.linear_x;
          user_chassis.ref_twist.linear_y = user_chassis.Ref_RoboSpeed.linear_y;
          user_chassis.ref_twist.omega = user_chassis.Ref_RoboSpeed.omega;
@@ -503,6 +531,17 @@ uint8_t Chassis(Omni_Chassis &user_chassis)
             chassis_motor[i].pid_control_to_motor();
          }          
          break;
+        case PARKING_CHASSIS:
+            user_chassis.Set_Parking_Speed();
+            // 外环速度环
+            user_chassis.Dynamics_Inverse_Resolution();
+            /* 电机输出赋值 */
+            for(size_t i = 0;i < user_chassis.Wheel_Num; i++)
+            {
+                chassis_motor[i].ctrl_motor_config.motor_controller_setting.pid_ref = user_chassis.Kinematics_Inverse_Resolution(i,user_chassis.ref_twist);
+                chassis_motor[i].pid_control_to_motor();
+            }
+            break;
     }
     Motor_SendMsgs(chassis_motor); // 发送电机can帧
     return 1;

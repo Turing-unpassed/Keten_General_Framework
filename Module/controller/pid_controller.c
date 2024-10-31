@@ -271,6 +271,24 @@ float PID_Calculate(PID_t *pid, float measure, float ref)
     return pid->Output;
 }
 
+void PID_Reset(PID_t *pid)
+{
+    pid->Ref = 0;
+    pid->ITerm = 0;
+    pid->Err = 0;
+    pid->Pout = 0;
+    pid->Iout = 0;
+    pid->Dout = 0;
+    pid->Output = 0;
+    pid->Last_Output = 0;
+    pid->Last_Measure = 0;
+    pid->Eriler_Measure = 0;
+    pid->Last_Err = 0;
+    pid->Eriler_Err = 0;
+    pid->Last_ITerm = 0;
+    pid->Last_Dout = 0;
+    pid->DWT_CNT = 0;
+}
 
 // 梯形积分，积分项为两次采样值的平均
 static void f_Trapezoid_Intergral(PID_t *pid)

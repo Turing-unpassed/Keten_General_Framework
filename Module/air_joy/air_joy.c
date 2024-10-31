@@ -208,6 +208,8 @@ void Air_Joy_Process()
 {
     /* 在最前面提供拨杆处理，优先处理拨杆再处理摇杆 */
     Air_SWO_Event_Process();
+
+    /* 遥杆数据浅滤一下 */
     if(air_instance->LEFT_X > 1400 && air_instance->LEFT_X < 1600)
         air_instance->LEFT_X = 1500;
     if(air_instance->LEFT_Y > 1400 && air_instance->LEFT_Y < 1600)  

@@ -178,6 +178,9 @@ void PID_Init(PID_t *pid);
 
 float PID_Calculate(PID_t *pid, float measure, float ref);
 
+void PID_Reset(PID_t *pid);
+
+
 /*************************** FEEDFORWARD CONTROL *****************************/
 
 /**

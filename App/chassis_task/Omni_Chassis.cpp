@@ -108,66 +108,108 @@ void Omni_Chassis::Kinematics_forward_Resolution(float wheel_1,float wheel_2,flo
 void Omni_Chassis::Dynamics_Inverse_Resolution()
 {
    float force_x,force_y,torque_omega;
-   switch(this->Chassis_Status)
-   {
-      case CHASSIS_STOP:
-      {
-         force_x = 0;
-         force_y = 0;
-         torque_omega = 0;
-         break;
-      }
-      case ROBOT_CHASSIS:
-      {
-         switch(this->Moving_Status)
-         {
+   static uint8_t cnt;
+
+    if (this->Chassis_Status == CHASSIS_STOP)
+    {
+        this->ref_twist.linear_x = force_x;
+        this->ref_twist.linear_y = force_y;
+        this->ref_twist.omega = torque_omega;
+        return;
+    }
+    if (this->Chassis_Status == ROBOT_CHASSIS || this->Chassis_Status == WORLD_CHASSIS)
+    {
+        if (this->Chassis_Status == WORLD_CHASSIS)
+        {
+            this->RefWorldSpeed_To_RefRoboSpeed();// 将参考世界坐标系转换为机器人坐标系
+        }
+        force_x = PID_Calculate(&this->Chassis_PID_X, this->RoboSpeed.linear_x, this->Ref_RoboSpeed.linear_x);
+        force_y = PID_Calculate(&this->Chassis_PID_Y, this->RoboSpeed.linear_y, this->Ref_RoboSpeed.linear_y);
+        switch (this->Moving_Status)
+        {
             case FREE:
-               force_x = PID_Calculate(&this->Chassis_PID_X,this->RoboSpeed.linear_x,this->Ref_RoboSpeed.linear_x);
-               force_y = PID_Calculate(&this->Chassis_PID_Y,this->RoboSpeed.linear_y,this->Ref_RoboSpeed.linear_y);
-               torque_omega = PID_Calculate(&this->Chassis_PID_Omega,this->RoboSpeed.omega,this->Ref_RoboSpeed.omega);
-               break;
+                if(this->Reset_Control_Bit(cnt, KEEP_NONE))
+                {
+                     this->Chassis_Reset_Output();// 清空之前底盘输出
+                }
+                torque_omega = PID_Calculate(&this->Chassis_PID_Omega, this->RoboSpeed.omega, this->Ref_RoboSpeed.omega);
+                break;
             case KEEP_X_MOVING:
-               force_x = PID_Calculate(&this->Chassis_PID_X,this->RoboSpeed.linear_x,this->Ref_RoboSpeed.linear_x);
-               force_y = 0;
-               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
-               break;
+                if(Set_Control_Bit(cnt, KEEP_1, KEEP_2 | KEEP_3 | KEEP_4))
+                {
+                     this->current_angle_to_keep = this->imu_data->yaw;// 将当前角赋值
+                     this->Chassis_Reset_Output();// 清空之前底盘输出
+                }
+                Yaw_Adjust(&this->Chassis_Yaw_Adjust, this->current_angle_to_keep, this->imu_data->yaw, -179, 179);
+                torque_omega = this->Chassis_Yaw_Adjust.Output;
+                break;
             case KEEP_Y_MOVING:
-               force_x = 0;
-               force_y = PID_Calculate(&this->Chassis_PID_Y,this->RoboSpeed.linear_y,this->Ref_RoboSpeed.linear_y);
-               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
-               break;
-         }
-         break;
-      }
-      case WORLD_CHASSIS:
-      {
-         switch(this->Moving_Status)
-         {
-            case FREE:
-               force_x = PID_Calculate(&this->Chassis_PID_X,this->WorldSpeed.linear_x,this->Ref_WorldSpeed.linear_x);
-               force_y = PID_Calculate(&this->Chassis_PID_Y,this->WorldSpeed.linear_y,this->Ref_WorldSpeed.linear_y);
-               torque_omega = PID_Calculate(&this->Chassis_PID_Omega,this->WorldSpeed.omega,this->WorldSpeed.omega);
-               break;
-            case KEEP_X_MOVING:
-               force_x = PID_Calculate(&this->Chassis_PID_X,this->WorldSpeed.linear_x,this->Ref_WorldSpeed.linear_x);
-               force_y = 0;
-               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
-               break;
-            case KEEP_Y_MOVING:
-               force_x = 0;
-               force_y = PID_Calculate(&this->Chassis_PID_Y,this->WorldSpeed.linear_y,this->Ref_WorldSpeed.linear_y);
-               torque_omega = PID_Calculate(&this->Chassis_Yaw_Adjust,this->imu_data->yaw,this->imu_data->yaw);
-               break;
-         }
-         break;
-      }
-   }
+                if(Set_Control_Bit(cnt, KEEP_2, KEEP_1 | KEEP_3 | KEEP_4))
+                {
+                     this->current_angle_to_keep = this->imu_data->yaw;// 将当前角赋值
+                     this->Chassis_Reset_Output();// 清空之前底盘输出
+                }
+                Yaw_Adjust(&this->Chassis_Yaw_Adjust, this->current_angle_to_keep, this->imu_data->yaw, -179, 179);
+                torque_omega = this->Chassis_Yaw_Adjust.Output;
+                break;
+        }
+    }
 
    this->ref_twist.linear_x = force_x;
    this->ref_twist.linear_y = force_y;
    this->ref_twist.omega = torque_omega;
-   
 }
+
+
+void Omni_Chassis::Chassis_Parking_Control()
+{
+   this->dt = DWT_GetDeltaT(&this->DWT_CNT);
+   // 10s没动车就设置为驻车模式
+   if(this->dt>=10)
+   {
+      this->Chassis_Status = CHASSIS_STOP;
+      this->dt = 0;
+   }
+}
+
+
+void Omni_Chassis::Chassis_Reset_Output()
+{
+   PID_Reset(&this->Chassis_PID_X);
+   PID_Reset(&this->Chassis_PID_Y);
+   PID_Reset(&this->Chassis_PID_Omega);
+   PID_Reset(&this->Chassis_Yaw_Adjust);
+}
+
+
+// 比较定制化的函数，用于清除位,并将上次角度赋值，清空上次底盘pid控制器速度输出
+uint8_t Omni_Chassis::Set_Control_Bit(uint8_t &cnt, uint8_t setFlag, uint8_t clearFlags)
+{
+    if (!(cnt & setFlag))
+    {
+        cnt |= setFlag;
+        cnt &= ~clearFlags;
+        return 1;
+    }
+    return 0;
+}
+
+uint8_t Omni_Chassis::Reset_Control_Bit(uint8_t &cnt, uint8_t value)
+{
+    if(cnt != value)
+    {
+      cnt = value;
+      return 1;
+    }
+    return 0;
+}
+
+
+
+
+
+
+
 
 
 

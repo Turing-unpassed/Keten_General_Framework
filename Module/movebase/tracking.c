@@ -17,7 +17,7 @@
 uint8_t Yaw_Adjust(PID_t *yaw_pid,float Target_Yaw,float Current_Yaw,float measure_min,float measure_max)
 {
     // 将目标角度限制在 能被观测的 角度范围内
-    VAL_LIMIT(Target_Yaw,measure_min,measure_max);
+    ANGLE_LIMIT(Target_Yaw,measure_min,measure_max);
 
     float temp_yaw_error;
     if(Current_Yaw*Target_Yaw >= 0)
@@ -44,12 +44,5 @@ uint8_t Yaw_Adjust(PID_t *yaw_pid,float Target_Yaw,float Current_Yaw,float measu
     }
     PID_Calculate(yaw_pid,Current_Yaw,Target_Yaw);
 
-    if(ABS(temp_yaw_error) < 0.5f)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
+    return (ABS(temp_yaw_error) < 0.5f) ? 1 : 0;
 }

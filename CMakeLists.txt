@@ -80,6 +80,7 @@ add_definitions(
     # -DDISABLE_SYSVIEW_SYSTEM
     -DDEBUG_TASK_RUN 
     # -DDEBUG_NO_TRACKING
+    # -DTEST_YAW_ADJUST
     ) # need -D<macro> to define macro
     
 

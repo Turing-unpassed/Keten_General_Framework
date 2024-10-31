@@ -71,6 +71,12 @@ extern uint8_t GlobalDebugMode;
         }                        \
     } while (0)
 
+#define ANGLE_LIMIT(val,min,max) \
+    do { \
+        while ((val) < (min)) (val) += (max) - (min); \
+        while ((val) > (max)) (val) -= (max) - (min); \
+    } while (0)
+
 #define ANGLE_LIMIT_360(val, angle)     \
     do                                  \
     {                                   \

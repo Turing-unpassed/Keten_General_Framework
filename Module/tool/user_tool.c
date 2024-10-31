@@ -390,3 +390,5 @@ float Get_OLS_Smooth(Ordinary_Least_Squares_t *OLS)
 {
     return OLS->k * OLS->x[OLS->Order - 1] + OLS->b;
 }
+
+

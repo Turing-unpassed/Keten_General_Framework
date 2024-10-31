@@ -15,6 +15,9 @@
  *        机器人使用pub-sub获取姿态数据，订阅chassis_imu_pub 获取 yaw角数据
  *                                     订阅chassis_pos_pub 获取位置数据（全局）
  * @versioninfo :
+ * 
+ * @todo: 1.添加底盘驻车模式，就是底盘如果位于一段时间内没有控制的话，会进入驻车模式，这时底盘会锁0
+ *        2.测试一下底盘极限速度
  */
 #pragma once
 
@@ -43,6 +46,7 @@ typedef enum
     CHASSIS_STOP = 0,
     ROBOT_CHASSIS,
     WORLD_CHASSIS,
+    PARKING_CHASSIS,
 }Chassis_Status_e;
 
 typedef enum
@@ -70,6 +74,10 @@ public:
 
     Chassis_Status_e Chassis_Status = CHASSIS_STOP;// 初始化为底盘失能状态
     Moving_Status_e Moving_Status = FREE;// 初始化为全向移动状态
+
+    uint32_t DWT_CNT;
+    float dt;
+
     /* 底盘所需pub-sub操作的初始化，必须调用 */
     uint8_t Chassis_Subscribe_Init()
     {
@@ -92,6 +100,7 @@ public:
             this->imu_data = (pub_imu_yaw*)(chassis_imu_data.data);
         }
     }
+    /* 获取当前底盘位置，如果有对应的ins系统可以调用此来更新底盘坐标 */
     void Get_Current_Position()
     {
         publish_data chassis_pos_data;
@@ -118,6 +127,12 @@ public:
         this->Ref_RoboSpeed.linear_y = this->Ref_WorldSpeed.linear_x * SINANGLE + this->Ref_WorldSpeed.linear_y * COSANGLE;
         this->Ref_RoboSpeed.omega = this->Ref_WorldSpeed.omega; 
     }
+    /* 设置驻车速度 */
+    void Set_Parking_Speed()
+    {
+        this->Ref_RoboSpeed = {0};
+        this->Ref_WorldSpeed = {0};
+    }
 protected:
     /* 底盘速度pid跟踪器初始化,必须由派生类重写 */
     virtual void Chassis_TrackingController_Init(){};
@@ -131,6 +146,10 @@ protected:
     virtual void Keep_X_Moving_Control(){}
     /* 保持Y轴方向移动 */
     virtual void Keep_Y_Moving_Control(){}
+    /* 底盘驻车模式 */
+    virtual void Chassis_Parking_Control(){}
+    /* 底盘输出重置0 */
+    virtual void Chassis_Reset_Output(){}
 public:
     Robot_Twist_t RoboSpeed = {0,0,0};// 机器人坐标系下速度
     Robot_Twist_t WorldSpeed = {0,0,0};// 世界坐标系下速度
@@ -140,6 +159,8 @@ public:
 
     float ref[4];// 期望值，用于各环pid输出到输入
     Robot_Twist_t ref_twist;// 期望速度
+
+    float current_angle_to_keep = 0;// 保持某轴方向移动时储存的角度值
 
     /* 订阅imu话题的订阅者 */
     Subscriber* chassis_imu_sub;

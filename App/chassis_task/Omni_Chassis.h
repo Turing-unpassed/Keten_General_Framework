@@ -20,6 +20,7 @@
 #include "rm_motor.h"
 #include "Chassis.h"
 #include "user_tool.h"
+#include "tracking.h"
 
 class Omni_Chassis :public Chassis
 {
@@ -31,7 +32,10 @@ public:
     virtual float Kinematics_Inverse_Resolution(size_t count,Robot_Twist_t ref_twist) override;
     virtual void Kinematics_forward_Resolution(float wheel_1,float wheel_2,float wheel_3,float wheel_4);
     virtual void Dynamics_Inverse_Resolution() override;
-    
+    virtual void Chassis_Parking_Control() override;
+    virtual void Chassis_Reset_Output() override;
+
+protected:
     float Wheel_To_Center = 0;// 轮子相对底盘中心的距离,底盘半径
 
     float Wheel_Azimuth[4] = {
@@ -41,6 +45,10 @@ public:
         315*DEGREE_2_RAD
     };// 轮子相对底盘中心的方位角
 
+private:
+    // 可能是专供这种全向底盘控制的，所以丢private里了，只可能在该类中的成员函数中调用，外界不可调用
+    uint8_t Set_Control_Bit(uint8_t &cnt, uint8_t setFlag, uint8_t clearFlags);
+    uint8_t Reset_Control_Bit(uint8_t &cnt, uint8_t value);
 };
 
 #endif
@@ -50,6 +58,15 @@ extern "C"{
 #define ONETHIRD            0.333333333f
 #define TWOTHIRD            0.666666667f
 #define SQR3_OF_THIRD       0.577350269f
+
+typedef enum
+{
+    KEEP_NONE = 0,
+    KEEP_1 = 0x01,
+    KEEP_2 = 0x02,
+    KEEP_3 = 0x04,
+    KEEP_4 = 0x08,
+}KEEP_DIRECTION_e;
 
 
 #ifdef __cplusplus
