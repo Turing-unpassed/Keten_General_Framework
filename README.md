@@ -1,3 +1,6 @@
+> 工具链安装以及配置参考：https://gitee.com/hnuyuelurm/basic_framework
+
+
 # 通用框架探索
 - 更加强大的调试工具ozone、segger rtt、segger_systemview的移植已经加入框架
 - 更加清晰的程序分层架构，app层和驱动层较好的解耦

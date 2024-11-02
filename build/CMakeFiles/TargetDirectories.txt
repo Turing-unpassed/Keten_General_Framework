@@ -1,0 +1,4 @@
+C:/c_plusplus_try/new_build/build/CMakeFiles/new_build.elf.dir
+C:/c_plusplus_try/new_build/build/CMakeFiles/download_jlink.dir
+C:/c_plusplus_try/new_build/build/CMakeFiles/edit_cache.dir
+C:/c_plusplus_try/new_build/build/CMakeFiles/rebuild_cache.dir

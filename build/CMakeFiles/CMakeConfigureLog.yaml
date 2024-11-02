@@ -1,0 +1,129 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineSystem.cmake:200 (message)"
+      - "CMakeLists.txt:32 (project)"
+    message: |
+      The target system is: Generic -  - arm
+      The host system is: Windows - 10.0.22000 - AMD64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:32 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: C:/msys64/mingw64/bin/arm-none-eabi-gcc.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-exit.o): in function `exit':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/stdlib/exit.c:65:(.text+0x28): undefined reference to `_exit'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-closer.o): in function `_close_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/closer.c:47:(.text+0x18): undefined reference to `_close'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-lseekr.o): in function `_lseek_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/lseekr.c:49:(.text+0x24): undefined reference to `_lseek'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-readr.o): in function `_read_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/readr.c:49:(.text+0x24): undefined reference to `_read'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-writer.o): in function `_write_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/writer.c:49:(.text+0x24): undefined reference to `_write'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-sbrkr.o): in function `_sbrk_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/sbrkr.c:51:(.text+0x18): undefined reference to `_sbrk'
+      collect2.exe: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:32 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: C:/msys64/mingw64/bin/arm-none-eabi-gcc.exe 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+      
+      The C compiler identification is GNU, found in:
+        C:/c_plusplus_try/new_build/build/CMakeFiles/3.30.0/CompilerIdC/CMakeCCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:32 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: C:/msys64/mingw64/bin/arm-none-eabi-g++.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      1
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-exit.o): in function `exit':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/stdlib/exit.c:65:(.text+0x28): undefined reference to `_exit'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-closer.o): in function `_close_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/closer.c:47:(.text+0x18): undefined reference to `_close'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-lseekr.o): in function `_lseek_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/lseekr.c:49:(.text+0x24): undefined reference to `_lseek'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-readr.o): in function `_read_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/readr.c:49:(.text+0x24): undefined reference to `_read'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-writer.o): in function `_write_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/writer.c:49:(.text+0x24): undefined reference to `_write'
+      C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/bin/ld.exe: C:/msys64/mingw64/bin/../lib/gcc/arm-none-eabi/13.3.0/../../../../arm-none-eabi/lib\\libc.a(libc_a-sbrkr.o): in function `_sbrk_r':
+      C:\\M\\B\\src\\build-MINGW64\\arm-none-eabi\\newlib/../../../newlib-4.4.0.20231231/newlib/libc/reent/sbrkr.c:51:(.text+0x18): undefined reference to `_sbrk'
+      collect2.exe: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:32 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: C:/msys64/mingw64/bin/arm-none-eabi-g++.exe 
+      Build flags: 
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+      
+      The CXX compiler identification is GNU, found in:
+        C:/c_plusplus_try/new_build/build/CMakeFiles/3.30.0/CompilerIdCXX/CMakeCXXCompilerId.o
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineCompilerId.cmake:1192 (message)"
+      - "C:/Program Files/CMake/share/cmake-3.30/Modules/CMakeDetermineASMCompiler.cmake:135 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:32 (project)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      arm-none-eabi-gcc.exe (GCC) 13.3.0
+      Copyright (C) 2023 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      
+...
