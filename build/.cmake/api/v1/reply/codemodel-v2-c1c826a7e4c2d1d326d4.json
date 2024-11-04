@@ -6,7 +6,7 @@
 			[
 				{
 					"build" : ".",
-					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.30"
@@ -41,14 +41,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "download_jlink::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-download_jlink-Debug-ea1b23971a11e8f1b51c.json",
+					"jsonFile" : "target-download_jlink-Debug-8c103de2ab9c57cf046c.json",
 					"name" : "download_jlink",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "new_build.elf::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-new_build.elf-Debug-6e838ed125e621cf9e90.json",
+					"jsonFile" : "target-new_build.elf-Debug-8b45891d45a39b4fc520.json",
 					"name" : "new_build.elf",
 					"projectIndex" : 0
 				}
@@ -58,8 +58,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "C:/c_plusplus_try/new_build/build",
-		"source" : "C:/c_plusplus_try/new_build"
+		"build" : "/home/keten/rc_2025/new_build/build",
+		"source" : "/home/keten/rc_2025/new_build"
 	},
 	"version" : 
 	{

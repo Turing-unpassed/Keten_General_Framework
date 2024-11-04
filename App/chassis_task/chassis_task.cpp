@@ -463,6 +463,10 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
                     User_Chassis.Ref_WorldSpeed.linear_x = 0;
                     break;
                 }
+                case AUTO_MOVING:
+                {
+                    break;
+                }
             }
         }
 #endif

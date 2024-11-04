@@ -19,6 +19,9 @@ extern "C"{
 #endif
 
 /*----------------------------------include-----------------------------------*/
+#include "FreeRTOS.h"
+#include "task.h"
+
 /* bsp层接口 */
 #include "bsp_dwt.h"
 #include "bsp_gpio.h"

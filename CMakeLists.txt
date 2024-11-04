@@ -81,6 +81,7 @@ add_definitions(
     -DDEBUG_TASK_RUN 
     # -DDEBUG_NO_TRACKING
     # -DTEST_YAW_ADJUST
+    -DDEBUG_GO1_MOTOR
     ) # need -D<macro> to define macro
     
 

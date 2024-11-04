@@ -171,7 +171,7 @@ public:
      /* 声明控制器句柄 */
      Motor_Control_Setting_t ctrl_motor_config = {0};
 
-     virtual void set_motor_ref(float ref)= 0;// 设置电机参考值
+     virtual void set_motor_ref(float ref) = 0;// 设置电机参考值
      virtual void stop_the_motor() = 0;// 急停电机
      virtual void enable_the_motor() = 0;// 使能电机
      virtual void pid_control_to_motor() = 0;// 电机pid计算out输出
@@ -192,6 +192,7 @@ public:
      float beta = 0.85f;// 转子角速度滤波系数
     
      float motor_acceleration = 0;// 电机加速度
+     
 
      inline float get_speed_after_low(){ return this->speed / motor_reduction_ratio; }// 获取减速箱操作之后的速度
      inline float get_speed_aps_after_low(){ return this->speed_aps / motor_reduction_ratio; }// 获取减速箱操作之后的角速度

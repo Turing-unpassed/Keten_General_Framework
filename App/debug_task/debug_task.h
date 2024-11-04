@@ -44,6 +44,7 @@ void Debug_Task(void *argument);
 #include "rm_motor.h"
 #include "motor_interface.h"
 #include "chassis_task.h"
+#include "Unitree_Go1.h"
 
 #endif
 

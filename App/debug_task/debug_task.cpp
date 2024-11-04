@@ -42,12 +42,32 @@ extern Motor_GM6020 gm6020[1];
 
 #endif
 
-
-extern Omni_Chassis User_Chassis;
-
-
 float wheel_v = 0;
 float ref = 0;
+
+#ifdef DEBUG_GO1_MOTOR
+
+CAN_Rx_Instance_t go1_rx_instance = {
+    .can_handle = &hcan2,
+    .RxHeader = {0},
+    .rx_len = 8,
+    .can_rx_buff = {0},
+};
+
+CAN_Tx_Instance_t go1_tx_instance = {
+    .can_handle = &hcan2,
+    .isExTid = 0,
+    .tx_mailbox = 0,
+    .tx_len = 8,
+    .can_tx_buff = {0},
+};
+
+Motor_Control_Setting_t go1_motor_ctrl = {0};
+// 较为特殊的go1电机，有些选项不需要配置！
+GO_M8010 go1_motor[1]={GO_M8010(1,go1_rx_instance,go1_tx_instance,go1_motor_ctrl,0,-1,CAN_To_RS485_Module_ID_1,GO1_Motor_ID_1)};
+#endif
+
+
 #ifdef TEST_SYSTEM_TURNER 
 uint16_t sample_rate = 5000;
 uint16_t frequency = 1;
@@ -57,18 +77,13 @@ float32_t phase_increment = 2 * PI * frequency / sample_rate;
 float32_t phase = 0.0f;
 float ref_temp = 0;
 float speed_aps = 0;
-float Dout = 0;
-float Iout = 0;
-float Pout = 0;
 #endif
 
 __attribute((noreturn)) void Debug_Task(void *argument)
 {
 #ifdef TEST_SYSTEM_TURNER
     int count = 0;
-
 #endif
-
 
 #ifdef VOFA_TO_DEBUG
     /* vofa设备创建 */
@@ -122,39 +137,11 @@ __attribute((noreturn)) void Debug_Task(void *argument)
         {
             count = 0;
         }
-        // chassis_motor[0].Motor_Ctrl(ref_temp);
-        // Motor_SendMsgs(chassis_motor);
-        // chassis_motor[0].Motor_Ctrl(sine);
-        // Motor_SendMsgs(chassis_motor);
-        // chassis_motor[1].Motor_Ctrl(sine);
         speed_aps = chassis_motor[3].speed_aps;
-        Dout = chassis_motor[3].ctrl_motor_config.motor_controller_setting.speed_PID.Dout;
-        Iout = chassis_motor[3].ctrl_motor_config.motor_controller_setting.speed_PID.Iout;
-        Pout = chassis_motor[3].ctrl_motor_config.motor_controller_setting.speed_PID.Pout;
+
 #endif
 
 #ifdef TEST_SYSTEM_M2006
-        // count++;
-        // if(count <= 3000)
-        // {
-        //     m2006[0].Motor_Ctrl(0);
-        //     Motor_SendMsgs(m2006);           
-        // }
-        // else if(count>3000 && count<=6000)
-        // {
-        //     m2006[0].Motor_Ctrl(3000);
-        //     Motor_SendMsgs(m2006);
-        // }
-        // else if(count >6000 && count <= 9000){
-        //     m2006[0].Motor_Ctrl(0);
-        //     Motor_SendMsgs(m2006);
-        // }
-        // else
-        // {
-        //     count = 0;
-        // }
-        // m2006[0].Motor_Ctrl(ref_temp);
-        // Motor_SendMsgs(m2006);
         m2006[0].Motor_Ctrl(sine);
         Motor_SendMsgs(m2006);
 #endif
@@ -183,16 +170,13 @@ __attribute((noreturn)) void Debug_Task(void *argument)
             count = 0;
         }
 
+#endif
 
 #endif
 
-
-        // chassis_motor[0].Motor_Ctrl(0);
-        // Motor_SendMsgs(chassis_motor);    
+#ifdef DEBUG_GO1_MOTOR
+        go1_motor[0].GO_Motor_Standard_Ctrl(0.0,0.02,0.1,0.1,90);
 #endif
-        // User_Chassis.Ref_RoboSpeed.linear_x = 2.5;
-        // User_Chassis.Ref_RoboSpeed.linear_y = 0;
-        // User_Chassis.Ref_RoboSpeed.omega = 0;
         osDelay(1);
     }
 }

@@ -8,13 +8,16 @@
  * @copyright Copyright (c) 2024
  * 
  * @attention :
- * @note :
+ * @note :      2024-11-03 修改CAN2接收回调函数，使其适配宇树go1 电机的数据解析
+ *                         移除了TEST_SYSTEM_M2006的测试
  * @versioninfo :
  */
 #include "com_config.h"
 #include "topics.h"
 
 extern Motor_C610 m2006[1];
+
+extern GO_M8010 go1_motor[1];
 
 osThreadId_t CAN1_Send_TaskHandle;
 osThreadId_t CAN2_Send_TaskHandle;
@@ -85,28 +88,33 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
     }
 }
 
-
+float aaa = 0;
+// 现在打算can2专控go1电机，当然也可以换上别的电机，只是暂时先用
 void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
-    if(can_instance->RxHeader.IDE == CAN_ID_STD)
+    aaa+=0.01;
+    Extid_Analysis_t temp_ana;
+    temp_ana.id_of_Extid = (uint8_t)(can_instance->RxHeader.ExtId >> 28) & 0x03;
+    temp_ana.data_of_Extid = (uint32_t)can_instance->RxHeader.ExtId & 0x07FFFFFF;
+    uint8_t temp_module_id = CAN_To_RS485_Module_ID_Callback(temp_ana.id_of_Extid);
+    uint8_t temp_motor_id = GO_Motor_ID_Callback(temp_ana.data_of_Extid);
+    if(temp_motor_id < 0)
     {
-        switch(can_instance->RxHeader.StdId)
-        {
-            case 0x201:
-            {
-#ifdef TEST_SYSTEM_M2006
-                m2006[0].update(can_instance->can_rx_buff);
-                speed_aps = m2006[0].speed_aps;
-                motor_acceleration = m2006[0].motor_acceleration;
-#endif
-                break;
-            }
-            case 0x205:
-            {
-                break;
-            }
-        }
+        return;
     }
+    switch(temp_module_id)
+    {
+        case 0:// 模块id为0
+            go1_motor[temp_motor_id].update_Go1(can_instance->can_rx_buff,temp_ana.data_of_Extid);
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+    }
+
 }
 
 
@@ -130,7 +138,7 @@ __attribute((noreturn)) void CAN1_Send_Task(void *argument)
     }
 }
 
-
+float ccc = 0;
 __attribute((noreturn)) void CAN2_Send_Task(void *argument)
 {
     CAN_Tx_Instance_t temp_can_txmsg;
@@ -142,12 +150,15 @@ __attribute((noreturn)) void CAN2_Send_Task(void *argument)
             do{
                 free_can_mailbox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan2);
             }while(free_can_mailbox == 0);
-            if(temp_can_txmsg.isExTid == 1)// 发送扩展帧
+            if(temp_can_txmsg.isExTid == 1)
+            {// 发送扩展帧
                 CAN_Transmit_ExtId(&temp_can_txmsg);
+                ccc+=0.001;
+            }
             else    // 发送标准帧
                 CAN_Transmit_StdID(&temp_can_txmsg);
         }
-        osDelay(1);
+        osDelay(1000);
     }
 }
 

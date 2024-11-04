@@ -128,7 +128,7 @@ public:
         CAN_TxMsg.can_tx_buff[ID * 2 - 2] = (uint8_t)(current_out >> 8) & 0xff; // 装填电流值高8位
         CAN_TxMsg.can_tx_buff[ID * 2 - 1] = (uint8_t)current_out & 0xff;        // 装填电流值低8位
     }
-    /* 电调回传数据处理函数 */
+    /* 电调控制数据处理函数 */
     virtual void CanMsg_Process(CAN_Tx_Instance_t &CAN_TxMsg) override
     {
         motor_constraint(&(this->Out), static_cast<int16_t>(-max_current),static_cast<int16_t>(max_current));

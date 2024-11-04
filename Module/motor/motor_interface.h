@@ -59,19 +59,6 @@ void Motor_SendMsgs(Motor_Type (&motor)[N])
         xQueueSend(CAN2_TxPort, &can_tx_instance, portMAX_DELAY);
 }
 
-/**
- * @brief 电机can发送函数，用于单个电机的发送（单电机对象）
- * 
- * @tparam Motor_Type 电机类
- * @param hcan        CAN句柄
- * @param motor       电机
- */
-// template <class Motor_Type>
-// void Motor_SendMsgs(Motor_Type &motor)
-// {
-//     Motor_Type motor_arr[1] = {motor};
-//     Motor_SendMsgs(motor_arr);
-// }
 
 #endif
 
