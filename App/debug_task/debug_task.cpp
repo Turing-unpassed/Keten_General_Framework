@@ -64,11 +64,7 @@ CAN_Tx_Instance_t go1_tx_instance = {
 
 Motor_Control_Setting_t go1_motor_ctrl = {0};
 // 较为特殊的go1电机，有些选项不需要配置！
-<<<<<<< HEAD
 GO_M8010 go1_motor[1]={GO_M8010(0,go1_rx_instance,go1_tx_instance,go1_motor_ctrl,0,-1,3)};
-=======
-GO_M8010 go1_motor[1]={GO_M8010(1,go1_rx_instance,go1_tx_instance,go1_motor_ctrl,0,-1,CAN_To_RS485_Module_ID_1,GO1_Motor_ID_1)};
->>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47
 #endif
 
 
@@ -184,7 +180,6 @@ __attribute((noreturn)) void Debug_Task(void *argument)
 #endif
 
 #ifdef DEBUG_GO1_MOTOR
-<<<<<<< HEAD
         if(debug <= 5000 || debug >= 10000)
         {
             go1_motor[0].GO_Motor_Speed_Ctrl(5,0.02);
@@ -195,9 +190,6 @@ __attribute((noreturn)) void Debug_Task(void *argument)
             go1_motor[0].GO_Motor_No_Tarque_Ctrl();
             debug++;
         }
-=======
-        go1_motor[0].GO_Motor_Standard_Ctrl(0.0,0.02,0.1,0.1,90);
->>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47
 #endif
         osDelay(1);
     }

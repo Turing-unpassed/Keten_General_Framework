@@ -15,7 +15,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-addr2line"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-addr2line.exe"
 		},
 		{
 			"name" : "CMAKE_ASM_COMPILER_AR",
@@ -31,7 +31,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc-ar"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-gcc-ar.exe"
 		},
 		{
 			"name" : "CMAKE_ASM_COMPILER_RANLIB",
@@ -47,7 +47,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-gcc-ranlib.exe"
 		},
 		{
 			"name" : "CMAKE_ASM_COMPILER_WORKS",
@@ -163,7 +163,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/keten/rc_2025/new_build/build"
+			"value" : "c:/c_plusplus_try/new_build/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -211,7 +211,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/usr/local/bin/cmake"
+			"value" : "C:/Program Files/CMake/bin/cmake.exe"
 		},
 		{
 			"name" : "CMAKE_CPACK_COMMAND",
@@ -223,7 +223,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/usr/local/bin/cpack"
+			"value" : "C:/Program Files/CMake/bin/cpack.exe"
 		},
 		{
 			"name" : "CMAKE_CTEST_COMMAND",
@@ -235,24 +235,9 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/usr/local/bin/ctest"
+			"value" : "C:/Program Files/CMake/bin/ctest.exe"
 		},
 		{
-<<<<<<<< HEAD:build/.cmake/api/v1/reply/cache-v2-26a9c2e9e22ba234cf1e.json
-========
-			"name" : "CMAKE_CXX_COMPILER",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
-				}
-			],
-			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-g++"
-		},
-		{
->>>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47:build/.cmake/api/v1/reply/cache-v2-da834afccc431f0f893a.json
 			"name" : "CMAKE_CXX_COMPILER_AR",
 			"properties" : 
 			[
@@ -266,7 +251,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc-ar"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-gcc-ar.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_COMPILER_RANLIB",
@@ -282,7 +267,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-gcc-ranlib.exe"
 		},
 		{
 			"name" : "CMAKE_CXX_FLAGS",
@@ -365,21 +350,6 @@
 			"value" : "-O2 -g -DNDEBUG"
 		},
 		{
-<<<<<<<< HEAD:build/.cmake/api/v1/reply/cache-v2-26a9c2e9e22ba234cf1e.json
-========
-			"name" : "CMAKE_C_COMPILER",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "No help, variable specified on the command line."
-				}
-			],
-			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc"
-		},
-		{
->>>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47:build/.cmake/api/v1/reply/cache-v2-da834afccc431f0f893a.json
 			"name" : "CMAKE_C_COMPILER_AR",
 			"properties" : 
 			[
@@ -393,7 +363,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc-ar"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-gcc-ar.exe"
 		},
 		{
 			"name" : "CMAKE_C_COMPILER_RANLIB",
@@ -409,7 +379,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc-ranlib"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-gcc-ranlib.exe"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",
@@ -505,7 +475,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "CMAKE_DLLTOOL-NOTFOUND"
+			"value" : "C:/msys64/mingw64/bin/dlltool.exe"
 		},
 		{
 			"name" : "CMAKE_EDIT_COMMAND",
@@ -517,7 +487,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/usr/local/bin/ccmake"
+			"value" : "C:/Program Files/CMake/bin/cmake-gui.exe"
 		},
 		{
 			"name" : "CMAKE_EXECUTABLE_FORMAT",
@@ -633,7 +603,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/keten/rc_2025/new_build/build/CMakeFiles/pkgRedirects"
+			"value" : "C:/c_plusplus_try/new_build/build/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -693,7 +663,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/keten/rc_2025/new_build"
+			"value" : "C:/c_plusplus_try/new_build"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -705,7 +675,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/usr/local"
+			"value" : "C:/Program Files (x86)/new_build"
 		},
 		{
 			"name" : "CMAKE_LINKER",
@@ -721,7 +691,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-ld"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-ld.exe"
 		},
 		{
 			"name" : "CMAKE_MAKE_PROGRAM",
@@ -737,7 +707,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ninja"
+			"value" : "C:/ninja/ninja.exe"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -833,7 +803,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-nm"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-nm.exe"
 		},
 		{
 			"name" : "CMAKE_NUMBER_OF_MAKEFILES",
@@ -909,7 +879,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-ranlib"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-ranlib.exe"
 		},
 		{
 			"name" : "CMAKE_READELF",
@@ -925,7 +895,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-readelf"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-readelf.exe"
 		},
 		{
 			"name" : "CMAKE_ROOT",
@@ -937,7 +907,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/usr/local/share/cmake-3.30"
+			"value" : "C:/Program Files/CMake/share/cmake-3.30"
 		},
 		{
 			"name" : "CMAKE_SHARED_LINKER_FLAGS",
@@ -1145,7 +1115,7 @@
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/home/keten/arm-gnu-toolchain/arm-gnu-toolchain-13.2.Rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-strip"
+			"value" : "C:/msys64/mingw64/bin/arm-none-eabi-strip.exe"
 		},
 		{
 			"name" : "CMAKE_TAPI",
@@ -1162,18 +1132,6 @@
 			],
 			"type" : "FILEPATH",
 			"value" : "CMAKE_TAPI-NOTFOUND"
-		},
-		{
-			"name" : "CMAKE_UNAME",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "uname command"
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "/usr/bin/uname"
 		},
 		{
 			"name" : "CMAKE_VERBOSE_MAKEFILE",
@@ -1201,7 +1159,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/keten/rc_2025/new_build/build"
+			"value" : "C:/c_plusplus_try/new_build/build"
 		},
 		{
 			"name" : "new_build_IS_TOP_LEVEL",
@@ -1225,7 +1183,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/keten/rc_2025/new_build"
+			"value" : "C:/c_plusplus_try/new_build"
 		}
 	],
 	"kind" : "cache",

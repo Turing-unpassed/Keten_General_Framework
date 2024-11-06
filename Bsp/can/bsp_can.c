@@ -101,16 +101,10 @@ void CAN_Filter_Init(CAN_HandleTypeDef * hcan, uint8_t object_para,uint32_t Id,u
 
 }
 
-<<<<<<< HEAD
 
-=======
-float ddd = 0;
-float eee = 0;
->>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
     static CAN_Rx_Instance_t temp_can_rx_instance;
-    eee +=0.001;
     if(hcan == &hcan1)
     {
        if(HAL_CAN_GetRxMessage(hcan,CAN_FILTER_FIFO0,&temp_can_rx_instance.RxHeader,temp_can_rx_instance.can_rx_buff)==HAL_ERROR){};
@@ -118,7 +112,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     }
     if(hcan == &hcan2)
     {
-        ddd+=0.001;
        if(HAL_CAN_GetRxMessage(hcan,CAN_FILTER_FIFO0,&temp_can_rx_instance.RxHeader,temp_can_rx_instance.can_rx_buff)==HAL_ERROR){};
 	   pCAN2_RxCpltCallback(&temp_can_rx_instance);
     }
