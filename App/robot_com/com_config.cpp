@@ -8,13 +8,16 @@
  * @copyright Copyright (c) 2024
  * 
  * @attention :
- * @note :
+ * @note :      2024-11-03 修改CAN2接收回调函数，使其适配宇树go1 电机的数据解析
+ *                         移除了TEST_SYSTEM_M2006的测试
  * @versioninfo :
  */
 #include "com_config.h"
 #include "topics.h"
 
 extern Motor_C610 m2006[1];
+
+extern GO_M8010 go1_motor[1];
 
 osThreadId_t CAN1_Send_TaskHandle;
 osThreadId_t CAN2_Send_TaskHandle;
@@ -85,28 +88,30 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
     }
 }
 
-
+// 现在打算can2专控go1电机，当然也可以换上别的电机，只是暂时先用
 void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
-    if(can_instance->RxHeader.IDE == CAN_ID_STD)
+    uint32_t data_of_id = (uint32_t)can_instance->RxHeader.ExtId & 0x07FFFFFF;
+    uint8_t temp_module_id = CAN_To_RS485_Module_ID_Callback((uint8_t)(can_instance->RxHeader.ExtId >> 27) & 0x03);// 解析出标识符（模块id）
+    uint8_t temp_motor_id = GO_Motor_ID_Callback(data_of_id);// 解析出扩展帧中的数据部分
+
+    if(temp_motor_id < 0)
     {
-        switch(can_instance->RxHeader.StdId)
-        {
-            case 0x201:
-            {
-#ifdef TEST_SYSTEM_M2006
-                m2006[0].update(can_instance->can_rx_buff);
-                speed_aps = m2006[0].speed_aps;
-                motor_acceleration = m2006[0].motor_acceleration;
-#endif
-                break;
-            }
-            case 0x205:
-            {
-                break;
-            }
-        }
+        return;
     }
+    switch(temp_module_id)
+    {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:// 模块出厂id为3
+            go1_motor[temp_motor_id].update_Go1(can_instance->can_rx_buff,data_of_id);
+            break;
+    }
+
 }
 
 
@@ -142,7 +147,7 @@ __attribute((noreturn)) void CAN2_Send_Task(void *argument)
             do{
                 free_can_mailbox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan2);
             }while(free_can_mailbox == 0);
-            if(temp_can_txmsg.isExTid == 1)// 发送扩展帧
+            if(temp_can_txmsg.isExTid == 1)     // 发送扩展帧
                 CAN_Transmit_ExtId(&temp_can_txmsg);
             else    // 发送标准帧
                 CAN_Transmit_StdID(&temp_can_txmsg);

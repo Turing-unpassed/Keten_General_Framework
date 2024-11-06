@@ -101,13 +101,12 @@ void CAN_Filter_Init(CAN_HandleTypeDef * hcan, uint8_t object_para,uint32_t Id,u
 
 }
 
-uint32_t bag = 0;
+
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
     static CAN_Rx_Instance_t temp_can_rx_instance;
     if(hcan == &hcan1)
     {
-        bag++;
        if(HAL_CAN_GetRxMessage(hcan,CAN_FILTER_FIFO0,&temp_can_rx_instance.RxHeader,temp_can_rx_instance.can_rx_buff)==HAL_ERROR){};
        pCAN1_RxCpltCallback(&temp_can_rx_instance);
     }
@@ -122,10 +121,8 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
 void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan)
 {
     static CAN_Rx_Instance_t temp_can_rx_instance;
-
     if(hcan == &hcan1)
     {
-        bag++;
        if(HAL_CAN_GetRxMessage(hcan,CAN_FILTER_FIFO1,&temp_can_rx_instance.RxHeader,temp_can_rx_instance.can_rx_buff)==HAL_ERROR){};
        pCAN1_RxCpltCallback(&temp_can_rx_instance);
     }
@@ -141,6 +138,7 @@ void CAN_Transmit_ExtId(CAN_Tx_Instance_t *can_tx_instance)
 {
     CAN_TxHeaderTypeDef TxHeader;                                                      // 创建发送句柄
     TxHeader.ExtId = can_tx_instance->tx_id;                                           // 将发送目标的id记录（内部不对扩展帧or标准帧作判断了，需要用户明确调用！）
+    TxHeader.StdId = 0;
     TxHeader.IDE = CAN_ID_EXT;                                                         // 设置为发送扩展帧模式
     TxHeader.RTR = CAN_RTR_DATA;                                                       // 发送数据帧
     TxHeader.DLC = can_tx_instance->tx_len;                                            // can协议规定，一包can数据只能含有8位数据帧
@@ -159,7 +157,8 @@ void CAN_Transmit_StdID(CAN_Tx_Instance_t *can_tx_instance)
     CAN_TxHeaderTypeDef TxHeader;
     uint32_t tx_mailbox = 0;                                                           // 创建发送句柄
     TxHeader.StdId = can_tx_instance->tx_id;                                           // 将发送目标的id记录（内部不对扩展帧or标准帧作判断了，需要用户明确调用！）
-    TxHeader.IDE = CAN_ID_STD;                                                         // 设置为发送标准帧模式
+    TxHeader.ExtId = 0;                                                      // 设置为发送标准帧模式
+    TxHeader.IDE = CAN_ID_STD;   
     TxHeader.RTR = CAN_RTR_DATA;                                                       // 发送数据帧
     TxHeader.DLC = can_tx_instance->tx_len;                                            // can协议规定，一包can数据只能含有8位数据帧
     TxHeader.TransmitGlobalTime = DISABLE;                                             // 不发送标记时间

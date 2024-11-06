@@ -107,7 +107,7 @@ void Omni_Chassis::Kinematics_forward_Resolution(float wheel_1,float wheel_2,flo
  */
 void Omni_Chassis::Dynamics_Inverse_Resolution()
 {
-   float force_x,force_y,torque_omega;
+   float force_x = 0,force_y = 0,torque_omega = 0;
    static uint8_t cnt;
 
     if (this->Chassis_Status == CHASSIS_STOP)

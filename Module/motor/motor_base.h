@@ -118,7 +118,7 @@ public:
     Motor(uint8_t id, 
           const CAN_Rx_Instance_t& can_rx_instance,const CAN_Tx_Instance_t& can_tx_instance,
           const Motor_Control_Setting_t& ctrl_config,
-          int16_t max_current,uint8_t reduction_ratio) 
+          int16_t max_current,float reduction_ratio) 
         : ID(id), 
           can_tx_for_motor{can_tx_instance},can_rx_for_motor{can_rx_instance},
           ctrl_motor_config(ctrl_config),
@@ -171,7 +171,7 @@ public:
      /* 声明控制器句柄 */
      Motor_Control_Setting_t ctrl_motor_config = {0};
 
-     virtual void set_motor_ref(float ref)= 0;// 设置电机参考值
+     virtual void set_motor_ref(float ref) = 0;// 设置电机参考值
      virtual void stop_the_motor() = 0;// 急停电机
      virtual void enable_the_motor() = 0;// 使能电机
      virtual void pid_control_to_motor() = 0;// 电机pid计算out输出
@@ -192,6 +192,7 @@ public:
      float beta = 0.85f;// 转子角速度滤波系数
     
      float motor_acceleration = 0;// 电机加速度
+     
 
      inline float get_speed_after_low(){ return this->speed / motor_reduction_ratio; }// 获取减速箱操作之后的速度
      inline float get_speed_aps_after_low(){ return this->speed_aps / motor_reduction_ratio; }// 获取减速箱操作之后的角速度
@@ -223,7 +224,7 @@ protected:
      int16_t max_current = 0;// 最大电流
 
      int8_t if_reduction = 0;// 用于配置减速比输出
-     int8_t motor_reduction_ratio = 0;// 电机减速比
+     float motor_reduction_ratio = 0;// 电机减速比
      
      float temp_last_speed_aps = 0;
      float temp_last_motor_acceleration = 0;

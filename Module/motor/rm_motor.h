@@ -38,7 +38,7 @@ public:
     RM_Common(uint8_t id,
               const CAN_Rx_Instance_t& can_rx_instance,const CAN_Tx_Instance_t& can_tx_instance,
               const Motor_Control_Setting_t& ctrl_config,
-              int16_t max_current, uint8_t reduction_ratio) 
+              int16_t max_current, float reduction_ratio) 
             : Motor(id,can_rx_instance,can_tx_instance,ctrl_config,max_current,reduction_ratio){}
 
     virtual ~RM_Common() = default;
@@ -128,7 +128,7 @@ public:
         CAN_TxMsg.can_tx_buff[ID * 2 - 2] = (uint8_t)(current_out >> 8) & 0xff; // 装填电流值高8位
         CAN_TxMsg.can_tx_buff[ID * 2 - 1] = (uint8_t)current_out & 0xff;        // 装填电流值低8位
     }
-    /* 电调回传数据处理函数 */
+    /* 电调控制数据处理函数 */
     virtual void CanMsg_Process(CAN_Tx_Instance_t &CAN_TxMsg) override
     {
         motor_constraint(&(this->Out), static_cast<int16_t>(-max_current),static_cast<int16_t>(max_current));
@@ -152,7 +152,7 @@ class Motor_C610 : public RM_Common
 {
 public:
     Motor_C610(uint8_t id,const CAN_Rx_Instance_t& can_rx_instance,const CAN_Tx_Instance_t& can_tx_instance,
-               const Motor_Control_Setting_t& ctrl_config,uint8_t reduction_ratio)
+               const Motor_Control_Setting_t& ctrl_config,float reduction_ratio)
      :RM_Common(id,can_rx_instance,can_tx_instance,ctrl_config,10000,reduction_ratio)
      {
         if(this->if_reduction == 1)
@@ -204,7 +204,7 @@ class Motor_C620 :public RM_Common
 {
 public:
     Motor_C620(uint8_t id,const CAN_Rx_Instance_t& can_rx_instance,const CAN_Tx_Instance_t& can_tx_instance,
-                const Motor_Control_Setting_t& ctrl_config,uint8_t reduction_ratio)
+                const Motor_Control_Setting_t& ctrl_config,float reduction_ratio)
      :RM_Common(id,can_rx_instance,can_tx_instance,ctrl_config,16384,reduction_ratio)
      {
         if(this->if_reduction == 1)
@@ -255,7 +255,7 @@ class Motor_GM6020 :public RM_Common
 {
 public:
     Motor_GM6020(uint8_t id,const CAN_Rx_Instance_t& can_rx_instance,const CAN_Tx_Instance_t& can_tx_instance,
-                 const Motor_Control_Setting_t& ctrl_config,uint8_t reduction_ratio)
+                 const Motor_Control_Setting_t& ctrl_config,float reduction_ratio)
      :RM_Common(id,can_rx_instance,can_tx_instance,ctrl_config,30000,reduction_ratio)
      {
         if(this->if_reduction == 1)

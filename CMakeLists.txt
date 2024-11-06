@@ -76,11 +76,12 @@ add_definitions(
     # -DTEST_SYSTEM_M3508 
     # -DTEST_SYSTEM_M2006
     # -DTEST_SYSTEM_GM6020 
-    -DDISABLE_LOG_SYSTEM
+    # -DDISABLE_LOG_SYSTEM
     # -DDISABLE_SYSVIEW_SYSTEM
     -DDEBUG_TASK_RUN 
     # -DDEBUG_NO_TRACKING
     # -DTEST_YAW_ADJUST
+    -DDEBUG_GO1_MOTOR
     ) # need -D<macro> to define macro
     
 

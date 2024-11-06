@@ -23,7 +23,6 @@ extern "C"{
 #include "queue.h"
 #include "cmsis_os.h"
 #include "bsp_can.h"
-
 /*------------------------------------extern------------------------------------*/
 
 extern QueueHandle_t CAN1_TxPort;
@@ -75,6 +74,7 @@ void CAN2_Send_Task(void *argument);
 
 #ifdef __cplusplus
 #include "chassis_task.h"
+#include "Unitree_Go1.h"
 
 #endif
 

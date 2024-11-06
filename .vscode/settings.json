@@ -41,7 +41,8 @@
         "cmsis_os2.h": "c",
         "pid_controller.h": "c",
         "limits": "cpp",
-        "tracking.h": "c"
+        "tracking.h": "c",
+        "main.h": "c"
     },
     // 这里要改成你自己的编译器的路径
     "C_Cpp.default.compilerPath": "arm-none-eabi-g++",

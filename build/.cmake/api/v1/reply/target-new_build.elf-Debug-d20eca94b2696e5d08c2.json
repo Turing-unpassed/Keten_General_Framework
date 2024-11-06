@@ -33,7 +33,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 139,
+				"line" : 140,
 				"parent" : 0
 			},
 			{
@@ -45,13 +45,13 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 137,
+				"line" : 138,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 141,
+				"line" : 142,
 				"parent" : 0
 			},
 			{
@@ -63,7 +63,7 @@
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 132,
+				"line" : 133,
 				"parent" : 0
 			},
 			{
@@ -81,13 +81,13 @@
 			{
 				"command" : 6,
 				"file" : 0,
-				"line" : 133,
+				"line" : 134,
 				"parent" : 0
 			},
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 91,
+				"line" : 92,
 				"parent" : 0
 			},
 			{
@@ -159,7 +159,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 92,
+				"line" : 93,
 				"parent" : 0
 			},
 			{
@@ -243,7 +243,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 93,
+				"line" : 94,
 				"parent" : 0
 			},
 			{
@@ -279,7 +279,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 94,
+				"line" : 95,
 				"parent" : 0
 			},
 			{
@@ -435,7 +435,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 95,
+				"line" : 96,
 				"parent" : 0
 			},
 			{
@@ -663,7 +663,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 96,
+				"line" : 97,
 				"parent" : 0
 			},
 			{
@@ -923,15 +923,15 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "DEBUG_GO1_MOTOR"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "DEBUG_TASK_RUN"
 				},
 				{
 					"backtrace" : 8,
 					"define" : "DISABLEFLOAT16"
-				},
-				{
-					"backtrace" : 8,
-					"define" : "DISABLE_LOG_SYSTEM"
 				},
 				{
 					"backtrace" : 9,
@@ -1231,7 +1231,8 @@
 				5,
 				60,
 				61,
-				63
+				63,
+				64
 			]
 		},
 		{
@@ -1325,15 +1326,15 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "DEBUG_GO1_MOTOR"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "DEBUG_TASK_RUN"
 				},
 				{
 					"backtrace" : 8,
 					"define" : "DISABLEFLOAT16"
-				},
-				{
-					"backtrace" : 8,
-					"define" : "DISABLE_LOG_SYSTEM"
 				},
 				{
 					"backtrace" : 9,
@@ -1682,7 +1683,6 @@
 				58,
 				59,
 				62,
-				64,
 				65,
 				66,
 				67,
@@ -1690,7 +1690,8 @@
 				69,
 				70,
 				71,
-				72
+				72,
+				73
 			]
 		},
 		{
@@ -1787,15 +1788,15 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "DEBUG_GO1_MOTOR"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "DEBUG_TASK_RUN"
 				},
 				{
 					"backtrace" : 8,
 					"define" : "DISABLEFLOAT16"
-				},
-				{
-					"backtrace" : 8,
-					"define" : "DISABLE_LOG_SYSTEM"
 				},
 				{
 					"backtrace" : 9,
@@ -2080,8 +2081,8 @@
 			"language" : "ASM",
 			"sourceIndexes" : 
 			[
-				73,
-				74
+				74,
+				75
 			]
 		}
 	],
@@ -2286,16 +2287,17 @@
 				69,
 				70,
 				71,
-				72
+				72,
+				73
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				73,
 				74,
-				75
+				75,
+				76
 			]
 		}
 	],
@@ -2677,6 +2679,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
 			"path" : "Module/controller/pid_controller.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Module/motor/Unitree_Go1.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
