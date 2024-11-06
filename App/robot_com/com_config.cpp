@@ -88,6 +88,7 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
     }
 }
 
+<<<<<<< HEAD
 // 现在打算can2专控go1电机，当然也可以换上别的电机，只是暂时先用
 void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
@@ -95,20 +96,41 @@ void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
     uint8_t temp_module_id = CAN_To_RS485_Module_ID_Callback((uint8_t)(can_instance->RxHeader.ExtId >> 27) & 0x03);// 解析出标识符（模块id）
     uint8_t temp_motor_id = GO_Motor_ID_Callback(data_of_id);// 解析出扩展帧中的数据部分
 
+=======
+float aaa = 0;
+// 现在打算can2专控go1电机，当然也可以换上别的电机，只是暂时先用
+void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
+{
+    aaa+=0.01;
+    Extid_Analysis_t temp_ana;
+    temp_ana.id_of_Extid = (uint8_t)(can_instance->RxHeader.ExtId >> 28) & 0x03;
+    temp_ana.data_of_Extid = (uint32_t)can_instance->RxHeader.ExtId & 0x07FFFFFF;
+    uint8_t temp_module_id = CAN_To_RS485_Module_ID_Callback(temp_ana.id_of_Extid);
+    uint8_t temp_motor_id = GO_Motor_ID_Callback(temp_ana.data_of_Extid);
+>>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47
     if(temp_motor_id < 0)
     {
         return;
     }
     switch(temp_module_id)
     {
+<<<<<<< HEAD
         case 0:
+=======
+        case 0:// 模块id为0
+            go1_motor[temp_motor_id].update_Go1(can_instance->can_rx_buff,temp_ana.data_of_Extid);
+>>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47
             break;
         case 1:
             break;
         case 2:
             break;
+<<<<<<< HEAD
         case 3:// 模块出厂id为3
             go1_motor[temp_motor_id].update_Go1(can_instance->can_rx_buff,data_of_id);
+=======
+        case 3:
+>>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47
             break;
     }
 
@@ -135,7 +157,7 @@ __attribute((noreturn)) void CAN1_Send_Task(void *argument)
     }
 }
 
-
+float ccc = 0;
 __attribute((noreturn)) void CAN2_Send_Task(void *argument)
 {
     CAN_Tx_Instance_t temp_can_txmsg;
@@ -147,12 +169,19 @@ __attribute((noreturn)) void CAN2_Send_Task(void *argument)
             do{
                 free_can_mailbox = HAL_CAN_GetTxMailboxesFreeLevel(&hcan2);
             }while(free_can_mailbox == 0);
+<<<<<<< HEAD
             if(temp_can_txmsg.isExTid == 1)     // 发送扩展帧
+=======
+            if(temp_can_txmsg.isExTid == 1)
+            {// 发送扩展帧
+>>>>>>> ed5a7bc63a58a0dc3d0b3d2590c344075653ba47
                 CAN_Transmit_ExtId(&temp_can_txmsg);
+                ccc+=0.001;
+            }
             else    // 发送标准帧
                 CAN_Transmit_StdID(&temp_can_txmsg);
         }
-        osDelay(1);
+        osDelay(1000);
     }
 }
 
