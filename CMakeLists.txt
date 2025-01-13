@@ -71,7 +71,10 @@ add_definitions(
     -DTOPICS_DEBUG
     -DDEBUG_FOR_ACTION 
     -DUSE_ACTION_FOR_IMU
-    -DCHASSIS_TO_DEBUG
+    -DCHASSIS_TO_DEBUG # 当前板是否为底盘控制板
+    # -DUSE_OMNI_CHASSIS # 使用全向轮底盘
+    -DUSE_SWERVE_CHASSIS # 使用舵轮底盘
+    -DUSE_AIRJOY_CONTROL # 使用航模遥控
     # -DTEST_SYSTEM_TURNER
     # -DTEST_SYSTEM_M3508 
     # -DTEST_SYSTEM_M2006
@@ -82,6 +85,8 @@ add_definitions(
     # -DDEBUG_NO_TRACKING
     # -DTEST_YAW_ADJUST
     -DDEBUG_GO1_MOTOR
+    -DRUBBER_ANGLE_OPTIMIZE # 使用舵向劣弧优化
+
     ) # need -D<macro> to define macro
     
 

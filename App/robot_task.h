@@ -80,21 +80,24 @@ void osTaskInit(void)
     };
     CAN2_Send_TaskHandle = osThreadNew(CAN2_Send_Task, NULL, &CAN2_SendTaskHandle_attributes);
 
+#ifdef DEBUG_TASK_RUN 
     const osThreadAttr_t DebugTaskHandle_attributes = {
     .name = "Debug_TaskHandle",
     .stack_size = 128*4 ,
     .priority = (osPriority_t) osPriorityNormal,
     };
-#ifdef DEBUG_TASK_RUN 
     Debug_TaskHandle = osThreadNew(Debug_Task, NULL, &DebugTaskHandle_attributes);
 #endif 
 
+
+#ifdef CHASSIS_TO_DEBUG
     const osThreadAttr_t ChassisTaskHandle_attributes = {
     .name = "Chassis_TaskHandle",
     .stack_size = 128*4 ,
     .priority = (osPriority_t) osPriorityNormal,
     };
     Chassis_TaskHandle = osThreadNew(Chassis_Task, NULL, &ChassisTaskHandle_attributes);
+#endif
 
     const osThreadAttr_t ControlTaskHandle_attributes = {
     .name = "Control_TaskHandle",

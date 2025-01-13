@@ -28,6 +28,14 @@ QueueHandle_t CAN2_TxPort;
 
 extern Motor_GM6020 gm6020[1];
 
+#ifdef USE_OMNI_CHASSIS
+// 全向底盘驱动电机
+extern Motor_C620 chassis_motor[4];
+#endif
+
+// 舵向电机实例
+extern Motor_GM6020 rubber_motor[4];
+
 uint8_t Common_Service_Init()
 {
     CAN1_TxPort = xQueueCreate(16,sizeof(CAN_Tx_Instance_t));
@@ -46,8 +54,9 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
     {
         switch(can_instance->RxHeader.StdId)
         {
+#ifdef USE_OMNI_CHASSIS
             case 0x201:
-            {
+            {                
                 chassis_motor[0].update(can_instance->can_rx_buff);
                 break;
             }
@@ -66,11 +75,36 @@ void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
                 chassis_motor[3].update(can_instance->can_rx_buff);
                 break;
             }
+#endif
+
 #ifdef TEST_SYSTEM_GM6020
             case 0x205:
             {
                 gm6020[0].update(can_instance->can_rx_buff);
                 angle = gm6020[0].angle;
+                break;
+            }
+#endif
+
+#ifdef USE_SWERVE_CHASSIS// 舵向电机
+            case 0x205:
+            {
+                rubber_motor[0].update(can_instance->can_rx_buff);
+                break;
+            }
+            case 0x206:
+            {
+                rubber_motor[1].update(can_instance->can_rx_buff);
+                break;
+            }
+            case 0x207:
+            {
+                rubber_motor[2].update(can_instance->can_rx_buff);
+                break;
+            }
+            case 0x208:
+            {
+                rubber_motor[3].update(can_instance->can_rx_buff);
                 break;
             }
 #endif
@@ -110,6 +144,42 @@ void CAN2_Rx_Callback(CAN_Rx_Instance_t *can_instance)
         case 3:// 模块出厂id为3
             go1_motor[temp_motor_id].update_Go1(can_instance->can_rx_buff,data_of_id);
             break;
+    }
+    // 如果不是go1的协议，为大疆电机的协议，则会进入这个分支
+     if(can_instance->RxHeader.IDE == CAN_ID_STD)
+    {
+        switch(can_instance->RxHeader.StdId)
+        {
+#ifdef USE_SWERVE_CHASSIS       
+            // 轮向电机     
+            case 0x205:
+            {
+                break;
+            }
+            case 0x206:
+            {
+                break;
+            }
+            case 0x207:
+            {
+                break;
+            }
+            case 0x208:
+            {
+                break;
+            }
+#endif
+        }
+    }
+    else
+    {
+        switch(can_instance->RxHeader.ExtId)
+        {
+            case 0x201:
+            {
+                break;
+            }
+        }
     }
 
 }

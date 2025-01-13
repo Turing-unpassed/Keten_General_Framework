@@ -153,12 +153,14 @@ protected:
     /* 底盘输出重置0 */
     virtual void Chassis_Reset_Output(){}
 public:
+    // 解算得到用来的或者由外部传感器得知
     Robot_Twist_t RoboSpeed = {0,0,0};// 机器人坐标系下速度
     Robot_Twist_t WorldSpeed = {0,0,0};// 世界坐标系下速度
 
     Robot_Twist_t Ref_RoboSpeed = {0,0,0};// 期望机器人坐标系下速度
     Robot_Twist_t Ref_WorldSpeed = {0,0,0};// 期望世界坐标系下速度
 
+    // 用于输入的计算变量
     float ref[4];// 期望值，用于各环pid输出到输入
     Robot_Twist_t ref_twist;// 期望速度
 

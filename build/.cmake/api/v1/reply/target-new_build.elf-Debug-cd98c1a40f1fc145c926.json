@@ -33,7 +33,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 142,
+				"line" : 147,
 				"parent" : 0
 			},
 			{
@@ -45,13 +45,13 @@
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 140,
+				"line" : 145,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 144,
+				"line" : 149,
 				"parent" : 0
 			},
 			{
@@ -63,7 +63,7 @@
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 135,
+				"line" : 140,
 				"parent" : 0
 			},
 			{
@@ -81,13 +81,13 @@
 			{
 				"command" : 6,
 				"file" : 0,
-				"line" : 136,
+				"line" : 141,
 				"parent" : 0
 			},
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 92,
+				"line" : 97,
 				"parent" : 0
 			},
 			{
@@ -183,7 +183,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 93,
+				"line" : 98,
 				"parent" : 0
 			},
 			{
@@ -267,7 +267,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 94,
+				"line" : 99,
 				"parent" : 0
 			},
 			{
@@ -303,7 +303,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 95,
+				"line" : 100,
 				"parent" : 0
 			},
 			{
@@ -459,7 +459,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 96,
+				"line" : 101,
 				"parent" : 0
 			},
 			{
@@ -783,7 +783,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 97,
+				"line" : 102,
 				"parent" : 0
 			},
 			{
@@ -951,7 +951,7 @@
 			{
 				"command" : 8,
 				"file" : 0,
-				"line" : 98,
+				"line" : 103,
 				"parent" : 0
 			},
 			{
@@ -1099,6 +1099,10 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "RUBBER_ANGLE_OPTIMIZE"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "STM32F407xx"
 				},
 				{
@@ -1111,6 +1115,10 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "USE_AIRJOY_CONTROL"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "USE_FULL_ASSERT"
 				},
 				{
@@ -1120,6 +1128,10 @@
 				{
 					"backtrace" : 8,
 					"define" : "USE_RTOS_FOR_UART"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "USE_SWERVE_CHASSIS"
 				}
 			],
 			"includes" : 
@@ -1560,6 +1572,10 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "RUBBER_ANGLE_OPTIMIZE"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "STM32F407xx"
 				},
 				{
@@ -1572,6 +1588,10 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "USE_AIRJOY_CONTROL"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "USE_FULL_ASSERT"
 				},
 				{
@@ -1581,6 +1601,10 @@
 				{
 					"backtrace" : 8,
 					"define" : "USE_RTOS_FOR_UART"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "USE_SWERVE_CHASSIS"
 				}
 			],
 			"includes" : 
@@ -2088,6 +2112,10 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "RUBBER_ANGLE_OPTIMIZE"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "STM32F407xx"
 				},
 				{
@@ -2100,6 +2128,10 @@
 				},
 				{
 					"backtrace" : 8,
+					"define" : "USE_AIRJOY_CONTROL"
+				},
+				{
+					"backtrace" : 8,
 					"define" : "USE_FULL_ASSERT"
 				},
 				{
@@ -2109,6 +2141,10 @@
 				{
 					"backtrace" : 8,
 					"define" : "USE_RTOS_FOR_UART"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "USE_SWERVE_CHASSIS"
 				}
 			],
 			"includes" : 
