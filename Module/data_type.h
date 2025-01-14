@@ -56,4 +56,5 @@ typedef struct
     float data6;
 }pub_ros_package;
 
+
 #pragma pack()

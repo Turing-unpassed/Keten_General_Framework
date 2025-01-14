@@ -32,7 +32,7 @@ extern osThreadId_t CAN2_Send_TaskHandle;
 extern osThreadId_t Debug_TaskHandle;
 extern osThreadId_t Chassis_TaskHandle;
 extern osThreadId_t Control_TaskHandle;
-
+extern osThreadId_t ROSCOM_TaskHandle;
 
 /* Definitions for TaskFunc */
 void ins_Task(void *argument);
@@ -42,7 +42,7 @@ void CAN2_Send_Task(void *argument);
 void Debug_Task(void *argument);
 void Chassis_Task(void *argument);
 void Control_Task(void *argument);
-
+void ROSCOM_Task(void *argument);
 
 /**
  * @brief os任务创建初始化函数
@@ -105,6 +105,13 @@ void osTaskInit(void)
     .priority = (osPriority_t) osPriorityNormal,
     };
     Control_TaskHandle = osThreadNew(Control_Task, NULL, &ControlTaskHandle_attributes);
+
+    const osThreadAttr_t ROSCOMTaskHandle_attributes = {
+    .name = "ROSCOM_TaskHandle",
+    .stack_size = 128*4 ,
+    .priority = (osPriority_t) osPriorityNormal,
+    };
+    Control_TaskHandle = osThreadNew(ROSCOM_Task, NULL, &ROSCOMTaskHandle_attributes);
 
 }
 

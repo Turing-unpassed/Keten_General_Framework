@@ -21,6 +21,7 @@ extern GO_M8010 go1_motor[1];
 
 osThreadId_t CAN1_Send_TaskHandle;
 osThreadId_t CAN2_Send_TaskHandle;
+osThreadId_t ROSCOM_TaskHandle;
 
 QueueHandle_t CAN1_TxPort;
 QueueHandle_t CAN2_TxPort;
@@ -226,5 +227,27 @@ __attribute((noreturn)) void CAN2_Send_Task(void *argument)
     }
 }
 
+extern ROS_Com_Instance_t *ros_instance;
+
+__attribute((noreturn)) void ROSCOM_Task(void *argument)
+{
+    if(ROS_Communication_Init() != 1)
+    {
+        LOGERROR("ros com failed!");// 初始化失败，直接自杀
+        vTaskDelete(NULL);
+    }
+    float test[6] = {0};
+    float send[6] = {0,0,0,0,0,0};
+    for(;;)
+    {
+        if(ROSCOM_Task_Function(ros_instance))// 解包得到数据
+        {
+            memcpy(test, ros_instance->data_get, sizeof(test)); 
+        }
+        send[0]++;send[1]++;send[2]++;send[3]++;send[4]++;send[5]++;
+        ROSCom_SendData(send);
+        osDelay(1);
+    }
+}
 
 

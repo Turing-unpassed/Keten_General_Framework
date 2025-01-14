@@ -82,10 +82,13 @@
         "ostream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "usbd_cdc_if.h": "c",
+        "ros_com.h": "c"
     },
     // 这里要改成你自己的编译器的路径
     "C_Cpp.default.compilerPath": "arm-none-eabi-g++",
     "C_Cpp.errorSquiggles": "enabled",
-    "makefile.makefilePath": "ToolChain/Makefile"
+    "makefile.makefilePath": "ToolChain/Makefile",
+    "ros.distro": "noetic"
 }

@@ -71,7 +71,7 @@ add_definitions(
     -DTOPICS_DEBUG
     -DDEBUG_FOR_ACTION 
     -DUSE_ACTION_FOR_IMU
-    -DCHASSIS_TO_DEBUG # 当前板是否为底盘控制板
+    # -DCHASSIS_TO_DEBUG # 当前板是否为底盘控制板
     # -DUSE_OMNI_CHASSIS # 使用全向轮底盘
     -DUSE_SWERVE_CHASSIS # 使用舵轮底盘
     -DUSE_AIRJOY_CONTROL # 使用航模遥控

@@ -1071,10 +1071,6 @@
 				},
 				{
 					"backtrace" : 8,
-					"define" : "CHASSIS_TO_DEBUG"
-				},
-				{
-					"backtrace" : 8,
 					"define" : "DEBUG_FOR_ACTION"
 				},
 				{
@@ -1541,10 +1537,6 @@
 				{
 					"backtrace" : 7,
 					"define" : "ARM_MATH_ROUNDING"
-				},
-				{
-					"backtrace" : 8,
-					"define" : "CHASSIS_TO_DEBUG"
 				},
 				{
 					"backtrace" : 8,
@@ -2081,10 +2073,6 @@
 				{
 					"backtrace" : 7,
 					"define" : "ARM_MATH_ROUNDING"
-				},
-				{
-					"backtrace" : 8,
-					"define" : "CHASSIS_TO_DEBUG"
 				},
 				{
 					"backtrace" : 8,
