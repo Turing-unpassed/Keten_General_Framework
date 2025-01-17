@@ -46,8 +46,6 @@ typedef struct
     Uart_Instance_t *uart_instance;
     rtos_for_module_t *rtos_for_roscom;
     IWDG_Instance_t *iwdg_instance;
-    Publisher *ros_pub;
-    pub_ros_package ros_package;
     float data_send[6];
     float data_get[6]; 
 }ROS_Com_Instance_t;

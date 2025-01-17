@@ -10,6 +10,15 @@
  * @attention :
  * @note :      2024-11-03 修改CAN2接收回调函数，使其适配宇树go1 电机的数据解析
  *                         移除了TEST_SYSTEM_M2006的测试
+ * 
+ *              2025-1-17  当前ros通讯协议
+ *                         数据位1：指令位
+ *                         数据位2：twist.x
+ *                         数据位3：twist.y
+ *                         数据位4：twist.z
+ *                         数据为5：NULL
+ *                         数据位6：NULL
+ *                         发布twist话题：ros_serial_pub
  * @versioninfo :
  */
 #include "com_config.h"
@@ -46,9 +55,17 @@ uint8_t Common_Service_Init()
     return 1;
 }
 
+#ifdef TEST_SYSTEM_GM6020
 float motor_acceleration = 0;
 float angle = 0;
 float motor_current = 0;
+#endif
+
+
+
+static void ros_serial_fsm(uint8_t _flag);
+
+
 void CAN1_Rx_Callback(CAN_Rx_Instance_t *can_instance)
 {
     if(can_instance->RxHeader.IDE == CAN_ID_STD)
@@ -227,26 +244,75 @@ __attribute((noreturn)) void CAN2_Send_Task(void *argument)
     }
 }
 
+
 extern ROS_Com_Instance_t *ros_instance;
 
 __attribute((noreturn)) void ROSCOM_Task(void *argument)
 {
+    uint8_t task_flag = 0;
     if(ROS_Communication_Init() != 1)
     {
         LOGERROR("ros com failed!");// 初始化失败，直接自杀
         vTaskDelete(NULL);
     }
-    float test[6] = {0};
-    float send[6] = {0,0,0,0,0,0};
+    /* 发布自动控制速度指令的发布者初始化 */
+    publish_data temp_data;
+    pub_Control_Data ros_twist;
+    Publisher *twist_pub = register_pub("air_joy_pub");
+
+
+    // float test[6] = {0};
+    // float send[6] = {0,0,0,0,0,0};
     for(;;)
     {
+        ros_serial_fsm(task_flag);
         if(ROSCOM_Task_Function(ros_instance))// 解包得到数据
         {
-            memcpy(test, ros_instance->data_get, sizeof(test)); 
+            task_flag = ros_instance->data_get[0];
+            ros_twist.linear_x = ros_instance->data_get[1];
+            ros_twist.linear_y = ros_instance->data_get[2];
+            ros_twist.Omega = ros_instance->data_get[3];
+            temp_data.data = (uint8_t*)&ros_twist;
+            temp_data.len = sizeof(pub_Control_Data);
+            twist_pub->publish(twist_pub,temp_data);// 发布自动控制速度指令
         }
-        send[0]++;send[1]++;send[2]++;send[3]++;send[4]++;send[5]++;
-        ROSCom_SendData(send);
         osDelay(1);
+    }
+}
+
+enum
+{
+    ASK_FOR_REQUEST = 0,
+    START_TALKING = 1,
+    STOP_TALKING = 2,
+};
+
+
+static void ros_serial_fsm(uint8_t _flag)
+{
+    float send[6] = {0};
+    // ros通讯设备状态机
+    switch(_flag)
+    {
+        case ASK_FOR_REQUEST:
+        {
+            /* 发送请求指令 */
+            send[0] = 1;
+            ROSCom_SendData(send);
+            osDelay(1000);// 1s发一次，等待回复
+            break;
+        }
+        case START_TALKING:
+        {
+            /* 可能需要将速度上传回电脑进行速度闭环，目前先不这么做 */
+            send[0] = 1;
+            break;
+        }
+        case STOP_TALKING:
+        {
+            send[0] = 2;// 发送该指令，小电脑停止发送数据
+            break;
+        }
     }
 }
 

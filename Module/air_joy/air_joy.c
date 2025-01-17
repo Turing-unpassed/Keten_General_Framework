@@ -202,6 +202,23 @@ static void Air_SWO_Event_Process()
             return;
         }
     }
+    if(air_instance->swo_event & SWD_EVENT)
+    {
+        if(air_instance->SWC > 950 && air_instance->SWC < 1050)
+        {
+            // 两档拨杆，最上状态
+            air_instance->control_data.Move = 0;
+            air_instance->swo_event &= ~SWD_EVENT;
+            return;
+        }
+        if(air_instance->SWC > 1950 && air_instance->SWC < 2050)
+        {
+            // 两档拨杆，最下状态
+            air_instance->control_data.Move = 1;
+            air_instance->swo_event &= ~SWD_EVENT;
+            return;
+        }
+    }
 }
 
 void Air_Joy_Process()

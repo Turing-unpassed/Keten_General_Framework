@@ -44,6 +44,7 @@ typedef struct
     float Omega;   // 转动速度 rad/s
     uint8_t Status;// 底盘状态
     uint8_t Move;// 底盘运动方式
+    uint8_t ctrl;// 底盘控制模式
 }pub_Control_Data;
 
 typedef struct 

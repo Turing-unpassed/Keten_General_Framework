@@ -23,7 +23,9 @@
  * @todo :使用扭矩进行底盘控制（并且加入扭矩前馈），将坐标系换成更加通用的 上z前x左y  -- done
  *        丰富底盘种类，目前打算加入：三全向轮、四全向轮、四舵轮、三舵轮  ---同时包括运动学正解算以及逆解算
  * 
- *       使用宏定义if开关直接切换底盘任务内容
+ *       使用宏定义if开关直接切换底盘任务内容   
+ * 
+ *        2025-1-17  更新底盘运动逻辑：Keep_x 并非只是单纯的把y轴速度指令给0，应该同时当前朝向锁住
  */
 #include "chassis_task.h"
 #include "rm_motor.h"
@@ -499,6 +501,11 @@ Subscriber *air_data_sub;
 pub_Control_Data twist;  
 #endif
 
+#ifdef TRY_AUTO_CONTROL
+Subscriber *ros_serial_sub;
+pub_Control_Data ros_twist;
+#endif
+
 
 uint8_t Chassis_Init()
 {
@@ -584,6 +591,10 @@ uint8_t Chassis_Init()
     air_data_sub = register_sub("air_joy_pub",1);
 #endif
 
+#ifdef TRY_AUTO_CONTROL
+    ros_serial_sub = register_sub("ros_serial_pub",1);
+#endif
+
 #ifdef VOFA_TO_DEBUG
     /* vofa订阅者准备 */
     motor_pid_sub = register_sub("vofa_pub",1);
@@ -595,11 +606,14 @@ uint8_t Chassis_Init()
 __attribute((noreturn)) void Chassis_Task(void *argument)
 {
     Chassis_Init();
+    publish_data temp_data;
+    publish_data ros_serial_data;
 
+    uint8_t _keep_x = 0;uint8_t _keep_y = 0;
+    float _current_angle = 0;
 #ifdef VOFA_TO_DEBUG
     publish_data temp_pid_data;
 #endif
-    publish_data temp_data;
     for(;;)
     {
 
@@ -626,6 +640,7 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
             twist = *(pub_Control_Data*)temp_data.data;
             User_Chassis.Chassis_Status = (Chassis_Status_e)twist.Status;
             User_Chassis.Moving_Status = (Moving_Status_e)twist.Move;
+            User_Chassis.Control_Status = (Control_Status_e)twist.ctrl;
             switch (User_Chassis.Chassis_Status)
             {
                 case ROBOT_CHASSIS:
@@ -649,24 +664,63 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
             {
                 case FREE:
                 {
+                    _keep_x = 0;
+                    _keep_y = 0;
                     break;
-                }
+                }         
                 case KEEP_X_MOVING:
                 {
+                    _keep_y = 0;
+                    if(_keep_x == 0)
+                    {
+                        _current_angle = User_Chassis.imu_data->yaw;
+                        _keep_x = 1;
+                    }
+                    Yaw_Adjust(&User_Chassis.Chassis_Yaw_Adjust,_current_angle,User_Chassis.imu_data->yaw,-180,180);
+                    User_Chassis.Ref_RoboSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
+                    User_Chassis.Ref_WorldSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
                     User_Chassis.Ref_RoboSpeed.linear_y = 0;
                     User_Chassis.Ref_WorldSpeed.linear_y = 0;
                     break;
                 }
                 case KEEP_Y_MOVING:
                 {
+                    _keep_x = 0;
+                    if(_keep_y == 0)
+                    {
+                        _current_angle = User_Chassis.imu_data->yaw;
+                        _keep_y = 1;
+                    }
+                    Yaw_Adjust(&User_Chassis.Chassis_Yaw_Adjust,_current_angle,User_Chassis.imu_data->yaw,-180,180);
+                    User_Chassis.Ref_RoboSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
+                    User_Chassis.Ref_WorldSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
                     User_Chassis.Ref_RoboSpeed.linear_x = 0;
                     User_Chassis.Ref_WorldSpeed.linear_x = 0;
                     break;
                 }
-                case AUTO_MOVING:
-                {
+            }
+            switch (User_Chassis.Control_Status)
+            {
+                case HAND_CONTROL:
+                    /* 什么都不用做？ */
                     break;
-                }
+                case AUTO_CONTROL:
+
+                    /* 自动驾驶建立在机器人坐标系下运动 */
+                    User_Chassis.Chassis_Status = ROBOT_CHASSIS;
+                    User_Chassis.Moving_Status = FREE;
+
+                    /* 这里其实是指令的覆盖，就是说和你的航模遥控并不冲突，当你切手动时，航模遥控的设置会立即覆盖当前设置 */
+                    /* 得将前面的速度指令全部换成ros_serial传下来的速度指令 */
+                    ros_serial_data = ros_serial_sub->getdata(ros_serial_sub);
+                    if(ros_serial_data.len != -1)
+                    {
+                        ros_twist = *(pub_Control_Data*)ros_serial_data.data;
+                        User_Chassis.Ref_RoboSpeed.linear_x = ros_twist.linear_x;
+                        User_Chassis.Ref_RoboSpeed.linear_y = ros_twist.linear_y;
+                        User_Chassis.Ref_RoboSpeed.omega = ros_twist.Omega;
+                    }
+                    break;
             }
         }
 #endif
@@ -676,7 +730,6 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
         User_Chassis.Chassis_Status = ROBOT_CHASSIS;
         User_Chassis.Ref_RoboSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
 #endif 
-
         User_Chassis.Chassis_Parking_Control();// 长时间未控制时自动进入驻车模式
         Chassis();       
         osDelay(1);
@@ -686,7 +739,9 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
 uint8_t Chassis()
 {
    /* 获取ins系统的机器人姿态数据 */
-   User_Chassis.Get_Current_Posture();
+   User_Chassis.Get_Current_Posture();// 更新机器人姿态
+   User_Chassis.Get_Current_Position();// 更新机器人位置
+   User_Chassis.Get_Current_Velocity();// 更新World_v 和 Robo_v
    switch(User_Chassis.Chassis_Status)
    {
       case CHASSIS_STOP:
@@ -704,8 +759,6 @@ uint8_t Chassis()
          break;
       case ROBOT_CHASSIS:/* 机器人坐标系下控制底盘 */
 #ifdef USE_OMNI_CHASSIS
-         // 正解算得到底盘速度
-         User_Chassis.Kinematics_forward_Resolution(chassis_motor[0].speed_aps,chassis_motor[1].speed_aps,chassis_motor[2].speed_aps,chassis_motor[3].speed_aps);      
          /* 外环速度环 */
 #ifndef DEBUG_NO_TRACKING
          User_Chassis.Dynamics_Inverse_Resolution();
@@ -744,10 +797,6 @@ uint8_t Chassis()
       case WORLD_CHASSIS:/* 世界坐标系下控制底盘 */
 
 #ifdef USE_OMNI_CHASSIS
-         // 正解算得到底盘速度
-         User_Chassis.Kinematics_forward_Resolution(chassis_motor[0].speed_aps,chassis_motor[1].speed_aps,chassis_motor[2].speed_aps,chassis_motor[3].speed_aps);      
-         /* 获得当前世界坐标系下速度 */
-         User_Chassis.RoboSpeed_To_WorldSpeed();
         
 #ifndef DEBUG_NO_TRACKING// 调试底盘速度外环跟踪
          // 外环速度环
@@ -773,15 +822,15 @@ uint8_t Chassis()
          break;
       case PARKING_CHASSIS:
 #ifdef USE_OMNI_CHASSIS
-            User_Chassis.Set_Parking_Speed();
-            // 外环速度环
-            User_Chassis.Dynamics_Inverse_Resolution();
-            /* 电机输出赋值 */
-            for(size_t i = 0;i < User_Chassis.Wheel_Num; i++)
-            {
-                chassis_motor[i].ctrl_motor_config.motor_controller_setting.pid_ref = User_Chassis.Kinematics_Inverse_Resolution(i,User_Chassis.ref_twist);
-                chassis_motor[i].pid_control_to_motor();
-            }
+        User_Chassis.Set_Parking_Speed();
+        // 外环速度环
+        User_Chassis.Dynamics_Inverse_Resolution();
+        /* 电机输出赋值 */
+        for(size_t i = 0;i < User_Chassis.Wheel_Num; i++)
+        {
+            chassis_motor[i].ctrl_motor_config.motor_controller_setting.pid_ref = User_Chassis.Kinematics_Inverse_Resolution(i,User_Chassis.ref_twist);
+            chassis_motor[i].pid_control_to_motor();
+        }
 #endif
 
 #ifdef USE_SWERVE_CHASSIS

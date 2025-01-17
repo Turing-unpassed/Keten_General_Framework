@@ -24,6 +24,7 @@ typedef struct
     float x;
     float y;
     float yaw;
+    float omega;// 角速度
 }pub_Chassis_Pos;
 
 /* 底盘计算所需yaw角数据 */

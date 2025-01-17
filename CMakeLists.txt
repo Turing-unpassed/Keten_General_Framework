@@ -86,6 +86,7 @@ add_definitions(
     # -DTEST_YAW_ADJUST
     -DDEBUG_GO1_MOTOR
     -DRUBBER_ANGLE_OPTIMIZE # 使用舵向劣弧优化
+    -DTRY_AUTO_CONTROL # 使用自动控制
 
     ) # need -D<macro> to define macro
     
