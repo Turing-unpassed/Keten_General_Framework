@@ -121,7 +121,7 @@ public:
         }
     }
 
-    // 提供一个由action传感器获取速度值的方法
+    // 提供一个由action传感器获取速度值的方法（更新：如果没有action，在宏定义文件中进行编写，可以启用原先使用的根据编码器正解算的方式得到速度）
     virtual void Get_Current_Velocity()
     {
         this->dt = DWT_GetDeltaT(&this->DWT_CNT);

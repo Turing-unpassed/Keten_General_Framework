@@ -11,7 +11,7 @@
  * @note :      2024-11-03 修改CAN2接收回调函数，使其适配宇树go1 电机的数据解析
  *                         移除了TEST_SYSTEM_M2006的测试
  * 
- *              2025-1-17  当前ros通讯协议
+ *              2025-1-17  当前ros通讯协议 stm32 -> ros
  *                         数据位1：指令位
  *                         数据位2：twist.x
  *                         数据位3：twist.y
@@ -19,6 +19,9 @@
  *                         数据为5：NULL
  *                         数据位6：NULL
  *                         发布twist话题：ros_serial_pub
+ * 
+ *              2025-1-22  对自动的接入维护：当控制命令输入“自动”时，需要检查是否开启上位机数据接收
+ *                         如果设置为自动，但是没有接入上位机数据，则不执行自动控制
  * @versioninfo :
  */
 #include "com_config.h"
@@ -255,23 +258,29 @@ __attribute((noreturn)) void ROSCOM_Task(void *argument)
         LOGERROR("ros com failed!");// 初始化失败，直接自杀
         vTaskDelete(NULL);
     }
-    /* 发布自动控制速度指令的发布者初始化 */
+    /* ros接收到信息向其他任务发布信息的发布者初始化 */
     publish_data temp_data;
     pub_Control_Data ros_twist;
-    Publisher *twist_pub = register_pub("air_joy_pub");
+    Publisher *twist_pub = register_pub("ros_serial_pub");
 
-
-    // float test[6] = {0};
-    // float send[6] = {0,0,0,0,0,0};
+    Subscriber *start_rev_cmd;
+    start_rev_cmd = register_sub("ctrl_pub",1);
+    publish_data cmd_data;
+    pub_Control_Data start_rev_data;
     for(;;)
     {
+        cmd_data = start_rev_cmd->getdata(start_rev_cmd);
+        if(cmd_data.len != -1)
+        {
+            start_rev_data = *(pub_Control_Data*)cmd_data.data;
+            task_flag = start_rev_data.ctrl;
+        }
         ros_serial_fsm(task_flag);
         if(ROSCOM_Task_Function(ros_instance))// 解包得到数据
         {
-            task_flag = ros_instance->data_get[0];
-            ros_twist.linear_x = ros_instance->data_get[1];
-            ros_twist.linear_y = ros_instance->data_get[2];
-            ros_twist.Omega = ros_instance->data_get[3];
+            ros_twist.linear_x = ros_instance->data_get[0];
+            ros_twist.linear_y = ros_instance->data_get[1];
+            ros_twist.Omega = ros_instance->data_get[2];
             temp_data.data = (uint8_t*)&ros_twist;
             temp_data.len = sizeof(pub_Control_Data);
             twist_pub->publish(twist_pub,temp_data);// 发布自动控制速度指令

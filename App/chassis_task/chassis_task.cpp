@@ -26,7 +26,9 @@
  *       使用宏定义if开关直接切换底盘任务内容   
  * 
  *        2025-1-17  更新底盘运动逻辑：Keep_x 并非只是单纯的把y轴速度指令给0，应该同时当前朝向锁住
- */
+ *        2025-1-22  修改遥控信息接口，统一为 ctrl_pub
+ * 
+ */       
 #include "chassis_task.h"
 #include "rm_motor.h"
 #include "Chassis.h"
@@ -497,7 +499,7 @@ pub_vofa_pid pid_data;
 
 #ifdef USE_AIRJOY_CONTROL
 /* 接收航模遥控控制信息 */
-Subscriber *air_data_sub;
+Subscriber *ctrl_data_sub;
 pub_Control_Data twist;  
 #endif
 
@@ -587,8 +589,8 @@ uint8_t Chassis_Init()
     User_Chassis.Chassis_Subscribe_Init();
 
 #ifdef USE_AIRJOY_CONTROL
-    /* air_joy 订阅者准备 */
-    air_data_sub = register_sub("air_joy_pub",1);
+    /* 遥控器 订阅者准备 */
+    ctrl_data_sub = register_sub("ctrl_pub",1);
 #endif
 
 #ifdef TRY_AUTO_CONTROL
@@ -634,7 +636,7 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
 
 #ifdef USE_AIRJOY_CONTROL
         /* 接收航模遥控数据 */
-        temp_data = air_data_sub->getdata(air_data_sub);
+        temp_data = ctrl_data_sub->getdata(ctrl_data_sub);
         if(temp_data.len != -1)
         {
             twist = *(pub_Control_Data*)temp_data.data;
@@ -724,12 +726,6 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
             }
         }
 #endif
-
-#ifdef TEST_YAW_ADJUST
-        Yaw_Adjust(&User_Chassis.Chassis_Yaw_Adjust,ref_angle,User_Chassis.imu_data->yaw,-180,180);
-        User_Chassis.Chassis_Status = ROBOT_CHASSIS;
-        User_Chassis.Ref_RoboSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
-#endif 
         User_Chassis.Chassis_Parking_Control();// 长时间未控制时自动进入驻车模式
         Chassis();       
         osDelay(1);
