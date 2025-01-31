@@ -27,6 +27,7 @@
  * 
  *        2025-1-17  更新底盘运动逻辑：Keep_x 并非只是单纯的把y轴速度指令给0，应该同时当前朝向锁住
  *        2025-1-22  修改遥控信息接口，统一为 ctrl_pub
+ *        2025-1-31  或许又是一次解耦，将锁角速度的指令放在控制指令层，而不是丢给底盘实例，让其去提供方法
  * 
  */       
 #include "chassis_task.h"
@@ -605,6 +606,12 @@ uint8_t Chassis_Init()
     return 1;
 }
 
+
+/**
+ * @brief 底盘任务函数，在进入Chassis() 之前的操作都是在设置控制指令
+ *          
+ * 
+ */
 __attribute((noreturn)) void Chassis_Task(void *argument)
 {
     Chassis_Init();
@@ -618,8 +625,6 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
 #endif
     for(;;)
     {
-
-
 #ifdef VOFA_TO_DEBUG
         /* vofa调试pid使用 */
         temp_pid_data = motor_pid_sub->getdata(motor_pid_sub);
@@ -666,8 +671,12 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
             {
                 case FREE:
                 {
-                    _keep_x = 0;
-                    _keep_y = 0;
+                    if(_keep_x == 1 || _keep_y ==1)
+                    {
+                        _keep_x = 0;
+                        _keep_y = 0;
+                        User_Chassis.Chassis_Reset_Output();
+                    }
                     break;
                 }         
                 case KEEP_X_MOVING:
@@ -677,6 +686,7 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
                     {
                         _current_angle = User_Chassis.imu_data->yaw;
                         _keep_x = 1;
+                        User_Chassis.Chassis_Reset_Output();
                     }
                     Yaw_Adjust(&User_Chassis.Chassis_Yaw_Adjust,_current_angle,User_Chassis.imu_data->yaw,-180,180);
                     User_Chassis.Ref_RoboSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
@@ -692,6 +702,7 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
                     {
                         _current_angle = User_Chassis.imu_data->yaw;
                         _keep_y = 1;
+                        User_Chassis.Chassis_Reset_Output();
                     }
                     Yaw_Adjust(&User_Chassis.Chassis_Yaw_Adjust,_current_angle,User_Chassis.imu_data->yaw,-180,180);
                     User_Chassis.Ref_RoboSpeed.omega = User_Chassis.Chassis_Yaw_Adjust.Output;
@@ -732,6 +743,12 @@ __attribute((noreturn)) void Chassis_Task(void *argument)
     }
 }
 
+
+/**
+ * @brief 将控制指令输入底盘控制器
+ * 
+ * @return uint8_t 
+ */
 uint8_t Chassis()
 {
    /* 获取ins系统的机器人姿态数据 */
@@ -772,7 +789,6 @@ uint8_t Chassis()
 
 #ifdef USE_SWERVE_CHASSIS
         User_Chassis.update_Swerve_Module(rubber_motor[0].angle,rubber_motor[1].angle,rubber_motor[2].angle,rubber_motor[3].angle);
-        // User_Chassis.Kinematics_forward_Resolution();// 正解算得到底盘速度
 
         /* 
         for(size_t i = 0;i < User_Chassis.Wheel_Num; i++)

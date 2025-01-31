@@ -25,7 +25,6 @@
 #pragma once
 
 /*----------------------------------include-----------------------------------*/
-#define  __FPU_PRESENT  1U
 #include "arm_math.h"
 #include "robot_def.h"
 #include "motor_base.h"
@@ -93,10 +92,14 @@ public:
     {
         this->chassis_imu_sub = register_sub("chassis_imu_pub",1);
         this->chassis_pos_sub = register_sub("chassis_pos_pub",1);
+        this->chassis_spe_sub = register_sub("chassis_spe_pub",1);
+
         this->imu_data = (pub_imu_yaw*)pvPortMalloc(sizeof(pub_imu_yaw));
         assert_param(this->imu_data != NULL);
         this->pos_data = (pub_Chassis_Pos*)pvPortMalloc(sizeof(pub_Chassis_Pos)); 
         assert_param(this->pos_data != NULL);
+        this->spe_data = (pub_chassis_spe*)pvPortMalloc(sizeof(pub_chassis_spe));
+        assert_param(this->spe_data != NULL);
         return 1;
     }
 
@@ -121,42 +124,42 @@ public:
         }
     }
 
-    // 提供一个由action传感器获取速度值的方法（更新：如果没有action，在宏定义文件中进行编写，可以启用原先使用的根据编码器正解算的方式得到速度）
-    virtual void Get_Current_Velocity()
+    // 获取当前底盘速度 
+    void Get_Current_Velocity()
     {
-        this->dt = DWT_GetDeltaT(&this->DWT_CNT);
-        this->current_pos_x = pos_data->x;this->current_pos_y = pos_data->y;
-        /* sensor得到的世界速度 */
-        this->WorldSpeed.linear_x = (this->current_pos_x - this->last_pos_x) / this->dt;
-        this->WorldSpeed.linear_y = (this->current_pos_y - this->last_pos_y) / this->dt;
-        this->WorldSpeed.omega = this->pos_data->omega;
-
+        publish_data chassis_spe_data;
+        chassis_spe_data = this->chassis_spe_sub->getdata(this->chassis_spe_sub);
+        if(chassis_spe_data.len != -1)
+        {
+            spe_data = (pub_chassis_spe*)(chassis_spe_data.data);
+            this->RoboSpeed.linear_x = spe_data->robo_vx;
+            this->RoboSpeed.linear_y = spe_data->robo_vy;
+            this->RoboSpeed.omega = spe_data->robo_omega;
+            this->WorldSpeed.linear_x = spe_data->world_vx;
+            this->WorldSpeed.linear_y = spe_data->world_vy;
+            this->WorldSpeed.omega = spe_data->world_omega;
+        }
+    }
+    
+    // 世界坐标系下速度转机器人坐标系下速度
+    void WorldTwist_To_RoboTwist(Robot_Twist_t& input_twist,Robot_Twist_t& output_twist)
+    {
         float COSANGLE = arm_cos_f32(this->imu_data->yaw * DEGREE_2_RAD);// cos90 = 0
         float SINANGLE = arm_sin_f32(this->imu_data->yaw * DEGREE_2_RAD);// sin90 = 1
-        this->RoboSpeed.linear_x = this->WorldSpeed.linear_x * COSANGLE - this->WorldSpeed.linear_y * SINANGLE;
-        this->RoboSpeed.linear_y = this->WorldSpeed.linear_x * SINANGLE + this->WorldSpeed.linear_y * COSANGLE;
-        this->RoboSpeed.omega = this->WorldSpeed.omega; 
-        
-        this->last_pos_x = this->current_pos_x;this->last_pos_y = this->current_pos_y;
+        output_twist.linear_x = input_twist.linear_x * COSANGLE - input_twist.linear_y * SINANGLE;
+        output_twist.linear_y = input_twist.linear_x * SINANGLE + input_twist.linear_y * COSANGLE;
+        output_twist.omega = input_twist.omega; 
     }
     // 机器人坐标系下速度转世界坐标系下速度
-    void RoboSpeed_To_WorldSpeed()
+    void RoboTwist_To_WorldTwist(Robot_Twist_t& input_twist,Robot_Twist_t& output_twist)
     {
         float COSANGLE = arm_cos_f32(this->imu_data->yaw*DEGREE_2_RAD);
         float SINANGLE = arm_sin_f32(this->imu_data->yaw*DEGREE_2_RAD);
-        this->WorldSpeed.linear_x = this->RoboSpeed.linear_x * COSANGLE - this->RoboSpeed.linear_y * SINANGLE;
-        this->WorldSpeed.linear_y = this->RoboSpeed.linear_x * SINANGLE + this->RoboSpeed.linear_y * COSANGLE;
-        this->WorldSpeed.omega = this->RoboSpeed.omega;  
+        output_twist.linear_x = input_twist.linear_x * COSANGLE - input_twist.linear_y * SINANGLE;
+        output_twist.linear_y = input_twist.linear_x * SINANGLE + input_twist.linear_y * COSANGLE;
+        output_twist.omega = input_twist.omega;  
     }
-    // 世界坐标系下速度转机器人坐标系下速度
-    void RefWorldSpeed_To_RefRoboSpeed()
-    {
-        float COSANGLE = arm_cos_f32(this->imu_data->yaw * DEGREE_2_RAD);// cos90 = 0
-        float SINANGLE = arm_sin_f32(this->imu_data->yaw * DEGREE_2_RAD);// sin90 = 1
-        this->Ref_RoboSpeed.linear_x = this->Ref_WorldSpeed.linear_x * COSANGLE - this->Ref_WorldSpeed.linear_y * SINANGLE;
-        this->Ref_RoboSpeed.linear_y = this->Ref_WorldSpeed.linear_x * SINANGLE + this->Ref_WorldSpeed.linear_y * COSANGLE;
-        this->Ref_RoboSpeed.omega = this->Ref_WorldSpeed.omega; 
-    }
+
     /* 设置驻车速度 */
     void Set_Parking_Speed()
     {
@@ -172,42 +175,37 @@ protected:
     virtual void Kinematics_forward_Resolution(){}
     /* 动力学，扭矩分配,由派生类重写 */
     virtual void Dynamics_Inverse_Resolution(){}
-    /* 保持X轴方向移动 */
-    virtual void Keep_X_Moving_Control(){}
-    /* 保持Y轴方向移动 */
-    virtual void Keep_Y_Moving_Control(){}
     /* 底盘驻车模式 */
     virtual void Chassis_Parking_Control(){}
     /* 底盘输出重置0 */
     virtual void Chassis_Reset_Output(){}
 public:
 
-    // 解算得到用来的或者由外部传感器得知
+    // robot_ins 解算得到
     Robot_Twist_t RoboSpeed = {0,0,0};// 机器人坐标系下速度
     Robot_Twist_t WorldSpeed = {0,0,0};// 世界坐标系下速度
-
+    // 控制指令设置
     Robot_Twist_t Ref_RoboSpeed = {0,0,0};// 期望机器人坐标系下速度
     Robot_Twist_t Ref_WorldSpeed = {0,0,0};// 期望世界坐标系下速度
 
+    // 自身正解算得到的机器人速度
+    Robot_Twist_t self_RoboSpeed = {0,0,0};// 运动学解算得到
+    Robot_Twist_t self_WorldSpeed = {0,0,0};
+
     // 用于输入的计算变量
-    float ref[4];// 期望值，用于各环pid输出到输入
-    Robot_Twist_t ref_twist;// 期望速度
+    Robot_Twist_t ref_twist;// 控制器输出量---> 设置电机的pid控制参考量
 
     float current_angle_to_keep = 0;// 保持某轴方向移动时储存的角度值
 
     /* 订阅imu话题的订阅者 */
     Subscriber* chassis_imu_sub;
     Subscriber* chassis_pos_sub; 
+    Subscriber* chassis_spe_sub;
 
     /* 订阅数据类型指针 */
     pub_imu_yaw *imu_data;// 调用它来读yaw值
     pub_Chassis_Pos *pos_data;// 调用它来读位置值
-
-private:
-    float last_pos_x = 0;
-    float last_pos_y = 0;
-    float current_pos_x = 0;
-    float current_pos_y = 0;
+    pub_chassis_spe *spe_data;// 调用它来读速度值
 
 };
 
