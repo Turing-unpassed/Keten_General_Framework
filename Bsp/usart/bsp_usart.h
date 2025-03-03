@@ -71,6 +71,7 @@ typedef struct
     uart_package_t uart_package;
     void *device;// 父指针，储存设备指针
     uint8_t (*Uart_Deinit)(void *);// 串口设备注销函数
+    uint8_t (*Uart_send)(Uart_Instance_t *);// 串口发送函数
 }Uart_Instance_t;
 
 typedef struct 
