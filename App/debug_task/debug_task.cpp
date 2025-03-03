@@ -31,6 +31,8 @@ osThreadId_t Debug_TaskHandle;
 Subscriber *sub_y = register_sub("test_y_pub",1);
 publish_data y_data;
 uint16_t left_y;
+
+Uart_Tx_Package_t test_tx_package;
 //////////////////////////////////////////////////////////
 
 uint8_t debug_buffer[9];
@@ -148,6 +150,8 @@ __attribute((noreturn)) void Debug_Task(void *argument)
         LOGERROR("vofa init failed!");
         vTaskDelete(NULL);
     }
+    test_tx_package.uart_handle = vofa_instance->vofa_uart_instance->uart_package.uart_handle;
+    
 #endif
 
 #ifdef DEBUG_GO1_MOTOR
@@ -246,6 +250,8 @@ __attribute((noreturn)) void Debug_Task(void *argument)
         
         test_m3508[0].Motor_Ctrl(3000);
         Motor_SendMsgs(test_m3508);
+
+        
 
         osDelay(1);
     }

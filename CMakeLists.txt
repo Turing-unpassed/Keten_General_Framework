@@ -110,6 +110,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE
     # DEBUG_GO1_MOTOR
     RUBBER_ANGLE_OPTIMIZE # 使用舵向劣弧优化
     TRY_AUTO_CONTROL # 使用自动控制
+    VOFA_TO_DEBUG # 调试VOFA模块
 )
 
 # Add linked libraries
