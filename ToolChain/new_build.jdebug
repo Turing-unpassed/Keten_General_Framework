@@ -4,8 +4,8 @@
 *                         www.segger.com                             *
 **********************************************************************
 
-File          : C:/c_plusplus_try/new_build/new_build.jdebug
-Created       : 15 Sep 2024 00:49
+File          : D:/Keten_Frame/Keten_General_Framework/ToolChain/new_build.jdebug
+Created       : 7 Mar 2025 21:27
 Ozone Version : V3.24
 */
 
@@ -22,18 +22,19 @@ void OnProjectLoad (void) {
   //
   // Dialog-generated settings
   //
-  Project.AddPathSubstitute ("C:/c_plusplus_try/new_build", "$(ProjectDir)");
-  Project.AddPathSubstitute ("c:/c_plusplus_try/new_build", "$(ProjectDir)");
+  Project.AddPathSubstitute ("D:/Keten_Frame/Keten_General_Framework/ToolChain", "$(ProjectDir)");
+  Project.AddPathSubstitute ("d:/keten_frame/keten_general_framework/toolchain", "$(ProjectDir)");
   Project.SetDevice ("Cortex-M4");
-  Project.SetHostIF ("USB", "1040849617");
+  Project.SetHostIF ("USB", "602718286");
   Project.SetTargetIF ("SWD");
   Project.SetTIFSpeed ("4 MHz");
   Project.AddSvdFile ("$(InstallDir)/Config/CPU/Cortex-M4F.svd");
-  Project.AddSvdFile ("$(InstallDir)/Config/Peripherals/STM32F407IG.svd");
+  Project.AddSvdFile ("$(InstallDir)/Config/Peripherals/STM32F407.svd");
   //
   // User settings
   //
-  File.Open ("$(ProjectDir)/build/new_build.elf");
+  File.Open ("D:/Keten_Frame/Keten_General_Framework/build/Debug/new_build.elf");
+  Project.SetOSPlugin ("FreeRTOSPlugin");
 }
 
 /*********************************************************************
