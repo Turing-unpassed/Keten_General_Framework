@@ -25,6 +25,9 @@ osThreadId_t Control_TaskHandle;
 Publisher *ctrl_pub;
 pub_Control_Data ctrl_data;
 
+Publisher *test_y_pub;
+publish_data temp_data;
+
 /* 订阅遥控信息 */
 Subscriber *air_joy_sub;
 pub_air_joy_data air_joy_data;
@@ -78,7 +81,14 @@ void Air_Joy_Process()
         air_joy_data.RIGHT_X = 1500;
     if(air_joy_data.RIGHT_Y > 1400 && air_joy_data.RIGHT_Y < 1600)
         air_joy_data.RIGHT_Y = 1500;
+////////////////////////////////////////////////////////////////////////
 
+    uint16_t temp_y = (air_joy_data.LEFT_Y - 1500)/500*3000;
+    temp_y = temp_y > 0 ? temp_y : -temp_y;
+    temp_data.data = (uint8_t*)&temp_y;
+    temp_data.len = sizeof(uint16_t);
+    test_y_pub->publish(test_y_pub,temp_data);
+///////////////////////////////////////////////////////////////////////////
     switch(if_use_trapezoidal)
     {
         case NORMAL:
@@ -132,6 +142,9 @@ __attribute((noreturn)) void Control_Task(void *argument)
     /* 发布控制数据 */
     ctrl_pub = register_pub("ctrl_pub");
     publish_data temp_ctrl_data;
+
+    test_y_pub = register_pub("test_y_pub");
+
     for(;;)
     {
         temp_air_data = air_joy_sub->getdata(air_joy_sub);

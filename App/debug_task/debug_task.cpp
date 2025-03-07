@@ -26,6 +26,15 @@
 
 osThreadId_t Debug_TaskHandle;
 
+///////////////////////////////////////////////////
+
+uint16_t left_y;
+
+Uart_Tx_Package_t test_tx_package,test_tx_package2,test_tx_package3;
+uint8_t tail[4]{0x00, 0x00, 0x80, 0x7f};
+
+//////////////////////////////////////////////////////////
+
 uint8_t debug_buffer[9];
 
 Subscriber *sub_debug;
@@ -34,6 +43,48 @@ pub_Control_Data debug_pid;
 VOFA_Instance_t *vofa_instance = NULL;
 Uart_Instance_t *vofa_uart_instance = NULL;
 extern uart_package_t VOFA_uart_package;
+
+//////////////////////////////////////////////////
+CAN_Tx_Instance_t test_m3508_tx = {
+    .can_handle = &hcan1,
+    .isExTid = 0,
+    .tx_mailbox = 0,
+    .tx_id = 0x200,
+    .tx_len = 8,
+    .can_tx_buff = {0},      
+};
+CAN_Rx_Instance_t test_m3508_rx = {
+    .can_handle = &hcan1,
+    .RxHeader = {0},
+    .rx_len = 8,
+    .rx_id = 0x201,
+    .can_rx_buff = {0},
+};
+
+Motor_Control_Setting_t test_m3508_motor_ctrl = {
+    .motor_controller_setting = {
+        .speed_PID = {
+            .Kp = 0.01,
+            .Ki = 0.00,
+            .Kd = 0.00,
+            .MaxOut = 10000,
+            .IntegralLimit = 1000,
+            .DeadBand = 5,  
+            .Output_LPF_RC = 0.9,
+            .Derivative_LPF_RC = 0.85,
+            .OLS_Order = 1,
+            .Improve = OutputFilter | Trapezoid_Intergral | Derivative_On_Measurement | Integral_Limit
+         },
+         .pid_ref = 0,
+    },
+    .outer_loop_type = SPEED_LOOP,// 外环控制为速度环
+    .inner_loop_type = SPEED_LOOP,// 内环控制为速度环
+    .motor_is_reverse_flag = MOTOR_DIRECTION_NORMAL,// 正转
+    .motor_working_status = MOTOR_ENABLED,// 使能电机
+}; 
+
+Motor_C620 test_m3508[1] = {Motor_C620(1,test_m3508_rx,test_m3508_tx,test_m3508_motor_ctrl,-1)};
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #ifdef TEST_SYSTEM_TURNER
 extern Motor_C610 m2006[1];
@@ -99,18 +150,30 @@ __attribute((noreturn)) void Debug_Task(void *argument)
         LOGERROR("vofa init failed!");
         vTaskDelete(NULL);
     }
+    test_tx_package.uart_handle = vofa_instance->vofa_uart_instance->uart_package.uart_handle;
+    test_tx_package.tx_buffer = (uint8_t*)&test_m3508[0].speed_aps;
+    test_tx_package.tx_buffer_size = sizeof(float);
+
+    test_tx_package2.uart_handle = vofa_instance->vofa_uart_instance->uart_package.uart_handle;
+    test_tx_package2.tx_buffer = tail;
+    test_tx_package2.tx_buffer_size = sizeof(tail);
+
 #endif
 
 #ifdef DEBUG_GO1_MOTOR
     int debug = 0;
 #endif
-
+    
+    Subscriber *sub_y = register_sub("test_y_pub",1);
+    publish_data y_data;
     for(;;)
     {
 
 #ifdef VOFA_TO_DEBUG
         vofa_instance->vofa_task(vofa_instance);
         LOGINFO("debug task is running!");
+        vofa_instance->vofa_uart_instance->Uart_send(test_tx_package);
+        
 #endif
 
 #ifdef TEST_SYSTEM_TURNER
@@ -191,6 +254,24 @@ __attribute((noreturn)) void Debug_Task(void *argument)
             debug++;
         }
 #endif
+        y_data = sub_y->getdata(sub_y);
+        left_y = *(uint16_t*)y_data.data;
+        //test_m3508[0].Motor_Ctrl(left_y);
+        
+        test_tx_package3.uart_handle = vofa_instance->vofa_uart_instance->uart_package.uart_handle;
+        test_tx_package3.tx_buffer = (uint8_t*)&left_y;
+        test_tx_package3.tx_buffer_size = sizeof(uint16_t);
+        vofa_instance->vofa_uart_instance->Uart_send(test_tx_package3);
+        vofa_instance->vofa_uart_instance->Uart_send(test_tx_package2);
+        
+        test_m3508[0].Motor_Ctrl(3000);
+        Motor_SendMsgs(test_m3508);
+
+        
+
         osDelay(1);
     }
+
+
 }
+

@@ -64,6 +64,13 @@ typedef struct
     uart_callback_t uart_callback;// 定义回调函数指针
 }uart_package_t;
 
+typedef struct 
+{
+    UART_HandleTypeDef *uart_handle;// hal库usart句柄成员
+    uint8_t *tx_buffer;// 发送缓存
+    uint8_t tx_buffer_size;// 发送缓存大小
+}Uart_Tx_Package_t;
+
 /* uart instance 串口设备实例 */
 typedef struct 
 {
@@ -71,14 +78,10 @@ typedef struct
     uart_package_t uart_package;
     void *device;// 父指针，储存设备指针
     uint8_t (*Uart_Deinit)(void *);// 串口设备注销函数
+    uint8_t (*Uart_send)(Uart_Tx_Package_t );// 串口发送函数
 }Uart_Instance_t;
 
-typedef struct 
-{
-    UART_HandleTypeDef *uart_handle;// hal库usart句柄成员
-    uint8_t *tx_buffer;// 发送缓存
-    uint8_t tx_buffer_size;// 发送缓存大小
-}Uart_Tx_Package_t;
+
 /*----------------------------------function----------------------------------*/
 /**
  * @brief 串口设备注册函数，用户通过创建一个实例指针和串口数据包，然后通过调用此函数以及将实例传入本函数来获取返回值的实例

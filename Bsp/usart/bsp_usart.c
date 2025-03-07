@@ -69,7 +69,7 @@ Uart_Instance_t* Uart_Register(uart_package_t *uart_config)
     uart_instance->uart_package = *uart_config;
 
     uart_instance->Uart_Deinit = Uart_UnRegister;// 挂载注销函数
-
+    uart_instance->Uart_send = Uart_Tx_By_DMA;// 挂载发送函数
     /* hal库硬件设置 */
     __HAL_UART_CLEAR_IDLEFLAG(uart_instance->uart_package.uart_handle);// 清除UART的空闲中断标志位
     __HAL_UART_ENABLE_IT(uart_instance->uart_package.uart_handle, UART_IT_IDLE);// 使能UART的空闲中断
